@@ -17,6 +17,7 @@ class AttackerECU(ECU):
                  verbose: bool = True):
         super().__init__(name, verbose)
         self.target_can_id  = target_can_id
+        self.healing_can_id = 0x010          # high-priority ID used during post-error healing
         self._attack_count  = 0
         self._valid_count   = 0
 
@@ -64,11 +65,19 @@ class AttackerECU(ECU):
         )
 
         attack_frame = self._make_attack_frame(victim_frame)
+        old_tec = self.tec
         self.send(attack_frame, concurrent_frame=victim_frame)
 
-        if self.bus:
-            self.bus.transmit_valid(self.name, N_VALID_MSGS)
-        self._valid_count += N_VALID_MSGS
+        # Arbitraggio e cure SOLO se l'attacco ha causato un errore (TEC dell'attaccante è salito)
+        if self.bus and self.tec > old_tec:
+            self.bus.resolve_post_error_arbitration(
+                victim_name    = victim_frame.sender_id,
+                attacker_name  = self.name,
+                victim_id      = victim_frame.can_id,
+                healing_id     = self.healing_can_id,
+                n_healing_msgs = N_VALID_MSGS,
+            )
+            self._valid_count += N_VALID_MSGS
 
         log.attack(
             f"{YELLOW}\n[{self.name}] After cycle #{self._attack_count}: "

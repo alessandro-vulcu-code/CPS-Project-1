@@ -154,15 +154,6 @@ class CANBus:
             log.tec(f"{YELLOW}  Victim   ({victim_name})   TEC: {old} → {victim_node.tec}{RESET}")
             victim_node._check_state_transition()
 
-            if victim_node.state != "Bus-Off":
-                log.tec(f"{GREEN}\n[BUS] Victim ({victim_name}) retransmits... SUCCESS → TEC -1{RESET}")
-                old = victim_node.tec
-                victim_node._decrement_tec(1)
-                log.tec(f"{GREEN}  Victim ({victim_name}) TEC: {old} → {victim_node.tec}{RESET}")
-                victim_node._check_state_transition()
-            else:
-                log.tec(f"{RED}\n[BUS] Victim ({victim_name}) is BUS-OFF — cannot retransmit!{RESET}")
-
         if attacker_node:
             attacker_node._check_state_transition()
 
@@ -182,3 +173,101 @@ class CANBus:
                 node._decrement_tec(1)
         log.bus(f"{GRAY}  {sender_name} TEC now: {node.tec}{RESET}")
         node._check_state_transition()
+
+    def resolve_post_error_arbitration(
+        self,
+        victim_name: str,
+        attacker_name: str,
+        victim_id: int,
+        healing_id: int,
+        n_healing_msgs: int,
+    ) -> None:
+        """Post-Error Arbitration Phase.
+
+        Determines who gains bus access first after an error event:
+        - If healing_id < victim_id: attacker wins arbitration, heals first,
+          then victim retransmits (if not Bus-Off).
+        - Otherwise: victim wins arbitration, retransmits first,
+          then attacker heals.
+        """
+        log = get_logger()
+        victim_node   = self._nodes.get(victim_name)
+        attacker_node = self._nodes.get(attacker_name)
+
+        log.bus(
+            f"{CYAN}\n{'─'*70}\n"
+            f"[BUS] ══ POST-ERROR ARBITRATION PHASE ══\n"
+            f"  Victim   ID: 0x{victim_id:03X}  ({victim_name})\n"
+            f"  Healing  ID: 0x{healing_id:03X}  ({attacker_name})\n"
+            f"{'─'*70}{RESET}"
+        )
+
+        if healing_id < victim_id:
+            log.bus(
+                f"{MAGENTA}[BUS] 0x{healing_id:03X} < 0x{victim_id:03X} "
+                f"→ ATTACKER wins arbitration (higher priority){RESET}"
+            )
+
+            # Attacker heals by sending n_healing_msgs valid frames
+            if attacker_node:
+                old = attacker_node.tec
+                for _ in range(n_healing_msgs):
+                    if attacker_node.tec > 0:
+                        attacker_node._decrement_tec(1)
+                log.tec(
+                    f"{GRAY}\n[BUS] Attacker ({attacker_name}) sends {n_healing_msgs} "
+                    f"valid healing frame(s): TEC {old} → {attacker_node.tec}{RESET}"
+                )
+
+            # Victim retransmits afterward (if not Bus-Off)
+            if victim_node and victim_node.state != "Bus-Off":
+                log.tec(
+                    f"{GREEN}\n[BUS] Victim ({victim_name}) retransmits... "
+                    f"SUCCESS → TEC -1{RESET}"
+                )
+                old = victim_node.tec
+                victim_node._decrement_tec(1)
+                log.tec(f"{GREEN}  Victim ({victim_name}) TEC: {old} → {victim_node.tec}{RESET}")
+            elif victim_node:
+                log.tec(
+                    f"{RED}\n[BUS] Victim ({victim_name}) is BUS-OFF "
+                    f"— cannot retransmit!{RESET}"
+                )
+
+        else:
+            log.bus(
+                f"{MAGENTA}[BUS] 0x{healing_id:03X} >= 0x{victim_id:03X} "
+                f"→ VICTIM wins arbitration (higher priority){RESET}"
+            )
+
+            # Victim retransmits first (if not Bus-Off)
+            if victim_node and victim_node.state != "Bus-Off":
+                log.tec(
+                    f"{GREEN}\n[BUS] Victim ({victim_name}) retransmits... "
+                    f"SUCCESS → TEC -1{RESET}"
+                )
+                old = victim_node.tec
+                victim_node._decrement_tec(1)
+                log.tec(f"{GREEN}  Victim ({victim_name}) TEC: {old} → {victim_node.tec}{RESET}")
+            elif victim_node:
+                log.tec(
+                    f"{RED}\n[BUS] Victim ({victim_name}) is BUS-OFF "
+                    f"— cannot retransmit!{RESET}"
+                )
+
+            # Attacker heals afterward
+            if attacker_node:
+                old = attacker_node.tec
+                for _ in range(n_healing_msgs):
+                    if attacker_node.tec > 0:
+                        attacker_node._decrement_tec(1)
+                log.tec(
+                    f"{GRAY}\n[BUS] Attacker ({attacker_name}) sends {n_healing_msgs} "
+                    f"valid healing frame(s): TEC {old} → {attacker_node.tec}{RESET}"
+                )
+
+        # Final state-transition check for both nodes
+        if victim_node:
+            victim_node._check_state_transition()
+        if attacker_node:
+            attacker_node._check_state_transition()

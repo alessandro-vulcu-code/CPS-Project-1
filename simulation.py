@@ -21,11 +21,10 @@ BANNER = f"""
 """
 
 
-def run_simulation(max_cycles: int  = 100,
-                   delay:      float = 0.05,
-                   verbose:    bool  = True,
-                   log_dir:    str   = "logs",
-                   no_log:     bool  = False) -> None:
+def run_simulation(delay:   float = 0.05,
+                   verbose: bool  = True,
+                   log_dir: str   = "logs",
+                   no_log:  bool  = False) -> None:
 
     # ── Init logger ────────────────────────────────────────────────────────────
     logger = init_logger(
@@ -60,7 +59,7 @@ def run_simulation(max_cycles: int  = 100,
     # ── Main loop ──────────────────────────────────────────────────────────────
     cycle = 0
     try:
-        while cycle < max_cycles:
+        while True:
             cycle += 1
 
             try:
@@ -136,13 +135,10 @@ if __name__ == "__main__":
 Examples:
   python simulation.py                        # verbose, saves logs/
   python simulation.py --quiet                # suppress bit dumps
-  python simulation.py --max-cycles 200       # more cycles
   python simulation.py --log-dir /tmp/can     # custom log directory
   python simulation.py --no-log               # disable file logging
         """,
     )
-    parser.add_argument("--max-cycles", type=int,   default=100,
-                        help="Max simulation cycles (default: 100)")
     parser.add_argument("--delay",      type=float, default=0.05,
                         help="Seconds between cycles (default: 0.05)")
     parser.add_argument("--quiet",      action="store_true",
@@ -154,9 +150,8 @@ Examples:
     args = parser.parse_args()
 
     run_simulation(
-        max_cycles = args.max_cycles,
-        delay      = args.delay,
-        verbose    = not args.quiet,
-        log_dir    = args.log_dir,
-        no_log     = args.no_log,
+        delay   = args.delay,
+        verbose = not args.quiet,
+        log_dir = args.log_dir,
+        no_log  = args.no_log,
     )
