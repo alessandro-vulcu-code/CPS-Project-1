@@ -21,7 +21,7 @@ BANNER = f"""
 """
 
 
-def run_simulation(max_cycles: int  = 100,
+def run_simulation(max_cycles: int | None = None,
                    delay:      float = 0.05,
                    verbose:    bool  = True,
                    log_dir:    str   = "logs",
@@ -60,7 +60,7 @@ def run_simulation(max_cycles: int  = 100,
     # ── Main loop ──────────────────────────────────────────────────────────────
     cycle = 0
     try:
-        while cycle < max_cycles:
+        while max_cycles is None or cycle < max_cycles:
             cycle += 1
 
             try:
@@ -141,8 +141,8 @@ Examples:
   python simulation.py --no-log               # disable file logging
         """,
     )
-    parser.add_argument("--max-cycles", type=int,   default=100,
-                        help="Max simulation cycles (default: 100)")
+    parser.add_argument("--max-cycles", type=int,   default=None,
+                        help="Max simulation cycles (default: unlimited)")
     parser.add_argument("--delay",      type=float, default=0.05,
                         help="Seconds between cycles (default: 0.05)")
     parser.add_argument("--quiet",      action="store_true",
