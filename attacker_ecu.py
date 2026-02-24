@@ -11,6 +11,13 @@ from logger import get_logger, RED, YELLOW, CYAN, MAGENTA, GREEN, GRAY, RESET
 
 N_VALID_MSGS = 5
 
+# ── Probabilistic realism: hardware sync jitter ──────────────────────────
+# Probability that the attacker loses perfect synchronization during an
+# injection cycle, causing a "mis-timed" injection (see paper §IV-B).
+# When this happens the injected recessive bit lands on a random position
+# and is very likely to hit another recessive bit, producing no bus error.
+SYNC_ERROR_PROBABILITY: float = 0.05   # 5 %
+
 # Bit positions derived from offline traffic analysis of the victim's known-static payload.
 # Victim data template: [0xDE, 0xAD, 0xBE, <seq>]
 #   0xDE = 1101_1110  →  zeros at frame offsets 13, 18
@@ -42,6 +49,7 @@ class AttackerECU(ECU):
         self.target_can_id  = target_can_id
         self._attack_count  = 0
         self._skip_count    = 0
+        self._mistimed_count = 0
         self._cycle_count   = 0
         self._valid_count   = 0
 
@@ -130,6 +138,50 @@ class AttackerECU(ECU):
         )
         return True
 
+    def _execute_mistimed(self, victim_frame: CANFrame) -> bool:
+        """Handle a mis-timed injection — attacker loses sync.
+
+        The injected recessive bit lands on a random frame position.
+        With very high probability the random position carries a recessive (1)
+        bit from the victim, so overwriting 1 with 1 produces no bus error.
+        The victim's transmission succeeds normally (TEC −1) and the attacker
+        simply wastes the cycle.
+        """
+        log = get_logger()
+        self._mistimed_count += 1
+
+        log.attack(
+            f"{YELLOW}\n{'~'*70}\n"
+            f"[{self.name}] ⚠ MIS-TIMED INJECTION  "
+            f"(attacker TEC={self.tec})\n"
+            f"{'~'*70}{RESET}"
+        )
+        log.bus(
+            f"{YELLOW}[BUS] Injection mis-timed! "
+            f"Attacker missed the dominant bit. Attack cycle failed.{RESET}"
+        )
+
+        # Victim's frame goes through without interference → TEC victim −1
+        victim_node = (
+            self.bus._nodes.get(victim_frame.sender_id) if self.bus else None
+        )
+        if victim_node and victim_node.state != ECUState.BUS_OFF:
+            old_vtec = victim_node.tec
+            victim_node._decrement_tec(1)
+            victim_node._check_state_transition()
+            log.attack(
+                f"{GREEN}[{self.name}] Mis-timed — victim transmits OK → "
+                f"Victim TEC: {old_vtec} → {victim_node.tec}  (−1){RESET}"
+            )
+
+        # Attacker sent a harmless recessive bit — no bus error, no TEC change
+        log.attack(
+            f"{YELLOW}[{self.name}] Mis-timed — attacker sent harmless "
+            f"recessive bit, no TEC penalty.  "
+            f"(mistimed #{self._mistimed_count}){RESET}"
+        )
+        return True
+
     def _execute_attack(self, victim_frame: CANFrame) -> bool:
         """Execute a real attack cycle — inject error + send valid frames.
 
@@ -137,6 +189,10 @@ class AttackerECU(ECU):
           • Error injection → TEC +8 to both attacker and victim.
           • Victim retransmits → TEC victim −1.  Net victim: +7.
           • Attacker sends N_VALID_MSGS valid frames → TEC −5.  Net attacker: +3.
+
+        Before injecting, a sync-error check is performed.  If the attacker
+        loses hardware synchronization (probability = SYNC_ERROR_PROBABILITY),
+        the injection is mis-timed and the cycle is wasted.
         """
         log = get_logger()
         self._attack_count += 1
@@ -148,6 +204,10 @@ class AttackerECU(ECU):
             f"(attacker TEC={tec_cycle_start})\n"
             f"{'═'*70}{RESET}"
         )
+
+        # ── Sync-error jitter check ───────────────────────────────────────────
+        if random.random() < SYNC_ERROR_PROBABILITY:
+            return self._execute_mistimed(victim_frame)
 
         # ── Step 1: inject recessive bit → bit error → TEC +8 both nodes ─────
         attack_frame = self._make_attack_frame(victim_frame)
@@ -199,6 +259,7 @@ class AttackerECU(ECU):
     def stats(self) -> str:
         return (f"[{self.name}] Total cycles={self._cycle_count}  "
                 f"Attack cycles={self._attack_count}  "
+                f"Mis-timed={self._mistimed_count}  "
                 f"Skip cycles={self._skip_count}  "
                 f"Valid msgs sent={self._valid_count}  "
                 f"TEC={self.tec}  state={self.state}")
