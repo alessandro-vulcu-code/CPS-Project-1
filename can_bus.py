@@ -154,17 +154,20 @@ class CANBus:
             log.tec(f"{YELLOW}  Victim   ({victim_name})   TEC: {old} → {victim_node.tec}{RESET}")
             victim_node._check_state_transition()
 
+            # Step 2: victim retransmits the frame after the error → TEC Victim -1
             if victim_node.state != "Bus-Off":
                 log.tec(f"{GREEN}\n[BUS] Victim ({victim_name}) retransmits... SUCCESS → TEC -1{RESET}")
                 old = victim_node.tec
                 victim_node._decrement_tec(1)
-                log.tec(f"{GREEN}  Victim ({victim_name}) TEC: {old} → {victim_node.tec}{RESET}")
+                log.tec(f"{GREEN}  Victim ({victim_name}) TEC: {old} → {victim_node.tec}  "
+                        f"[cycle net so far: +7]{RESET}")
                 victim_node._check_state_transition()
             else:
                 log.tec(f"{RED}\n[BUS] Victim ({victim_name}) is BUS-OFF — cannot retransmit!{RESET}")
 
-        if attacker_node:
-            attacker_node._check_state_transition()
+        # NOTE: attacker state transition is intentionally deferred to after
+        # transmit_valid() so that _check_state_transition reflects the full
+        # cycle balance (+8 error  −5 valid msgs = net +3), not a transient +8.
 
     def _deliver_frame(self, frame: CANFrame) -> None:
         for name, node in self._nodes.items():
