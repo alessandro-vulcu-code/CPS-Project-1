@@ -19,7 +19,7 @@ N_VALID_MSGS = 5
 SYNC_ERROR_PROBABILITY: float = 0.05   # 5 %
 
 # Bit positions derived from offline traffic analysis of the victim's known-static payload.
-# Victim data template: [0xDE, 0xAD, 0xBE, <seq>]
+# Victim data temdenplate: [0xDE, 0xAD, 0xBE, <seq>]
 #   0xDE = 1101_1110  →  zeros at frame offsets 13, 18
 #   0xAD = 1010_1101  →  zeros at frame offsets 20, 22, 25
 #   0xBE = 1011_1110  →  zeros at frame offsets 28, 34
