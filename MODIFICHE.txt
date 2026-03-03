@@ -1,0 +1,41 @@
+Riassunto delle Modifiche e Sviluppi Futuri
+
+1. Modifiche Effettuate (Stato Attuale)
+
+Bit Stuffing Dinamico: Implementata la logica fisica del bus (inserimento di un bit opposto ogni 5 bit consecutivi identici). Questo permette all'attaccante di calcolare la posizione fisica esatta sul cavo per l'iniezione del bit, annullando gli errori derivanti dall'uso di indici puramente logici.
+
+Frame CAN Completo: Integrati tutti i campi dello standard CAN 2.0A (SOF, RTR, IDE, r0, DLC, CRC, ACK, EOF). Il bit stuffing viene ora applicato rigorosamente solo ai segmenti tra il SOF e il CRC, mantenendo inalterati i bit di delimitazione come da protocollo.
+
+Motore DES (Discrete Event Simulation): Eliminati i ritardi software casuali (time.sleep). La simulazione avanza ora tramite un clock assoluto misurato in microsecondi ($\mu s$), calcolato in base a un baud rate di 500 kbps (dove 1 bit = 2.0 $\mu s$).
+
+Jitter Hardware Gaussiano: Introdotta una deviazione standard gaussiana ($\sigma = 0.65\ \mu s$) per simulare l'imperfezione degli oscillatori hardware reali. Se la fluttuazione porta l'iniezione fuori dalla finestra fisica di 2.0 $\mu s$ del bit bersaglio, l'attacco fallisce (evento mis-timed).
+
+Calcolo dell'Occupazione del Bus: Il simulatore determina le finestre temporali di congestione fisica. L'attaccante è ora costretto a saltare un ciclo di attacco se il bus risulta temporalmente occupato dalla trasmissione dei suoi stessi frame di raffreddamento (necessari per abbassare il TEC).
+
+2. Miglioramenti Necessari (Integrazione Paper AutoSec 2021)
+
+Per trasformare il simulatore in un banco di prova rigoroso (allineato al SAE Benchmark), è necessario risolvere le seguenti discrepanze architetturali:
+
+2.1. Carico di Rete Realistico (SAE Benchmark)
+
+Stato attuale: Il bus ospita solo 2 nodi (Attaccante e Vittima) e risulta vuoto.
+
+Miglioramento: (Rif. Paper §IV.A.2) Introdurre ECU di background (es. VC, Brakes, Battery, Driver, IMC) che trasmettano ID con frequenze e priorità miste. Questo serve a generare traffico e collisioni reali sul bus.
+
+2.2. Arbitraggio dei Messaggi di Raffreddamento (Eq. 1)
+
+Stato attuale: L'attaccante abbassa il proprio TEC imponendo l'invio forzato di 5 frame validi (N_VALID_MSGS), ignorando le collisioni.
+
+Miglioramento: (Rif. Paper §III.D) I frame di recupero dell'attaccante devono subire il processo di arbitraggio contro il traffico generato dalle ECU di background. Perdere l'arbitraggio allungherà i tempi di recupero del TEC, aumentando il numero di cicli da saltare (skip) e la durata complessiva dell'attacco.
+
+2.3. Sincronizzazione tramite Messaggi Precedenti (Preceded Messages)
+
+Stato attuale: L'algoritmo assume una conoscenza temporale perfetta (oracolo) per sapere quando la vittima trasmetterà.
+
+Miglioramento: (Rif. Paper §II.B.1) L'attacco deve essere attivato (trigger) unicamente dalla lettura di un messaggio autentico noto che viaggia sul bus subito prima di quello della vittima (preceded ID), simulando il meccanismo di allineamento hardware.
+
+2.4. Calcolo Fisico degli Error Flags
+
+Stato attuale: I tempi di propagazione degli error flag non sono calcolati nel motore in microsecondi.
+
+Miglioramento: Integrare nel calcolo del tempo assoluto la durata esatta di un Active Error Flag (6 bit dominanti) e del suo relativo Error Delimiter (8 bit recessivi) prima di sbloccare il bus per la successiva fase di ritrasmissione.

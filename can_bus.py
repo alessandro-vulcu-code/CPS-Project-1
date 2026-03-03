@@ -1,8 +1,8 @@
 """
 can_bus.py
 ----------
-Simulates the CAN shared bus medium.
-All output goes through the centralised SimLogger (logger.py).
+Simula il bus CAN. Modificato per modellare un frame CAN 2.0A completo
+e unificare il campo Control (IDE, r0, DLC).
 """
 
 import threading
@@ -24,7 +24,7 @@ ERROR_DELIMITER    = [RECESSIVE] * 8
 
 @dataclass
 class CANFrame:
-    """Represents a CAN 2.0A frame (11-bit ID)."""
+    """Rappresenta un frame CAN 2.0A logico."""
     can_id:              int
     data:                List[int]
     sender_id:           str
@@ -32,16 +32,89 @@ class CANFrame:
     is_malicious:        bool = False
 
 
-def _id_to_bits(can_id: int, length: int = 11) -> List[int]:
+def id_to_bits(can_id: int, length: int = 11) -> List[int]:
     return [(can_id >> (length - 1 - i)) & 1 for i in range(length)]
 
 
-def _data_to_bits(data: List[int]) -> List[int]:
+def data_to_bits(data: List[int]) -> List[int]:
     bits = []
     for byte in data:
         for i in range(7, -1, -1):
             bits.append((byte >> i) & 1)
     return bits
+
+
+def calculate_mock_crc(bits: List[int]) -> List[int]:
+    """Genera un CRC-15 simulato basato su xor per mantenere coerenza dimensionale."""
+    crc = 0x45A9 # Valore base arbitrario
+    for b in bits:
+        crc ^= b
+    return [(crc >> i) & 1 for i in range(14, -1, -1)]
+
+
+def build_physical_frame(can_id: int, data: List[int]) -> tuple[List[int], List[int]]:
+    """
+    Costruisce la rappresentazione fisica del frame CAN.
+    Restituisce:
+      - physical_stream: Il flusso completo di bit sul cavo.
+      - data_index_map: Mappa che collega l'indice logico all'interno del DATA FIELD 
+                        al rispettivo indice fisico nel physical_stream.
+    """
+    # 1. Campi soggetti a Bit Stuffing
+    sof      = [DOMINANT]
+    id_bits  = id_to_bits(can_id)
+    rtr      = [DOMINANT] # Data frame
+    
+    # Control Field (6 bit): IDE (1) + r0 (1) + DLC (4)
+    dlc_val  = len(data)
+    dlc_bits = [(dlc_val >> i) & 1 for i in range(3, -1, -1)]
+    control_bits = [DOMINANT, DOMINANT] + dlc_bits
+    
+    data_bits = data_to_bits(data)
+    
+    header_bits = sof + id_bits + rtr + control_bits
+    crc_bits    = calculate_mock_crc(header_bits + data_bits)
+    
+    stuffable_section = header_bits + data_bits + crc_bits
+    
+    # Applicazione Bit Stuffing
+    stuffed_section = []
+    data_index_map = []
+    
+    count = 0
+    last_bit = -1
+    logical_data_start = len(header_bits)
+    logical_data_end = logical_data_start + len(data_bits)
+    
+    for i, bit in enumerate(stuffable_section):
+        if bit == last_bit:
+            count += 1
+        else:
+            count = 1
+            last_bit = bit
+
+        stuffed_section.append(bit)
+        
+        # Mappatura specifica per gli indici del campo dati
+        if logical_data_start <= i < logical_data_end:
+            data_index_map.append(len(stuffed_section) - 1)
+
+        if count == 5:
+            stuff_bit = 1 - last_bit
+            stuffed_section.append(stuff_bit)
+            count = 1
+            last_bit = stuff_bit
+            
+    # 2. Campi NON soggetti a Bit Stuffing
+    crc_delim  = [RECESSIVE]
+    ack_slot   = [RECESSIVE] # Trasmesso come recessivo
+    ack_delim  = [RECESSIVE]
+    eof        = [RECESSIVE] * 7
+    
+    tail_section = crc_delim + ack_slot + ack_delim + eof
+    
+    physical_stream = stuffed_section + tail_section
+    return physical_stream, data_index_map
 
 
 class CANBus:
@@ -68,45 +141,38 @@ class CANBus:
             f"CAN-ID=0x{frame.can_id:03X}  malicious={frame.is_malicious}{RESET}"
         )
 
-        id_bits   = _id_to_bits(frame.can_id)
-        data_bits = _data_to_bits(frame.data)
-
-        log.bits("CAN-ID bits (11-bit):", id_bits,   YELLOW)
-        log.bits("DATA bits:",            data_bits,  WHITE)
+        physical_stream, _ = build_physical_frame(frame.can_id, frame.data)
+        log.bits("PHYSICAL bits:", physical_stream, YELLOW)
 
         if concurrent is not None:
             log.bus(f"{MAGENTA}\n[BUS] Simultaneous transmissions → ARBITRATION{RESET}")
-            victim_id_bits   = _id_to_bits(concurrent.can_id)
-            attacker_id_bits = id_bits
-            log.bits("Victim  CAN-ID bits:",  victim_id_bits,   GREEN)
-            log.bits("Attacker CAN-ID bits:", attacker_id_bits, RED)
+            victim_stream, _ = build_physical_frame(concurrent.can_id, concurrent.data)
 
             winner_id = "TIE"
-            for i, (vb, ab) in enumerate(zip(victim_id_bits, attacker_id_bits)):
+            for i, (vb, ab) in enumerate(zip(victim_stream, physical_stream)):
                 bus_bit = DOMINANT if (vb == DOMINANT or ab == DOMINANT) else RECESSIVE
                 if vb != ab:
                     winner_id = (concurrent.sender_id if vb == DOMINANT else frame.sender_id)
                     log.bus(
-                        f"{MAGENTA}  Arbitration lost at bit {i}: "
+                        f"{MAGENTA}  Arbitration lost at physical bit {i}: "
                         f"bus={bus_bit}  victim={vb}  attacker={ab}  "
                         f"→ winner={winner_id}{RESET}"
                     )
                     break
             if winner_id == "TIE":
-                log.bus(f"{MAGENTA}  Arbitration: SAME ID → both transmit together (WeepingCAN){RESET}")
+                log.bus(f"{MAGENTA}  Arbitration: SAME ID → both transmit together{RESET}")
 
         if frame.is_malicious and frame.inject_recessive_at is not None:
             inject_pos = frame.inject_recessive_at
-            log.bus(f"{RED}\n[BUS] ATTACKER injects RECESSIVE bit at position {inject_pos}{RESET}")
+            log.bus(f"{RED}\n[BUS] ATTACKER injects RECESSIVE bit at physical position {inject_pos}{RESET}")
 
-            victim_data_bits = _data_to_bits(concurrent.data) if concurrent else data_bits[:]
-            victim_full = (
-                _id_to_bits(concurrent.can_id if concurrent else frame.can_id)
-                + victim_data_bits
-            )
+            if concurrent:
+                victim_stream_local, _ = build_physical_frame(concurrent.can_id, concurrent.data)
+            else:
+                victim_stream_local = physical_stream
 
+            victim_sent = victim_stream_local[inject_pos] if inject_pos < len(victim_stream_local) else DOMINANT
             attacker_sent = RECESSIVE
-            victim_sent   = victim_full[inject_pos] if inject_pos < len(victim_full) else DOMINANT
             bus_result    = DOMINANT if (victim_sent == DOMINANT or attacker_sent == DOMINANT) else RECESSIVE
 
             log.bits(f"Attacker bit @ pos {inject_pos}:", [attacker_sent], RED)
@@ -154,7 +220,6 @@ class CANBus:
             log.tec(f"{YELLOW}  Victim   ({victim_name})   TEC: {old} → {victim_node.tec}{RESET}")
             victim_node._check_state_transition()
 
-            # Step 2: victim retransmits the frame after the error → TEC Victim -1
             if victim_node.state != "Bus-Off":
                 log.tec(f"{GREEN}\n[BUS] Victim ({victim_name}) retransmits... SUCCESS → TEC -1{RESET}")
                 old = victim_node.tec
@@ -164,10 +229,6 @@ class CANBus:
                 victim_node._check_state_transition()
             else:
                 log.tec(f"{RED}\n[BUS] Victim ({victim_name}) is BUS-OFF — cannot retransmit!{RESET}")
-
-        # NOTE: attacker state transition is intentionally deferred to after
-        # transmit_valid() so that _check_state_transition reflects the full
-        # cycle balance (+8 error  −5 valid msgs = net +3), not a transient +8.
 
     def _deliver_frame(self, frame: CANFrame) -> None:
         for name, node in self._nodes.items():

@@ -1,79 +1,104 @@
 """
 simulation.py
 -------------
-Orchestrates the WeepingCAN simulation.
-Initialises the SimLogger so every module writes to the same .log / .jsonl files.
+Orchestrates the WeepingCAN simulation using a Discrete Event Simulation (DES) model.
+Time is tracked in microseconds (µs) based on baud rate, entirely replacing time.sleep().
 """
 
 import sys
-import time
 
 from logger      import init_logger, get_logger, RED, GREEN, YELLOW, CYAN, BOLD, RESET
-from can_bus     import CANBus
+from can_bus     import CANBus, build_physical_frame
 from ecu         import ECUState
 from victim_ecu  import VictimECU
 from attacker_ecu import AttackerECU
 
-
 BANNER = f"""
-{CYAN}  WeepingCAN Bus-Off Attack Simulator{RESET}
-{CYAN}  Stealth variant — attacker stays Error-Active throughout{RESET}
+{CYAN}  WeepingCAN Bus-Off Attack Simulator (DES Engine){RESET}
+{CYAN}  Time resolution: Microseconds (µs) | Baud Rate: 500 kbps{RESET}
 """
 
+# Parametri fisici della rete
+BAUD_RATE_KBPS = 500
+BIT_TIME_US    = 1000.0 / BAUD_RATE_KBPS  # A 500 kbps, 1 bit = 2.0 µs
 
-def run_simulation(max_cycles: int | None = None,
-                   delay:      float = 0.05,
-                   verbose:    bool  = True,
-                   log_dir:    str   = "logs",
-                   no_log:     bool  = False) -> None:
+def run_simulation(max_time_ms: float | None = None,
+                   verbose:     bool  = True,
+                   log_dir:     str   = "logs",
+                   no_log:      bool  = False) -> None:
 
-    # ── Init logger ────────────────────────────────────────────────────────────
-    logger = init_logger(
-        log_dir  = log_dir,
-        run_name = "weepingcan",
-        console  = True,          # always print to stdout
-    )
-
-    # Print and log the banner
+    logger = init_logger(log_dir=log_dir, run_name="weepingcan_des", console=True)
     logger.raw(BANNER)
-    logger.raw(
-        f"  Log file  : {logger.get_log_path()}\n"
-        f"  JSON log  : {logger.get_json_path()}"
-    )
 
-    # ── Setup ──────────────────────────────────────────────────────────────────
     VICTIM_CAN_ID = 0x100
-    VICTIM_PERIOD = 10
+    VICTIM_PERIOD_MS = 10.0
+    VICTIM_PERIOD_US = VICTIM_PERIOD_MS * 1000.0
 
     bus      = CANBus(verbose=verbose)
-    victim   = VictimECU(can_id=VICTIM_CAN_ID, period_ms=VICTIM_PERIOD, verbose=verbose)
+    victim   = VictimECU(can_id=VICTIM_CAN_ID, period_ms=int(VICTIM_PERIOD_MS), verbose=verbose)
     attacker = AttackerECU(target_can_id=VICTIM_CAN_ID, verbose=verbose)
 
     victim.attach(bus)
     attacker.attach(bus)
-    attacker.analyze_pattern(VICTIM_CAN_ID, VICTIM_PERIOD)
+    attacker.analyze_pattern(VICTIM_CAN_ID, int(VICTIM_PERIOD_MS))
 
-    logger.raw(f"\n{BOLD}{CYAN}Initial state:{RESET}")
-    logger.raw(f"  {victim.status()}")
-    logger.raw(f"  {attacker.status()}\n")
-
-    # ── Main loop ──────────────────────────────────────────────────────────────
+    # Variabili temporali DES
+    clock_us = 0.0
+    victim_next_tx_us = 0.0
+    attacker_busy_until_us = 0.0
     cycle = 0
+
+    max_time_us = (max_time_ms * 1000.0) if max_time_ms else float('inf')
+
     try:
-        while max_cycles is None or cycle < max_cycles:
+        while clock_us < max_time_us:
+            # Avanza il tempo al prossimo evento della vittima
+            clock_us = victim_next_tx_us
             cycle += 1
+
+            logger.raw(f"\n{BOLD}{CYAN}--- TIMESTAMP: {clock_us/1000.0:.3f} ms ---{RESET}")
 
             try:
                 victim_frame = victim.broadcast()
             except RuntimeError:
                 break
 
+            # Calcolo durata fisica del frame della vittima
+            physical_stream, _ = build_physical_frame(victim_frame.can_id, victim_frame.data)
+            frame_duration_us = len(physical_stream) * BIT_TIME_US
+
+            # 1. Verifica congestione: l'attaccante è libero?
+            if clock_us < attacker_busy_until_us:
+                logger.raw(
+                    f"{YELLOW}[SIM] Attacker BUSY cooling down "
+                    f"(until {attacker_busy_until_us/1000.0:.3f} ms). Missed opportunity!{RESET}"
+                )
+                bus.transmit(victim_frame)
+                victim_next_tx_us += VICTIM_PERIOD_US
+                continue
+
+            # 2. L'attaccante è libero, esegue logica di attacco
             ok = attacker.attack(victim_frame)
             if not ok:
-                logger.raw(f"\n{RED}[SIM] Attacker could not attack. Stopping.{RESET}")
                 break
 
-            # Per-cycle summary (goes to console + both log files)
+            # 3. Aggiornamento stato temporale basato sulle azioni intraprese
+            if attacker._last_action == "ATTACK":
+                # La vittima ritrasmette (costa frame_duration_us)
+                # L'attaccante invia frame di raffreddamento validi (N_VALID_MSGS * frame_duration_us)
+                cooldown_time_us = frame_duration_us + (attacker.valid_msgs_sent_last_cycle * frame_duration_us)
+                attacker_busy_until_us = clock_us + cooldown_time_us
+            elif attacker._last_action == "SKIP":
+                # L'attaccante salta e invia frame di raffreddamento
+                cooldown_time_us = attacker.valid_msgs_sent_last_cycle * frame_duration_us
+                attacker_busy_until_us = clock_us + cooldown_time_us
+            elif attacker._last_action == "MISTIMED":
+                # Frame vittima passa normalmente
+                attacker_busy_until_us = clock_us + frame_duration_us
+
+            # Schedula prossimo frame vittima
+            victim_next_tx_us += VICTIM_PERIOD_US
+
             logger.cycle_summary(
                 cycle          = cycle,
                 victim_tec     = victim.tec,
@@ -85,7 +110,7 @@ def run_simulation(max_cycles: int | None = None,
             if victim.state == ECUState.BUS_OFF:
                 msg = (
                     f"\n{BOLD}{RED}{'═'*60}{RESET}\n"
-                    f"{BOLD}{RED}  VICTIM HAS GONE BUS-OFF after {cycle} cycle(s)!{RESET}\n"
+                    f"{BOLD}{RED}  VICTIM HAS GONE BUS-OFF at {clock_us/1000.0:.3f} ms!{RESET}\n"
                     f"{BOLD}{RED}{'═'*60}{RESET}"
                 )
                 logger.summary(msg)
@@ -98,65 +123,22 @@ def run_simulation(max_cycles: int | None = None,
                 )
                 break
 
-            time.sleep(delay)
-
     except KeyboardInterrupt:
         logger.raw(f"\n{YELLOW}[SIM] Interrupted by user.{RESET}")
 
-    # ── Final report ───────────────────────────────────────────────────────────
     sep = BOLD + "═" * 60 + RESET
     logger.summary(f"\n{sep}")
-    logger.summary(f"{BOLD}{CYAN}  SIMULATION COMPLETE{RESET}")
+    logger.summary(f"{BOLD}{CYAN}  SIMULATION COMPLETE (Time: {clock_us/1000.0:.3f} ms){RESET}")
     logger.summary(f"{sep}")
-    logger.summary(f"\n  Cycles executed : {cycle}")
     logger.summary(f"  {victim.status()}")
     logger.summary(f"  {attacker.status()}")
     logger.summary(f"\n  {attacker.stats()}")
 
-    if attacker.state == ECUState.ERROR_ACTIVE:
-        logger.summary(f"\n  {GREEN}Attacker remained in Error-Active throughout.{RESET}")
-    else:
-        logger.summary(f"\n  {RED}Attacker left Error-Active — attack model violated!{RESET}")
-
-    logger.summary(
-        f"\n  Log saved to : {logger.get_log_path()}"
-        f"\n  JSON saved to: {logger.get_json_path()}"
-    )
-    logger.raw("")
-
-
-# ── Entry point ────────────────────────────────────────────────────────────────
 if __name__ == "__main__":
     import argparse
-
-    parser = argparse.ArgumentParser(
-        description="WeepingCAN Bus-Off Attack Simulator",
-        formatter_class=argparse.RawDescriptionHelpFormatter,
-        epilog="""
-Examples:
-  python simulation.py                        # verbose, saves logs/
-  python simulation.py --quiet                # suppress bit dumps
-  python simulation.py --max-cycles 200       # more cycles
-  python simulation.py --log-dir /tmp/can     # custom log directory
-  python simulation.py --no-log               # disable file logging
-        """,
-    )
-    parser.add_argument("--max-cycles", type=int,   default=None,
-                        help="Max simulation cycles (default: unlimited)")
-    parser.add_argument("--delay",      type=float, default=0.05,
-                        help="Seconds between cycles (default: 0.05)")
-    parser.add_argument("--quiet",      action="store_true",
-                        help="Suppress per-frame bit-stream dumps")
-    parser.add_argument("--log-dir",    type=str,   default="logs",
-                        help="Directory for log files (default: logs/)")
-    parser.add_argument("--no-log",     action="store_true",
-                        help="Disable file logging (console only)")
+    parser = argparse.ArgumentParser(description="WeepingCAN DES Simulator")
+    parser.add_argument("--max-time-ms", type=float, default=2000.0, help="Max sim time in ms")
+    parser.add_argument("--quiet", action="store_true", help="Suppress bit dumps")
     args = parser.parse_args()
-
-    run_simulation(
-        max_cycles = args.max_cycles,
-        delay      = args.delay,
-        verbose    = not args.quiet,
-        log_dir    = args.log_dir,
-        no_log     = args.no_log,
-    )
+    
+    run_simulation(max_time_ms=args.max_time_ms, verbose=not args.quiet)
