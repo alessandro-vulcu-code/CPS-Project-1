@@ -1,0 +1,2230 @@
+2026-03-03 14:58:24.235 | INFO     | WeepingCAN simulation log started — 2026-03-03T14:58:24.235514
+2026-03-03 14:58:24.235 | INFO     | Plain log : logs/weepingcan_20260303_145824.log
+2026-03-03 14:58:24.235 | INFO     | JSON log  : logs/weepingcan_20260303_145824.jsonl
+2026-03-03 14:58:24.235 | INFO     | 
+  WeepingCAN Bus-Off Attack Simulator
+  Stealth variant — attacker stays Error-Active throughout
+
+2026-03-03 14:58:24.235 | INFO     |   Log file  : logs/weepingcan_20260303_145824.log
+  JSON log  : logs/weepingcan_20260303_145824.jsonl
+2026-03-03 14:58:24.236 | BUS      | [BUS] Node registered: VICTIM
+2026-03-03 14:58:24.236 | BUS      | [BUS] Node registered: ATTACKER
+2026-03-03 14:58:24.236 | ATTACK   | 
+[ATTACKER] Pattern analysis complete → target CAN-ID=0x100  period≈10ms
+2026-03-03 14:58:24.236 | INFO     | 
+Initial state:
+2026-03-03 14:58:24.236 | INFO     |   [VICTIM]  TEC=  0  state=Error-Active
+2026-03-03 14:58:24.236 | INFO     |   [ATTACKER]  TEC=  0  state=Error-Active
+
+2026-03-03 14:58:24.236 | BUS      | 
+[VICTIM] Preparing periodic frame  CAN-ID=0x100  seq=0x01  data=['0xde', '0xad', '0xbe', '0x1']
+2026-03-03 14:58:24.236 | ATTACK   | 
+══════════════════════════════════════════════════════════════════════
+[ATTACKER] ATTACK CYCLE #1  (attacker TEC=0)
+══════════════════════════════════════════════════════════════════════
+2026-03-03 14:58:24.236 | ATTACK   | 
+[ATTACKER] Building attack frame  CAN-ID=0x100  recessive-inject-at physical bit 36  (targeted unstuffed safe pool: [13, 18, 20, 22, 25, 28, 34])
+2026-03-03 14:58:24.236 | INFO     | ──────────────────────────────────────────────────────────────────────
+2026-03-03 14:58:24.236 | BUS      | [BUS] Transmission attempt  sender=ATTACKER  CAN-ID=0x100  malicious=True
+2026-03-03 14:58:24.236 | BITS     |   RAW bits (ID+Data):           0 0 1 0 0 0 0 0 0 0 0 1 1 0 1 1 1 1 0 1 0 1 0 1 1 0 1 1 0 1 1 1 1 1 0 0 0 0 0 0 0 0 1
+2026-03-03 14:58:24.236 | BITS     |   STUFFED bits:                 0 0 1 0 0 0 0 0 1 0 0 0 1 1 0 1 1 1 1 0 1 0 1 0 1 1 0 1 1 0 1 1 1 1 1 0 0 0 0 0 1 0 0 0 0 1
+2026-03-03 14:58:24.236 | BUS      | 
+[BUS] Simultaneous transmissions → ARBITRATION
+2026-03-03 14:58:24.236 | BUS      |   Arbitration: SAME ID → both transmit together (WeepingCAN)
+2026-03-03 14:58:24.236 | BUS      | 
+[BUS] ATTACKER injects RECESSIVE bit at physical position 36
+2026-03-03 14:58:24.237 | BITS     |   Attacker bit @ pos 36:        1
+2026-03-03 14:58:24.237 | BITS     |   Victim   bit @ pos 36:        0
+2026-03-03 14:58:24.237 | BITS     |   Bus result (wire-AND):        0
+2026-03-03 14:58:24.237 | BUS      | 
+[BUS] BIT ERROR detected by attacker (sent=1, read=0)
+2026-03-03 14:58:24.237 | ERRFLAG  | 
+[BUS] ══ ERROR FLAG SEQUENCE ══
+2026-03-03 14:58:24.237 | BITS     |   ACTIVE Error Flag (attacker): 0 0 0 0 0 0
+2026-03-03 14:58:24.237 | BITS     |   Error Delimiter:              1 1 1 1 1 1 1 1
+2026-03-03 14:58:24.237 | ERRFLAG  | 
+[BUS] TEC update (+8 to both nodes):
+2026-03-03 14:58:24.237 | ERRFLAG  |   Attacker (ATTACKER) TEC: 0 → 8
+2026-03-03 14:58:24.237 | ERRFLAG  |   Victim   (VICTIM)   TEC: 0 → 8
+2026-03-03 14:58:24.237 | ERRFLAG  | 
+[BUS] Victim (VICTIM) retransmits... SUCCESS → TEC -1
+2026-03-03 14:58:24.237 | ERRFLAG  |   Victim (VICTIM) TEC: 8 → 7  [cycle net so far: +7]
+2026-03-03 14:58:24.237 | ATTACK   | [ATTACKER] Step 1 — error injected: TEC +8: 0 → 8
+2026-03-03 14:58:24.237 | BUS      | 
+[BUS] ATTACKER sends 5 valid frame(s) → TEC -5
+2026-03-03 14:58:24.237 | BUS      |   ATTACKER TEC now: 3
+2026-03-03 14:58:24.237 | ATTACK   | [ATTACKER] Step 3 — 5 valid frames: TEC −5: 8 → 3  [cycle net: +3  | victim cycle net: +7]
+2026-03-03 14:58:24.237 | ATTACK   | 
+[ATTACKER] After attack #1: TEC=3  state=Error-Active
+2026-03-03 14:58:24.237 | CYCLE    | 
+──────────────────────────────────────────────────
+  Cycle   1  |  [VICTIM]   TEC=  7  state=Error-Active
+           |  [ATTACKER] TEC=  3  state=Error-Active
+──────────────────────────────────────────────────
+2026-03-03 14:58:24.288 | BUS      | 
+[VICTIM] Preparing periodic frame  CAN-ID=0x100  seq=0x02  data=['0xde', '0xad', '0xbe', '0x2']
+2026-03-03 14:58:24.288 | ATTACK   | 
+══════════════════════════════════════════════════════════════════════
+[ATTACKER] ATTACK CYCLE #2  (attacker TEC=3)
+══════════════════════════════════════════════════════════════════════
+2026-03-03 14:58:24.288 | ATTACK   | 
+[ATTACKER] Building attack frame  CAN-ID=0x100  recessive-inject-at physical bit 21  (targeted unstuffed safe pool: [13, 18, 20, 22, 25, 28, 34])
+2026-03-03 14:58:24.288 | INFO     | ──────────────────────────────────────────────────────────────────────
+2026-03-03 14:58:24.288 | BUS      | [BUS] Transmission attempt  sender=ATTACKER  CAN-ID=0x100  malicious=True
+2026-03-03 14:58:24.288 | BITS     |   RAW bits (ID+Data):           0 0 1 0 0 0 0 0 0 0 0 1 1 0 1 1 1 1 0 1 0 1 0 1 1 0 1 1 0 1 1 1 1 1 0 0 0 0 0 0 0 1 0
+2026-03-03 14:58:24.288 | BITS     |   STUFFED bits:                 0 0 1 0 0 0 0 0 1 0 0 0 1 1 0 1 1 1 1 0 1 0 1 0 1 1 0 1 1 0 1 1 1 1 1 0 0 0 0 0 1 0 0 0 1 0
+2026-03-03 14:58:24.288 | BUS      | 
+[BUS] Simultaneous transmissions → ARBITRATION
+2026-03-03 14:58:24.288 | BUS      |   Arbitration: SAME ID → both transmit together (WeepingCAN)
+2026-03-03 14:58:24.288 | BUS      | 
+[BUS] ATTACKER injects RECESSIVE bit at physical position 21
+2026-03-03 14:58:24.288 | BITS     |   Attacker bit @ pos 21:        1
+2026-03-03 14:58:24.288 | BITS     |   Victim   bit @ pos 21:        0
+2026-03-03 14:58:24.288 | BITS     |   Bus result (wire-AND):        0
+2026-03-03 14:58:24.288 | BUS      | 
+[BUS] BIT ERROR detected by attacker (sent=1, read=0)
+2026-03-03 14:58:24.288 | ERRFLAG  | 
+[BUS] ══ ERROR FLAG SEQUENCE ══
+2026-03-03 14:58:24.288 | BITS     |   ACTIVE Error Flag (attacker): 0 0 0 0 0 0
+2026-03-03 14:58:24.288 | BITS     |   Error Delimiter:              1 1 1 1 1 1 1 1
+2026-03-03 14:58:24.288 | ERRFLAG  | 
+[BUS] TEC update (+8 to both nodes):
+2026-03-03 14:58:24.288 | ERRFLAG  |   Attacker (ATTACKER) TEC: 3 → 11
+2026-03-03 14:58:24.289 | ERRFLAG  |   Victim   (VICTIM)   TEC: 7 → 15
+2026-03-03 14:58:24.289 | ERRFLAG  | 
+[BUS] Victim (VICTIM) retransmits... SUCCESS → TEC -1
+2026-03-03 14:58:24.289 | ERRFLAG  |   Victim (VICTIM) TEC: 15 → 14  [cycle net so far: +7]
+2026-03-03 14:58:24.289 | ATTACK   | [ATTACKER] Step 1 — error injected: TEC +8: 3 → 11
+2026-03-03 14:58:24.289 | BUS      | 
+[BUS] ATTACKER sends 5 valid frame(s) → TEC -5
+2026-03-03 14:58:24.289 | BUS      |   ATTACKER TEC now: 6
+2026-03-03 14:58:24.289 | ATTACK   | [ATTACKER] Step 3 — 5 valid frames: TEC −5: 11 → 6  [cycle net: +3  | victim cycle net: +7]
+2026-03-03 14:58:24.289 | ATTACK   | 
+[ATTACKER] After attack #2: TEC=6  state=Error-Active
+2026-03-03 14:58:24.289 | CYCLE    | 
+──────────────────────────────────────────────────
+  Cycle   2  |  [VICTIM]   TEC= 14  state=Error-Active
+           |  [ATTACKER] TEC=  6  state=Error-Active
+──────────────────────────────────────────────────
+2026-03-03 14:58:24.339 | BUS      | 
+[VICTIM] Preparing periodic frame  CAN-ID=0x100  seq=0x03  data=['0xde', '0xad', '0xbe', '0x3']
+2026-03-03 14:58:24.339 | ATTACK   | 
+──────────────────────────────────────────────────────────────────────
+[ATTACKER] SKIP CYCLE #1  (attacker TEC=6 ≥ threshold=6)
+──────────────────────────────────────────────────────────────────────
+2026-03-03 14:58:24.339 | ATTACK   | [ATTACKER] Skip — victim transmits OK → Victim TEC: 14 → 13  (−1)
+2026-03-03 14:58:24.340 | BUS      | 
+[BUS] ATTACKER sends 5 valid frame(s) → TEC -5
+2026-03-03 14:58:24.340 | BUS      |   ATTACKER TEC now: 1
+2026-03-03 14:58:24.340 | ATTACK   | [ATTACKER] Skip — 5 valid frames: Attacker TEC: 6 → 1  (−5)
+2026-03-03 14:58:24.340 | ATTACK   | [ATTACKER] After skip #1: TEC=1  state=Error-Active  [cycle net attacker: -5  | cycle net victim: −1]
+2026-03-03 14:58:24.340 | CYCLE    | 
+──────────────────────────────────────────────────
+  Cycle   3  |  [VICTIM]   TEC= 13  state=Error-Active
+           |  [ATTACKER] TEC=  1  state=Error-Active
+──────────────────────────────────────────────────
+2026-03-03 14:58:24.390 | BUS      | 
+[VICTIM] Preparing periodic frame  CAN-ID=0x100  seq=0x04  data=['0xde', '0xad', '0xbe', '0x4']
+2026-03-03 14:58:24.391 | ATTACK   | 
+══════════════════════════════════════════════════════════════════════
+[ATTACKER] ATTACK CYCLE #3  (attacker TEC=1)
+══════════════════════════════════════════════════════════════════════
+2026-03-03 14:58:24.391 | ATTACK   | 
+[ATTACKER] Building attack frame  CAN-ID=0x100  recessive-inject-at physical bit 36  (targeted unstuffed safe pool: [13, 18, 20, 22, 25, 28, 34])
+2026-03-03 14:58:24.391 | INFO     | ──────────────────────────────────────────────────────────────────────
+2026-03-03 14:58:24.392 | BUS      | [BUS] Transmission attempt  sender=ATTACKER  CAN-ID=0x100  malicious=True
+2026-03-03 14:58:24.392 | BITS     |   RAW bits (ID+Data):           0 0 1 0 0 0 0 0 0 0 0 1 1 0 1 1 1 1 0 1 0 1 0 1 1 0 1 1 0 1 1 1 1 1 0 0 0 0 0 0 1 0 0
+2026-03-03 14:58:24.392 | BITS     |   STUFFED bits:                 0 0 1 0 0 0 0 0 1 0 0 0 1 1 0 1 1 1 1 0 1 0 1 0 1 1 0 1 1 0 1 1 1 1 1 0 0 0 0 0 1 0 0 1 0 0
+2026-03-03 14:58:24.392 | BUS      | 
+[BUS] Simultaneous transmissions → ARBITRATION
+2026-03-03 14:58:24.393 | BUS      |   Arbitration: SAME ID → both transmit together (WeepingCAN)
+2026-03-03 14:58:24.393 | BUS      | 
+[BUS] ATTACKER injects RECESSIVE bit at physical position 36
+2026-03-03 14:58:24.393 | BITS     |   Attacker bit @ pos 36:        1
+2026-03-03 14:58:24.393 | BITS     |   Victim   bit @ pos 36:        0
+2026-03-03 14:58:24.393 | BITS     |   Bus result (wire-AND):        0
+2026-03-03 14:58:24.393 | BUS      | 
+[BUS] BIT ERROR detected by attacker (sent=1, read=0)
+2026-03-03 14:58:24.394 | ERRFLAG  | 
+[BUS] ══ ERROR FLAG SEQUENCE ══
+2026-03-03 14:58:24.394 | BITS     |   ACTIVE Error Flag (attacker): 0 0 0 0 0 0
+2026-03-03 14:58:24.394 | BITS     |   Error Delimiter:              1 1 1 1 1 1 1 1
+2026-03-03 14:58:24.394 | ERRFLAG  | 
+[BUS] TEC update (+8 to both nodes):
+2026-03-03 14:58:24.394 | ERRFLAG  |   Attacker (ATTACKER) TEC: 1 → 9
+2026-03-03 14:58:24.395 | ERRFLAG  |   Victim   (VICTIM)   TEC: 13 → 21
+2026-03-03 14:58:24.395 | ERRFLAG  | 
+[BUS] Victim (VICTIM) retransmits... SUCCESS → TEC -1
+2026-03-03 14:58:24.395 | ERRFLAG  |   Victim (VICTIM) TEC: 21 → 20  [cycle net so far: +7]
+2026-03-03 14:58:24.395 | ATTACK   | [ATTACKER] Step 1 — error injected: TEC +8: 1 → 9
+2026-03-03 14:58:24.396 | BUS      | 
+[BUS] ATTACKER sends 5 valid frame(s) → TEC -5
+2026-03-03 14:58:24.396 | BUS      |   ATTACKER TEC now: 4
+2026-03-03 14:58:24.396 | ATTACK   | [ATTACKER] Step 3 — 5 valid frames: TEC −5: 9 → 4  [cycle net: +3  | victim cycle net: +7]
+2026-03-03 14:58:24.396 | ATTACK   | 
+[ATTACKER] After attack #3: TEC=4  state=Error-Active
+2026-03-03 14:58:24.396 | CYCLE    | 
+──────────────────────────────────────────────────
+  Cycle   4  |  [VICTIM]   TEC= 20  state=Error-Active
+           |  [ATTACKER] TEC=  4  state=Error-Active
+──────────────────────────────────────────────────
+2026-03-03 14:58:24.447 | BUS      | 
+[VICTIM] Preparing periodic frame  CAN-ID=0x100  seq=0x05  data=['0xde', '0xad', '0xbe', '0x5']
+2026-03-03 14:58:24.447 | ATTACK   | 
+══════════════════════════════════════════════════════════════════════
+[ATTACKER] ATTACK CYCLE #4  (attacker TEC=4)
+══════════════════════════════════════════════════════════════════════
+2026-03-03 14:58:24.447 | ATTACK   | 
+[ATTACKER] Building attack frame  CAN-ID=0x100  recessive-inject-at physical bit 21  (targeted unstuffed safe pool: [13, 18, 20, 22, 25, 28, 34])
+2026-03-03 14:58:24.448 | INFO     | ──────────────────────────────────────────────────────────────────────
+2026-03-03 14:58:24.448 | BUS      | [BUS] Transmission attempt  sender=ATTACKER  CAN-ID=0x100  malicious=True
+2026-03-03 14:58:24.448 | BITS     |   RAW bits (ID+Data):           0 0 1 0 0 0 0 0 0 0 0 1 1 0 1 1 1 1 0 1 0 1 0 1 1 0 1 1 0 1 1 1 1 1 0 0 0 0 0 0 1 0 1
+2026-03-03 14:58:24.448 | BITS     |   STUFFED bits:                 0 0 1 0 0 0 0 0 1 0 0 0 1 1 0 1 1 1 1 0 1 0 1 0 1 1 0 1 1 0 1 1 1 1 1 0 0 0 0 0 1 0 0 1 0 1
+2026-03-03 14:58:24.448 | BUS      | 
+[BUS] Simultaneous transmissions → ARBITRATION
+2026-03-03 14:58:24.449 | BUS      |   Arbitration: SAME ID → both transmit together (WeepingCAN)
+2026-03-03 14:58:24.449 | BUS      | 
+[BUS] ATTACKER injects RECESSIVE bit at physical position 21
+2026-03-03 14:58:24.449 | BITS     |   Attacker bit @ pos 21:        1
+2026-03-03 14:58:24.450 | BITS     |   Victim   bit @ pos 21:        0
+2026-03-03 14:58:24.450 | BITS     |   Bus result (wire-AND):        0
+2026-03-03 14:58:24.450 | BUS      | 
+[BUS] BIT ERROR detected by attacker (sent=1, read=0)
+2026-03-03 14:58:24.450 | ERRFLAG  | 
+[BUS] ══ ERROR FLAG SEQUENCE ══
+2026-03-03 14:58:24.450 | BITS     |   ACTIVE Error Flag (attacker): 0 0 0 0 0 0
+2026-03-03 14:58:24.450 | BITS     |   Error Delimiter:              1 1 1 1 1 1 1 1
+2026-03-03 14:58:24.450 | ERRFLAG  | 
+[BUS] TEC update (+8 to both nodes):
+2026-03-03 14:58:24.451 | ERRFLAG  |   Attacker (ATTACKER) TEC: 4 → 12
+2026-03-03 14:58:24.451 | ERRFLAG  |   Victim   (VICTIM)   TEC: 20 → 28
+2026-03-03 14:58:24.451 | ERRFLAG  | 
+[BUS] Victim (VICTIM) retransmits... SUCCESS → TEC -1
+2026-03-03 14:58:24.451 | ERRFLAG  |   Victim (VICTIM) TEC: 28 → 27  [cycle net so far: +7]
+2026-03-03 14:58:24.452 | ATTACK   | [ATTACKER] Step 1 — error injected: TEC +8: 4 → 12
+2026-03-03 14:58:24.452 | BUS      | 
+[BUS] ATTACKER sends 5 valid frame(s) → TEC -5
+2026-03-03 14:58:24.452 | BUS      |   ATTACKER TEC now: 7
+2026-03-03 14:58:24.452 | ATTACK   | [ATTACKER] Step 3 — 5 valid frames: TEC −5: 12 → 7  [cycle net: +3  | victim cycle net: +7]
+2026-03-03 14:58:24.452 | ATTACK   | 
+[ATTACKER] After attack #4: TEC=7  state=Error-Active
+2026-03-03 14:58:24.452 | CYCLE    | 
+──────────────────────────────────────────────────
+  Cycle   5  |  [VICTIM]   TEC= 27  state=Error-Active
+           |  [ATTACKER] TEC=  7  state=Error-Active
+──────────────────────────────────────────────────
+2026-03-03 14:58:24.503 | BUS      | 
+[VICTIM] Preparing periodic frame  CAN-ID=0x100  seq=0x06  data=['0xde', '0xad', '0xbe', '0x6']
+2026-03-03 14:58:24.503 | ATTACK   | 
+──────────────────────────────────────────────────────────────────────
+[ATTACKER] SKIP CYCLE #2  (attacker TEC=7 ≥ threshold=6)
+──────────────────────────────────────────────────────────────────────
+2026-03-03 14:58:24.503 | ATTACK   | [ATTACKER] Skip — victim transmits OK → Victim TEC: 27 → 26  (−1)
+2026-03-03 14:58:24.504 | BUS      | 
+[BUS] ATTACKER sends 5 valid frame(s) → TEC -5
+2026-03-03 14:58:24.504 | BUS      |   ATTACKER TEC now: 2
+2026-03-03 14:58:24.504 | ATTACK   | [ATTACKER] Skip — 5 valid frames: Attacker TEC: 7 → 2  (−5)
+2026-03-03 14:58:24.504 | ATTACK   | [ATTACKER] After skip #2: TEC=2  state=Error-Active  [cycle net attacker: -5  | cycle net victim: −1]
+2026-03-03 14:58:24.504 | CYCLE    | 
+──────────────────────────────────────────────────
+  Cycle   6  |  [VICTIM]   TEC= 26  state=Error-Active
+           |  [ATTACKER] TEC=  2  state=Error-Active
+──────────────────────────────────────────────────
+2026-03-03 14:58:24.558 | BUS      | 
+[VICTIM] Preparing periodic frame  CAN-ID=0x100  seq=0x07  data=['0xde', '0xad', '0xbe', '0x7']
+2026-03-03 14:58:24.558 | ATTACK   | 
+══════════════════════════════════════════════════════════════════════
+[ATTACKER] ATTACK CYCLE #5  (attacker TEC=2)
+══════════════════════════════════════════════════════════════════════
+2026-03-03 14:58:24.559 | ATTACK   | 
+[ATTACKER] Building attack frame  CAN-ID=0x100  recessive-inject-at physical bit 14  (targeted unstuffed safe pool: [13, 18, 20, 22, 25, 28, 34])
+2026-03-03 14:58:24.559 | INFO     | ──────────────────────────────────────────────────────────────────────
+2026-03-03 14:58:24.559 | BUS      | [BUS] Transmission attempt  sender=ATTACKER  CAN-ID=0x100  malicious=True
+2026-03-03 14:58:24.559 | BITS     |   RAW bits (ID+Data):           0 0 1 0 0 0 0 0 0 0 0 1 1 0 1 1 1 1 0 1 0 1 0 1 1 0 1 1 0 1 1 1 1 1 0 0 0 0 0 0 1 1 1
+2026-03-03 14:58:24.559 | BITS     |   STUFFED bits:                 0 0 1 0 0 0 0 0 1 0 0 0 1 1 0 1 1 1 1 0 1 0 1 0 1 1 0 1 1 0 1 1 1 1 1 0 0 0 0 0 1 0 0 1 1 1
+2026-03-03 14:58:24.559 | BUS      | 
+[BUS] Simultaneous transmissions → ARBITRATION
+2026-03-03 14:58:24.559 | BUS      |   Arbitration: SAME ID → both transmit together (WeepingCAN)
+2026-03-03 14:58:24.559 | BUS      | 
+[BUS] ATTACKER injects RECESSIVE bit at physical position 14
+2026-03-03 14:58:24.560 | BITS     |   Attacker bit @ pos 14:        1
+2026-03-03 14:58:24.560 | BITS     |   Victim   bit @ pos 14:        0
+2026-03-03 14:58:24.560 | BITS     |   Bus result (wire-AND):        0
+2026-03-03 14:58:24.560 | BUS      | 
+[BUS] BIT ERROR detected by attacker (sent=1, read=0)
+2026-03-03 14:58:24.560 | ERRFLAG  | 
+[BUS] ══ ERROR FLAG SEQUENCE ══
+2026-03-03 14:58:24.563 | BITS     |   ACTIVE Error Flag (attacker): 0 0 0 0 0 0
+2026-03-03 14:58:24.564 | BITS     |   Error Delimiter:              1 1 1 1 1 1 1 1
+2026-03-03 14:58:24.564 | ERRFLAG  | 
+[BUS] TEC update (+8 to both nodes):
+2026-03-03 14:58:24.564 | ERRFLAG  |   Attacker (ATTACKER) TEC: 2 → 10
+2026-03-03 14:58:24.564 | ERRFLAG  |   Victim   (VICTIM)   TEC: 26 → 34
+2026-03-03 14:58:24.564 | ERRFLAG  | 
+[BUS] Victim (VICTIM) retransmits... SUCCESS → TEC -1
+2026-03-03 14:58:24.565 | ERRFLAG  |   Victim (VICTIM) TEC: 34 → 33  [cycle net so far: +7]
+2026-03-03 14:58:24.566 | ATTACK   | [ATTACKER] Step 1 — error injected: TEC +8: 2 → 10
+2026-03-03 14:58:24.567 | BUS      | 
+[BUS] ATTACKER sends 5 valid frame(s) → TEC -5
+2026-03-03 14:58:24.567 | BUS      |   ATTACKER TEC now: 5
+2026-03-03 14:58:24.567 | ATTACK   | [ATTACKER] Step 3 — 5 valid frames: TEC −5: 10 → 5  [cycle net: +3  | victim cycle net: +7]
+2026-03-03 14:58:24.567 | ATTACK   | 
+[ATTACKER] After attack #5: TEC=5  state=Error-Active
+2026-03-03 14:58:24.567 | CYCLE    | 
+──────────────────────────────────────────────────
+  Cycle   7  |  [VICTIM]   TEC= 33  state=Error-Active
+           |  [ATTACKER] TEC=  5  state=Error-Active
+──────────────────────────────────────────────────
+2026-03-03 14:58:24.618 | BUS      | 
+[VICTIM] Preparing periodic frame  CAN-ID=0x100  seq=0x08  data=['0xde', '0xad', '0xbe', '0x8']
+2026-03-03 14:58:24.618 | ATTACK   | 
+══════════════════════════════════════════════════════════════════════
+[ATTACKER] ATTACK CYCLE #6  (attacker TEC=5)
+══════════════════════════════════════════════════════════════════════
+2026-03-03 14:58:24.619 | ATTACK   | 
+[ATTACKER] Building attack frame  CAN-ID=0x100  recessive-inject-at physical bit 14  (targeted unstuffed safe pool: [13, 18, 20, 22, 25, 28, 34])
+2026-03-03 14:58:24.620 | INFO     | ──────────────────────────────────────────────────────────────────────
+2026-03-03 14:58:24.621 | BUS      | [BUS] Transmission attempt  sender=ATTACKER  CAN-ID=0x100  malicious=True
+2026-03-03 14:58:24.621 | BITS     |   RAW bits (ID+Data):           0 0 1 0 0 0 0 0 0 0 0 1 1 0 1 1 1 1 0 1 0 1 0 1 1 0 1 1 0 1 1 1 1 1 0 0 0 0 0 1 0 0 0
+2026-03-03 14:58:24.621 | BITS     |   STUFFED bits:                 0 0 1 0 0 0 0 0 1 0 0 0 1 1 0 1 1 1 1 0 1 0 1 0 1 1 0 1 1 0 1 1 1 1 1 0 0 0 0 0 1 0 1 0 0 0
+2026-03-03 14:58:24.621 | BUS      | 
+[BUS] Simultaneous transmissions → ARBITRATION
+2026-03-03 14:58:24.623 | BUS      |   Arbitration: SAME ID → both transmit together (WeepingCAN)
+2026-03-03 14:58:24.623 | BUS      | 
+[BUS] ATTACKER injects RECESSIVE bit at physical position 14
+2026-03-03 14:58:24.623 | BITS     |   Attacker bit @ pos 14:        1
+2026-03-03 14:58:24.623 | BITS     |   Victim   bit @ pos 14:        0
+2026-03-03 14:58:24.625 | BITS     |   Bus result (wire-AND):        0
+2026-03-03 14:58:24.625 | BUS      | 
+[BUS] BIT ERROR detected by attacker (sent=1, read=0)
+2026-03-03 14:58:24.626 | ERRFLAG  | 
+[BUS] ══ ERROR FLAG SEQUENCE ══
+2026-03-03 14:58:24.626 | BITS     |   ACTIVE Error Flag (attacker): 0 0 0 0 0 0
+2026-03-03 14:58:24.627 | BITS     |   Error Delimiter:              1 1 1 1 1 1 1 1
+2026-03-03 14:58:24.627 | ERRFLAG  | 
+[BUS] TEC update (+8 to both nodes):
+2026-03-03 14:58:24.627 | ERRFLAG  |   Attacker (ATTACKER) TEC: 5 → 13
+2026-03-03 14:58:24.627 | ERRFLAG  |   Victim   (VICTIM)   TEC: 33 → 41
+2026-03-03 14:58:24.629 | ERRFLAG  | 
+[BUS] Victim (VICTIM) retransmits... SUCCESS → TEC -1
+2026-03-03 14:58:24.629 | ERRFLAG  |   Victim (VICTIM) TEC: 41 → 40  [cycle net so far: +7]
+2026-03-03 14:58:24.629 | ATTACK   | [ATTACKER] Step 1 — error injected: TEC +8: 5 → 13
+2026-03-03 14:58:24.632 | BUS      | 
+[BUS] ATTACKER sends 5 valid frame(s) → TEC -5
+2026-03-03 14:58:24.633 | BUS      |   ATTACKER TEC now: 8
+2026-03-03 14:58:24.635 | ATTACK   | [ATTACKER] Step 3 — 5 valid frames: TEC −5: 13 → 8  [cycle net: +3  | victim cycle net: +7]
+2026-03-03 14:58:24.637 | ATTACK   | 
+[ATTACKER] After attack #6: TEC=8  state=Error-Active
+2026-03-03 14:58:24.638 | CYCLE    | 
+──────────────────────────────────────────────────
+  Cycle   8  |  [VICTIM]   TEC= 40  state=Error-Active
+           |  [ATTACKER] TEC=  8  state=Error-Active
+──────────────────────────────────────────────────
+2026-03-03 14:58:24.688 | BUS      | 
+[VICTIM] Preparing periodic frame  CAN-ID=0x100  seq=0x09  data=['0xde', '0xad', '0xbe', '0x9']
+2026-03-03 14:58:24.689 | ATTACK   | 
+──────────────────────────────────────────────────────────────────────
+[ATTACKER] SKIP CYCLE #3  (attacker TEC=8 ≥ threshold=6)
+──────────────────────────────────────────────────────────────────────
+2026-03-03 14:58:24.689 | ATTACK   | [ATTACKER] Skip — victim transmits OK → Victim TEC: 40 → 39  (−1)
+2026-03-03 14:58:24.689 | BUS      | 
+[BUS] ATTACKER sends 5 valid frame(s) → TEC -5
+2026-03-03 14:58:24.689 | BUS      |   ATTACKER TEC now: 3
+2026-03-03 14:58:24.689 | ATTACK   | [ATTACKER] Skip — 5 valid frames: Attacker TEC: 8 → 3  (−5)
+2026-03-03 14:58:24.689 | ATTACK   | [ATTACKER] After skip #3: TEC=3  state=Error-Active  [cycle net attacker: -5  | cycle net victim: −1]
+2026-03-03 14:58:24.690 | CYCLE    | 
+──────────────────────────────────────────────────
+  Cycle   9  |  [VICTIM]   TEC= 39  state=Error-Active
+           |  [ATTACKER] TEC=  3  state=Error-Active
+──────────────────────────────────────────────────
+2026-03-03 14:58:24.741 | BUS      | 
+[VICTIM] Preparing periodic frame  CAN-ID=0x100  seq=0x0a  data=['0xde', '0xad', '0xbe', '0xa']
+2026-03-03 14:58:24.742 | ATTACK   | 
+══════════════════════════════════════════════════════════════════════
+[ATTACKER] ATTACK CYCLE #7  (attacker TEC=3)
+══════════════════════════════════════════════════════════════════════
+2026-03-03 14:58:24.742 | ATTACK   | 
+[ATTACKER] Building attack frame  CAN-ID=0x100  recessive-inject-at physical bit 29  (targeted unstuffed safe pool: [13, 18, 20, 22, 25, 28, 34])
+2026-03-03 14:58:24.743 | INFO     | ──────────────────────────────────────────────────────────────────────
+2026-03-03 14:58:24.743 | BUS      | [BUS] Transmission attempt  sender=ATTACKER  CAN-ID=0x100  malicious=True
+2026-03-03 14:58:24.743 | BITS     |   RAW bits (ID+Data):           0 0 1 0 0 0 0 0 0 0 0 1 1 0 1 1 1 1 0 1 0 1 0 1 1 0 1 1 0 1 1 1 1 1 0 0 0 0 0 1 0 1 0
+2026-03-03 14:58:24.743 | BITS     |   STUFFED bits:                 0 0 1 0 0 0 0 0 1 0 0 0 1 1 0 1 1 1 1 0 1 0 1 0 1 1 0 1 1 0 1 1 1 1 1 0 0 0 0 0 1 0 1 0 1 0
+2026-03-03 14:58:24.744 | BUS      | 
+[BUS] Simultaneous transmissions → ARBITRATION
+2026-03-03 14:58:24.744 | BUS      |   Arbitration: SAME ID → both transmit together (WeepingCAN)
+2026-03-03 14:58:24.744 | BUS      | 
+[BUS] ATTACKER injects RECESSIVE bit at physical position 29
+2026-03-03 14:58:24.744 | BITS     |   Attacker bit @ pos 29:        1
+2026-03-03 14:58:24.744 | BITS     |   Victim   bit @ pos 29:        0
+2026-03-03 14:58:24.745 | BITS     |   Bus result (wire-AND):        0
+2026-03-03 14:58:24.745 | BUS      | 
+[BUS] BIT ERROR detected by attacker (sent=1, read=0)
+2026-03-03 14:58:24.745 | ERRFLAG  | 
+[BUS] ══ ERROR FLAG SEQUENCE ══
+2026-03-03 14:58:24.745 | BITS     |   ACTIVE Error Flag (attacker): 0 0 0 0 0 0
+2026-03-03 14:58:24.745 | BITS     |   Error Delimiter:              1 1 1 1 1 1 1 1
+2026-03-03 14:58:24.745 | ERRFLAG  | 
+[BUS] TEC update (+8 to both nodes):
+2026-03-03 14:58:24.745 | ERRFLAG  |   Attacker (ATTACKER) TEC: 3 → 11
+2026-03-03 14:58:24.746 | ERRFLAG  |   Victim   (VICTIM)   TEC: 39 → 47
+2026-03-03 14:58:24.746 | ERRFLAG  | 
+[BUS] Victim (VICTIM) retransmits... SUCCESS → TEC -1
+2026-03-03 14:58:24.746 | ERRFLAG  |   Victim (VICTIM) TEC: 47 → 46  [cycle net so far: +7]
+2026-03-03 14:58:24.746 | ATTACK   | [ATTACKER] Step 1 — error injected: TEC +8: 3 → 11
+2026-03-03 14:58:24.746 | BUS      | 
+[BUS] ATTACKER sends 5 valid frame(s) → TEC -5
+2026-03-03 14:58:24.746 | BUS      |   ATTACKER TEC now: 6
+2026-03-03 14:58:24.747 | ATTACK   | [ATTACKER] Step 3 — 5 valid frames: TEC −5: 11 → 6  [cycle net: +3  | victim cycle net: +7]
+2026-03-03 14:58:24.747 | ATTACK   | 
+[ATTACKER] After attack #7: TEC=6  state=Error-Active
+2026-03-03 14:58:24.747 | CYCLE    | 
+──────────────────────────────────────────────────
+  Cycle  10  |  [VICTIM]   TEC= 46  state=Error-Active
+           |  [ATTACKER] TEC=  6  state=Error-Active
+──────────────────────────────────────────────────
+2026-03-03 14:58:24.797 | BUS      | 
+[VICTIM] Preparing periodic frame  CAN-ID=0x100  seq=0x0b  data=['0xde', '0xad', '0xbe', '0xb']
+2026-03-03 14:58:24.798 | ATTACK   | 
+──────────────────────────────────────────────────────────────────────
+[ATTACKER] SKIP CYCLE #4  (attacker TEC=6 ≥ threshold=6)
+──────────────────────────────────────────────────────────────────────
+2026-03-03 14:58:24.798 | ATTACK   | [ATTACKER] Skip — victim transmits OK → Victim TEC: 46 → 45  (−1)
+2026-03-03 14:58:24.799 | BUS      | 
+[BUS] ATTACKER sends 5 valid frame(s) → TEC -5
+2026-03-03 14:58:24.799 | BUS      |   ATTACKER TEC now: 1
+2026-03-03 14:58:24.800 | ATTACK   | [ATTACKER] Skip — 5 valid frames: Attacker TEC: 6 → 1  (−5)
+2026-03-03 14:58:24.800 | ATTACK   | [ATTACKER] After skip #4: TEC=1  state=Error-Active  [cycle net attacker: -5  | cycle net victim: −1]
+2026-03-03 14:58:24.800 | CYCLE    | 
+──────────────────────────────────────────────────
+  Cycle  11  |  [VICTIM]   TEC= 45  state=Error-Active
+           |  [ATTACKER] TEC=  1  state=Error-Active
+──────────────────────────────────────────────────
+2026-03-03 14:58:24.851 | BUS      | 
+[VICTIM] Preparing periodic frame  CAN-ID=0x100  seq=0x0c  data=['0xde', '0xad', '0xbe', '0xc']
+2026-03-03 14:58:24.851 | ATTACK   | 
+══════════════════════════════════════════════════════════════════════
+[ATTACKER] ATTACK CYCLE #8  (attacker TEC=1)
+══════════════════════════════════════════════════════════════════════
+2026-03-03 14:58:24.851 | ATTACK   | 
+[ATTACKER] Building attack frame  CAN-ID=0x100  recessive-inject-at physical bit 14  (targeted unstuffed safe pool: [13, 18, 20, 22, 25, 28, 34])
+2026-03-03 14:58:24.852 | INFO     | ──────────────────────────────────────────────────────────────────────
+2026-03-03 14:58:24.852 | BUS      | [BUS] Transmission attempt  sender=ATTACKER  CAN-ID=0x100  malicious=True
+2026-03-03 14:58:24.852 | BITS     |   RAW bits (ID+Data):           0 0 1 0 0 0 0 0 0 0 0 1 1 0 1 1 1 1 0 1 0 1 0 1 1 0 1 1 0 1 1 1 1 1 0 0 0 0 0 1 1 0 0
+2026-03-03 14:58:24.852 | BITS     |   STUFFED bits:                 0 0 1 0 0 0 0 0 1 0 0 0 1 1 0 1 1 1 1 0 1 0 1 0 1 1 0 1 1 0 1 1 1 1 1 0 0 0 0 0 1 0 1 1 0 0
+2026-03-03 14:58:24.853 | BUS      | 
+[BUS] Simultaneous transmissions → ARBITRATION
+2026-03-03 14:58:24.853 | BUS      |   Arbitration: SAME ID → both transmit together (WeepingCAN)
+2026-03-03 14:58:24.853 | BUS      | 
+[BUS] ATTACKER injects RECESSIVE bit at physical position 14
+2026-03-03 14:58:24.853 | BITS     |   Attacker bit @ pos 14:        1
+2026-03-03 14:58:24.854 | BITS     |   Victim   bit @ pos 14:        0
+2026-03-03 14:58:24.854 | BITS     |   Bus result (wire-AND):        0
+2026-03-03 14:58:24.854 | BUS      | 
+[BUS] BIT ERROR detected by attacker (sent=1, read=0)
+2026-03-03 14:58:24.854 | ERRFLAG  | 
+[BUS] ══ ERROR FLAG SEQUENCE ══
+2026-03-03 14:58:24.854 | BITS     |   ACTIVE Error Flag (attacker): 0 0 0 0 0 0
+2026-03-03 14:58:24.855 | BITS     |   Error Delimiter:              1 1 1 1 1 1 1 1
+2026-03-03 14:58:24.855 | ERRFLAG  | 
+[BUS] TEC update (+8 to both nodes):
+2026-03-03 14:58:24.855 | ERRFLAG  |   Attacker (ATTACKER) TEC: 1 → 9
+2026-03-03 14:58:24.856 | ERRFLAG  |   Victim   (VICTIM)   TEC: 45 → 53
+2026-03-03 14:58:24.856 | ERRFLAG  | 
+[BUS] Victim (VICTIM) retransmits... SUCCESS → TEC -1
+2026-03-03 14:58:24.856 | ERRFLAG  |   Victim (VICTIM) TEC: 53 → 52  [cycle net so far: +7]
+2026-03-03 14:58:24.856 | ATTACK   | [ATTACKER] Step 1 — error injected: TEC +8: 1 → 9
+2026-03-03 14:58:24.856 | BUS      | 
+[BUS] ATTACKER sends 5 valid frame(s) → TEC -5
+2026-03-03 14:58:24.856 | BUS      |   ATTACKER TEC now: 4
+2026-03-03 14:58:24.857 | ATTACK   | [ATTACKER] Step 3 — 5 valid frames: TEC −5: 9 → 4  [cycle net: +3  | victim cycle net: +7]
+2026-03-03 14:58:24.857 | ATTACK   | 
+[ATTACKER] After attack #8: TEC=4  state=Error-Active
+2026-03-03 14:58:24.857 | CYCLE    | 
+──────────────────────────────────────────────────
+  Cycle  12  |  [VICTIM]   TEC= 52  state=Error-Active
+           |  [ATTACKER] TEC=  4  state=Error-Active
+──────────────────────────────────────────────────
+2026-03-03 14:58:24.907 | BUS      | 
+[VICTIM] Preparing periodic frame  CAN-ID=0x100  seq=0x0d  data=['0xde', '0xad', '0xbe', '0xd']
+2026-03-03 14:58:24.908 | ATTACK   | 
+══════════════════════════════════════════════════════════════════════
+[ATTACKER] ATTACK CYCLE #9  (attacker TEC=4)
+══════════════════════════════════════════════════════════════════════
+2026-03-03 14:58:24.908 | ATTACK   | 
+[ATTACKER] Building attack frame  CAN-ID=0x100  recessive-inject-at physical bit 36  (targeted unstuffed safe pool: [13, 18, 20, 22, 25, 28, 34])
+2026-03-03 14:58:24.908 | INFO     | ──────────────────────────────────────────────────────────────────────
+2026-03-03 14:58:24.908 | BUS      | [BUS] Transmission attempt  sender=ATTACKER  CAN-ID=0x100  malicious=True
+2026-03-03 14:58:24.908 | BITS     |   RAW bits (ID+Data):           0 0 1 0 0 0 0 0 0 0 0 1 1 0 1 1 1 1 0 1 0 1 0 1 1 0 1 1 0 1 1 1 1 1 0 0 0 0 0 1 1 0 1
+2026-03-03 14:58:24.908 | BITS     |   STUFFED bits:                 0 0 1 0 0 0 0 0 1 0 0 0 1 1 0 1 1 1 1 0 1 0 1 0 1 1 0 1 1 0 1 1 1 1 1 0 0 0 0 0 1 0 1 1 0 1
+2026-03-03 14:58:24.908 | BUS      | 
+[BUS] Simultaneous transmissions → ARBITRATION
+2026-03-03 14:58:24.909 | BUS      |   Arbitration: SAME ID → both transmit together (WeepingCAN)
+2026-03-03 14:58:24.909 | BUS      | 
+[BUS] ATTACKER injects RECESSIVE bit at physical position 36
+2026-03-03 14:58:24.909 | BITS     |   Attacker bit @ pos 36:        1
+2026-03-03 14:58:24.909 | BITS     |   Victim   bit @ pos 36:        0
+2026-03-03 14:58:24.909 | BITS     |   Bus result (wire-AND):        0
+2026-03-03 14:58:24.909 | BUS      | 
+[BUS] BIT ERROR detected by attacker (sent=1, read=0)
+2026-03-03 14:58:24.909 | ERRFLAG  | 
+[BUS] ══ ERROR FLAG SEQUENCE ══
+2026-03-03 14:58:24.910 | BITS     |   ACTIVE Error Flag (attacker): 0 0 0 0 0 0
+2026-03-03 14:58:24.910 | BITS     |   Error Delimiter:              1 1 1 1 1 1 1 1
+2026-03-03 14:58:24.910 | ERRFLAG  | 
+[BUS] TEC update (+8 to both nodes):
+2026-03-03 14:58:24.910 | ERRFLAG  |   Attacker (ATTACKER) TEC: 4 → 12
+2026-03-03 14:58:24.910 | ERRFLAG  |   Victim   (VICTIM)   TEC: 52 → 60
+2026-03-03 14:58:24.911 | ERRFLAG  | 
+[BUS] Victim (VICTIM) retransmits... SUCCESS → TEC -1
+2026-03-03 14:58:24.911 | ERRFLAG  |   Victim (VICTIM) TEC: 60 → 59  [cycle net so far: +7]
+2026-03-03 14:58:24.911 | ATTACK   | [ATTACKER] Step 1 — error injected: TEC +8: 4 → 12
+2026-03-03 14:58:24.911 | BUS      | 
+[BUS] ATTACKER sends 5 valid frame(s) → TEC -5
+2026-03-03 14:58:24.911 | BUS      |   ATTACKER TEC now: 7
+2026-03-03 14:58:24.912 | ATTACK   | [ATTACKER] Step 3 — 5 valid frames: TEC −5: 12 → 7  [cycle net: +3  | victim cycle net: +7]
+2026-03-03 14:58:24.912 | ATTACK   | 
+[ATTACKER] After attack #9: TEC=7  state=Error-Active
+2026-03-03 14:58:24.912 | CYCLE    | 
+──────────────────────────────────────────────────
+  Cycle  13  |  [VICTIM]   TEC= 59  state=Error-Active
+           |  [ATTACKER] TEC=  7  state=Error-Active
+──────────────────────────────────────────────────
+2026-03-03 14:58:24.962 | BUS      | 
+[VICTIM] Preparing periodic frame  CAN-ID=0x100  seq=0x0e  data=['0xde', '0xad', '0xbe', '0xe']
+2026-03-03 14:58:24.963 | ATTACK   | 
+──────────────────────────────────────────────────────────────────────
+[ATTACKER] SKIP CYCLE #5  (attacker TEC=7 ≥ threshold=6)
+──────────────────────────────────────────────────────────────────────
+2026-03-03 14:58:24.963 | ATTACK   | [ATTACKER] Skip — victim transmits OK → Victim TEC: 59 → 58  (−1)
+2026-03-03 14:58:24.963 | BUS      | 
+[BUS] ATTACKER sends 5 valid frame(s) → TEC -5
+2026-03-03 14:58:24.963 | BUS      |   ATTACKER TEC now: 2
+2026-03-03 14:58:24.963 | ATTACK   | [ATTACKER] Skip — 5 valid frames: Attacker TEC: 7 → 2  (−5)
+2026-03-03 14:58:24.963 | ATTACK   | [ATTACKER] After skip #5: TEC=2  state=Error-Active  [cycle net attacker: -5  | cycle net victim: −1]
+2026-03-03 14:58:24.963 | CYCLE    | 
+──────────────────────────────────────────────────
+  Cycle  14  |  [VICTIM]   TEC= 58  state=Error-Active
+           |  [ATTACKER] TEC=  2  state=Error-Active
+──────────────────────────────────────────────────
+2026-03-03 14:58:25.013 | BUS      | 
+[VICTIM] Preparing periodic frame  CAN-ID=0x100  seq=0x0f  data=['0xde', '0xad', '0xbe', '0xf']
+2026-03-03 14:58:25.014 | ATTACK   | 
+══════════════════════════════════════════════════════════════════════
+[ATTACKER] ATTACK CYCLE #10  (attacker TEC=2)
+══════════════════════════════════════════════════════════════════════
+2026-03-03 14:58:25.014 | ATTACK   | 
+[ATTACKER] Building attack frame  CAN-ID=0x100  recessive-inject-at physical bit 29  (targeted unstuffed safe pool: [13, 18, 20, 22, 25, 28, 34])
+2026-03-03 14:58:25.014 | INFO     | ──────────────────────────────────────────────────────────────────────
+2026-03-03 14:58:25.014 | BUS      | [BUS] Transmission attempt  sender=ATTACKER  CAN-ID=0x100  malicious=True
+2026-03-03 14:58:25.014 | BITS     |   RAW bits (ID+Data):           0 0 1 0 0 0 0 0 0 0 0 1 1 0 1 1 1 1 0 1 0 1 0 1 1 0 1 1 0 1 1 1 1 1 0 0 0 0 0 1 1 1 1
+2026-03-03 14:58:25.014 | BITS     |   STUFFED bits:                 0 0 1 0 0 0 0 0 1 0 0 0 1 1 0 1 1 1 1 0 1 0 1 0 1 1 0 1 1 0 1 1 1 1 1 0 0 0 0 0 1 0 1 1 1 1
+2026-03-03 14:58:25.014 | BUS      | 
+[BUS] Simultaneous transmissions → ARBITRATION
+2026-03-03 14:58:25.014 | BUS      |   Arbitration: SAME ID → both transmit together (WeepingCAN)
+2026-03-03 14:58:25.014 | BUS      | 
+[BUS] ATTACKER injects RECESSIVE bit at physical position 29
+2026-03-03 14:58:25.014 | BITS     |   Attacker bit @ pos 29:        1
+2026-03-03 14:58:25.014 | BITS     |   Victim   bit @ pos 29:        0
+2026-03-03 14:58:25.014 | BITS     |   Bus result (wire-AND):        0
+2026-03-03 14:58:25.015 | BUS      | 
+[BUS] BIT ERROR detected by attacker (sent=1, read=0)
+2026-03-03 14:58:25.015 | ERRFLAG  | 
+[BUS] ══ ERROR FLAG SEQUENCE ══
+2026-03-03 14:58:25.015 | BITS     |   ACTIVE Error Flag (attacker): 0 0 0 0 0 0
+2026-03-03 14:58:25.015 | BITS     |   Error Delimiter:              1 1 1 1 1 1 1 1
+2026-03-03 14:58:25.015 | ERRFLAG  | 
+[BUS] TEC update (+8 to both nodes):
+2026-03-03 14:58:25.015 | ERRFLAG  |   Attacker (ATTACKER) TEC: 2 → 10
+2026-03-03 14:58:25.016 | ERRFLAG  |   Victim   (VICTIM)   TEC: 58 → 66
+2026-03-03 14:58:25.016 | ERRFLAG  | 
+[BUS] Victim (VICTIM) retransmits... SUCCESS → TEC -1
+2026-03-03 14:58:25.016 | ERRFLAG  |   Victim (VICTIM) TEC: 66 → 65  [cycle net so far: +7]
+2026-03-03 14:58:25.016 | ATTACK   | [ATTACKER] Step 1 — error injected: TEC +8: 2 → 10
+2026-03-03 14:58:25.016 | BUS      | 
+[BUS] ATTACKER sends 5 valid frame(s) → TEC -5
+2026-03-03 14:58:25.017 | BUS      |   ATTACKER TEC now: 5
+2026-03-03 14:58:25.017 | ATTACK   | [ATTACKER] Step 3 — 5 valid frames: TEC −5: 10 → 5  [cycle net: +3  | victim cycle net: +7]
+2026-03-03 14:58:25.017 | ATTACK   | 
+[ATTACKER] After attack #10: TEC=5  state=Error-Active
+2026-03-03 14:58:25.017 | CYCLE    | 
+──────────────────────────────────────────────────
+  Cycle  15  |  [VICTIM]   TEC= 65  state=Error-Active
+           |  [ATTACKER] TEC=  5  state=Error-Active
+──────────────────────────────────────────────────
+2026-03-03 14:58:25.067 | BUS      | 
+[VICTIM] Preparing periodic frame  CAN-ID=0x100  seq=0x10  data=['0xde', '0xad', '0xbe', '0x10']
+2026-03-03 14:58:25.068 | ATTACK   | 
+══════════════════════════════════════════════════════════════════════
+[ATTACKER] ATTACK CYCLE #11  (attacker TEC=5)
+══════════════════════════════════════════════════════════════════════
+2026-03-03 14:58:25.068 | ATTACK   | 
+[ATTACKER] Building attack frame  CAN-ID=0x100  recessive-inject-at physical bit 23  (targeted unstuffed safe pool: [13, 18, 20, 22, 25, 28, 34])
+2026-03-03 14:58:25.068 | INFO     | ──────────────────────────────────────────────────────────────────────
+2026-03-03 14:58:25.068 | BUS      | [BUS] Transmission attempt  sender=ATTACKER  CAN-ID=0x100  malicious=True
+2026-03-03 14:58:25.068 | BITS     |   RAW bits (ID+Data):           0 0 1 0 0 0 0 0 0 0 0 1 1 0 1 1 1 1 0 1 0 1 0 1 1 0 1 1 0 1 1 1 1 1 0 0 0 0 1 0 0 0 0
+2026-03-03 14:58:25.068 | BITS     |   STUFFED bits:                 0 0 1 0 0 0 0 0 1 0 0 0 1 1 0 1 1 1 1 0 1 0 1 0 1 1 0 1 1 0 1 1 1 1 1 0 0 0 0 0 1 1 0 0 0 0
+2026-03-03 14:58:25.068 | BUS      | 
+[BUS] Simultaneous transmissions → ARBITRATION
+2026-03-03 14:58:25.068 | BUS      |   Arbitration: SAME ID → both transmit together (WeepingCAN)
+2026-03-03 14:58:25.069 | BUS      | 
+[BUS] ATTACKER injects RECESSIVE bit at physical position 23
+2026-03-03 14:58:25.069 | BITS     |   Attacker bit @ pos 23:        1
+2026-03-03 14:58:25.069 | BITS     |   Victim   bit @ pos 23:        0
+2026-03-03 14:58:25.069 | BITS     |   Bus result (wire-AND):        0
+2026-03-03 14:58:25.069 | BUS      | 
+[BUS] BIT ERROR detected by attacker (sent=1, read=0)
+2026-03-03 14:58:25.070 | ERRFLAG  | 
+[BUS] ══ ERROR FLAG SEQUENCE ══
+2026-03-03 14:58:25.070 | BITS     |   ACTIVE Error Flag (attacker): 0 0 0 0 0 0
+2026-03-03 14:58:25.070 | BITS     |   Error Delimiter:              1 1 1 1 1 1 1 1
+2026-03-03 14:58:25.070 | ERRFLAG  | 
+[BUS] TEC update (+8 to both nodes):
+2026-03-03 14:58:25.071 | ERRFLAG  |   Attacker (ATTACKER) TEC: 5 → 13
+2026-03-03 14:58:25.071 | ERRFLAG  |   Victim   (VICTIM)   TEC: 65 → 73
+2026-03-03 14:58:25.071 | ERRFLAG  | 
+[BUS] Victim (VICTIM) retransmits... SUCCESS → TEC -1
+2026-03-03 14:58:25.071 | ERRFLAG  |   Victim (VICTIM) TEC: 73 → 72  [cycle net so far: +7]
+2026-03-03 14:58:25.071 | ATTACK   | [ATTACKER] Step 1 — error injected: TEC +8: 5 → 13
+2026-03-03 14:58:25.071 | BUS      | 
+[BUS] ATTACKER sends 5 valid frame(s) → TEC -5
+2026-03-03 14:58:25.072 | BUS      |   ATTACKER TEC now: 8
+2026-03-03 14:58:25.072 | ATTACK   | [ATTACKER] Step 3 — 5 valid frames: TEC −5: 13 → 8  [cycle net: +3  | victim cycle net: +7]
+2026-03-03 14:58:25.072 | ATTACK   | 
+[ATTACKER] After attack #11: TEC=8  state=Error-Active
+2026-03-03 14:58:25.072 | CYCLE    | 
+──────────────────────────────────────────────────
+  Cycle  16  |  [VICTIM]   TEC= 72  state=Error-Active
+           |  [ATTACKER] TEC=  8  state=Error-Active
+──────────────────────────────────────────────────
+2026-03-03 14:58:25.123 | BUS      | 
+[VICTIM] Preparing periodic frame  CAN-ID=0x100  seq=0x11  data=['0xde', '0xad', '0xbe', '0x11']
+2026-03-03 14:58:25.123 | ATTACK   | 
+──────────────────────────────────────────────────────────────────────
+[ATTACKER] SKIP CYCLE #6  (attacker TEC=8 ≥ threshold=6)
+──────────────────────────────────────────────────────────────────────
+2026-03-03 14:58:25.123 | ATTACK   | [ATTACKER] Skip — victim transmits OK → Victim TEC: 72 → 71  (−1)
+2026-03-03 14:58:25.123 | BUS      | 
+[BUS] ATTACKER sends 5 valid frame(s) → TEC -5
+2026-03-03 14:58:25.123 | BUS      |   ATTACKER TEC now: 3
+2026-03-03 14:58:25.123 | ATTACK   | [ATTACKER] Skip — 5 valid frames: Attacker TEC: 8 → 3  (−5)
+2026-03-03 14:58:25.123 | ATTACK   | [ATTACKER] After skip #6: TEC=3  state=Error-Active  [cycle net attacker: -5  | cycle net victim: −1]
+2026-03-03 14:58:25.123 | CYCLE    | 
+──────────────────────────────────────────────────
+  Cycle  17  |  [VICTIM]   TEC= 71  state=Error-Active
+           |  [ATTACKER] TEC=  3  state=Error-Active
+──────────────────────────────────────────────────
+2026-03-03 14:58:25.174 | BUS      | 
+[VICTIM] Preparing periodic frame  CAN-ID=0x100  seq=0x12  data=['0xde', '0xad', '0xbe', '0x12']
+2026-03-03 14:58:25.174 | ATTACK   | 
+══════════════════════════════════════════════════════════════════════
+[ATTACKER] ATTACK CYCLE #12  (attacker TEC=3)
+══════════════════════════════════════════════════════════════════════
+2026-03-03 14:58:25.174 | ATTACK   | 
+[ATTACKER] Building attack frame  CAN-ID=0x100  recessive-inject-at physical bit 14  (targeted unstuffed safe pool: [13, 18, 20, 22, 25, 28, 34])
+2026-03-03 14:58:25.174 | INFO     | ──────────────────────────────────────────────────────────────────────
+2026-03-03 14:58:25.175 | BUS      | [BUS] Transmission attempt  sender=ATTACKER  CAN-ID=0x100  malicious=True
+2026-03-03 14:58:25.175 | BITS     |   RAW bits (ID+Data):           0 0 1 0 0 0 0 0 0 0 0 1 1 0 1 1 1 1 0 1 0 1 0 1 1 0 1 1 0 1 1 1 1 1 0 0 0 0 1 0 0 1 0
+2026-03-03 14:58:25.175 | BITS     |   STUFFED bits:                 0 0 1 0 0 0 0 0 1 0 0 0 1 1 0 1 1 1 1 0 1 0 1 0 1 1 0 1 1 0 1 1 1 1 1 0 0 0 0 0 1 1 0 0 1 0
+2026-03-03 14:58:25.175 | BUS      | 
+[BUS] Simultaneous transmissions → ARBITRATION
+2026-03-03 14:58:25.175 | BUS      |   Arbitration: SAME ID → both transmit together (WeepingCAN)
+2026-03-03 14:58:25.176 | BUS      | 
+[BUS] ATTACKER injects RECESSIVE bit at physical position 14
+2026-03-03 14:58:25.176 | BITS     |   Attacker bit @ pos 14:        1
+2026-03-03 14:58:25.176 | BITS     |   Victim   bit @ pos 14:        0
+2026-03-03 14:58:25.176 | BITS     |   Bus result (wire-AND):        0
+2026-03-03 14:58:25.176 | BUS      | 
+[BUS] BIT ERROR detected by attacker (sent=1, read=0)
+2026-03-03 14:58:25.177 | ERRFLAG  | 
+[BUS] ══ ERROR FLAG SEQUENCE ══
+2026-03-03 14:58:25.177 | BITS     |   ACTIVE Error Flag (attacker): 0 0 0 0 0 0
+2026-03-03 14:58:25.177 | BITS     |   Error Delimiter:              1 1 1 1 1 1 1 1
+2026-03-03 14:58:25.177 | ERRFLAG  | 
+[BUS] TEC update (+8 to both nodes):
+2026-03-03 14:58:25.177 | ERRFLAG  |   Attacker (ATTACKER) TEC: 3 → 11
+2026-03-03 14:58:25.178 | ERRFLAG  |   Victim   (VICTIM)   TEC: 71 → 79
+2026-03-03 14:58:25.178 | ERRFLAG  | 
+[BUS] Victim (VICTIM) retransmits... SUCCESS → TEC -1
+2026-03-03 14:58:25.178 | ERRFLAG  |   Victim (VICTIM) TEC: 79 → 78  [cycle net so far: +7]
+2026-03-03 14:58:25.178 | ATTACK   | [ATTACKER] Step 1 — error injected: TEC +8: 3 → 11
+2026-03-03 14:58:25.179 | BUS      | 
+[BUS] ATTACKER sends 5 valid frame(s) → TEC -5
+2026-03-03 14:58:25.179 | BUS      |   ATTACKER TEC now: 6
+2026-03-03 14:58:25.179 | ATTACK   | [ATTACKER] Step 3 — 5 valid frames: TEC −5: 11 → 6  [cycle net: +3  | victim cycle net: +7]
+2026-03-03 14:58:25.181 | ATTACK   | 
+[ATTACKER] After attack #12: TEC=6  state=Error-Active
+2026-03-03 14:58:25.181 | CYCLE    | 
+──────────────────────────────────────────────────
+  Cycle  18  |  [VICTIM]   TEC= 78  state=Error-Active
+           |  [ATTACKER] TEC=  6  state=Error-Active
+──────────────────────────────────────────────────
+2026-03-03 14:58:25.232 | BUS      | 
+[VICTIM] Preparing periodic frame  CAN-ID=0x100  seq=0x13  data=['0xde', '0xad', '0xbe', '0x13']
+2026-03-03 14:58:25.232 | ATTACK   | 
+──────────────────────────────────────────────────────────────────────
+[ATTACKER] SKIP CYCLE #7  (attacker TEC=6 ≥ threshold=6)
+──────────────────────────────────────────────────────────────────────
+2026-03-03 14:58:25.232 | ATTACK   | [ATTACKER] Skip — victim transmits OK → Victim TEC: 78 → 77  (−1)
+2026-03-03 14:58:25.232 | BUS      | 
+[BUS] ATTACKER sends 5 valid frame(s) → TEC -5
+2026-03-03 14:58:25.232 | BUS      |   ATTACKER TEC now: 1
+2026-03-03 14:58:25.232 | ATTACK   | [ATTACKER] Skip — 5 valid frames: Attacker TEC: 6 → 1  (−5)
+2026-03-03 14:58:25.233 | ATTACK   | [ATTACKER] After skip #7: TEC=1  state=Error-Active  [cycle net attacker: -5  | cycle net victim: −1]
+2026-03-03 14:58:25.233 | CYCLE    | 
+──────────────────────────────────────────────────
+  Cycle  19  |  [VICTIM]   TEC= 77  state=Error-Active
+           |  [ATTACKER] TEC=  1  state=Error-Active
+──────────────────────────────────────────────────
+2026-03-03 14:58:25.283 | BUS      | 
+[VICTIM] Preparing periodic frame  CAN-ID=0x100  seq=0x14  data=['0xde', '0xad', '0xbe', '0x14']
+2026-03-03 14:58:25.283 | ATTACK   | 
+══════════════════════════════════════════════════════════════════════
+[ATTACKER] ATTACK CYCLE #13  (attacker TEC=1)
+══════════════════════════════════════════════════════════════════════
+2026-03-03 14:58:25.283 | ATTACK   | 
+[ATTACKER] Building attack frame  CAN-ID=0x100  recessive-inject-at physical bit 14  (targeted unstuffed safe pool: [13, 18, 20, 22, 25, 28, 34])
+2026-03-03 14:58:25.283 | INFO     | ──────────────────────────────────────────────────────────────────────
+2026-03-03 14:58:25.283 | BUS      | [BUS] Transmission attempt  sender=ATTACKER  CAN-ID=0x100  malicious=True
+2026-03-03 14:58:25.284 | BITS     |   RAW bits (ID+Data):           0 0 1 0 0 0 0 0 0 0 0 1 1 0 1 1 1 1 0 1 0 1 0 1 1 0 1 1 0 1 1 1 1 1 0 0 0 0 1 0 1 0 0
+2026-03-03 14:58:25.284 | BITS     |   STUFFED bits:                 0 0 1 0 0 0 0 0 1 0 0 0 1 1 0 1 1 1 1 0 1 0 1 0 1 1 0 1 1 0 1 1 1 1 1 0 0 0 0 0 1 1 0 1 0 0
+2026-03-03 14:58:25.284 | BUS      | 
+[BUS] Simultaneous transmissions → ARBITRATION
+2026-03-03 14:58:25.284 | BUS      |   Arbitration: SAME ID → both transmit together (WeepingCAN)
+2026-03-03 14:58:25.284 | BUS      | 
+[BUS] ATTACKER injects RECESSIVE bit at physical position 14
+2026-03-03 14:58:25.284 | BITS     |   Attacker bit @ pos 14:        1
+2026-03-03 14:58:25.284 | BITS     |   Victim   bit @ pos 14:        0
+2026-03-03 14:58:25.284 | BITS     |   Bus result (wire-AND):        0
+2026-03-03 14:58:25.284 | BUS      | 
+[BUS] BIT ERROR detected by attacker (sent=1, read=0)
+2026-03-03 14:58:25.284 | ERRFLAG  | 
+[BUS] ══ ERROR FLAG SEQUENCE ══
+2026-03-03 14:58:25.284 | BITS     |   ACTIVE Error Flag (attacker): 0 0 0 0 0 0
+2026-03-03 14:58:25.284 | BITS     |   Error Delimiter:              1 1 1 1 1 1 1 1
+2026-03-03 14:58:25.284 | ERRFLAG  | 
+[BUS] TEC update (+8 to both nodes):
+2026-03-03 14:58:25.284 | ERRFLAG  |   Attacker (ATTACKER) TEC: 1 → 9
+2026-03-03 14:58:25.284 | ERRFLAG  |   Victim   (VICTIM)   TEC: 77 → 85
+2026-03-03 14:58:25.284 | ERRFLAG  | 
+[BUS] Victim (VICTIM) retransmits... SUCCESS → TEC -1
+2026-03-03 14:58:25.284 | ERRFLAG  |   Victim (VICTIM) TEC: 85 → 84  [cycle net so far: +7]
+2026-03-03 14:58:25.284 | ATTACK   | [ATTACKER] Step 1 — error injected: TEC +8: 1 → 9
+2026-03-03 14:58:25.284 | BUS      | 
+[BUS] ATTACKER sends 5 valid frame(s) → TEC -5
+2026-03-03 14:58:25.284 | BUS      |   ATTACKER TEC now: 4
+2026-03-03 14:58:25.285 | ATTACK   | [ATTACKER] Step 3 — 5 valid frames: TEC −5: 9 → 4  [cycle net: +3  | victim cycle net: +7]
+2026-03-03 14:58:25.285 | ATTACK   | 
+[ATTACKER] After attack #13: TEC=4  state=Error-Active
+2026-03-03 14:58:25.285 | CYCLE    | 
+──────────────────────────────────────────────────
+  Cycle  20  |  [VICTIM]   TEC= 84  state=Error-Active
+           |  [ATTACKER] TEC=  4  state=Error-Active
+──────────────────────────────────────────────────
+2026-03-03 14:58:25.335 | BUS      | 
+[VICTIM] Preparing periodic frame  CAN-ID=0x100  seq=0x15  data=['0xde', '0xad', '0xbe', '0x15']
+2026-03-03 14:58:25.335 | ATTACK   | 
+══════════════════════════════════════════════════════════════════════
+[ATTACKER] ATTACK CYCLE #14  (attacker TEC=4)
+══════════════════════════════════════════════════════════════════════
+2026-03-03 14:58:25.335 | ATTACK   | 
+[ATTACKER] Building attack frame  CAN-ID=0x100  recessive-inject-at physical bit 36  (targeted unstuffed safe pool: [13, 18, 20, 22, 25, 28, 34])
+2026-03-03 14:58:25.335 | INFO     | ──────────────────────────────────────────────────────────────────────
+2026-03-03 14:58:25.335 | BUS      | [BUS] Transmission attempt  sender=ATTACKER  CAN-ID=0x100  malicious=True
+2026-03-03 14:58:25.335 | BITS     |   RAW bits (ID+Data):           0 0 1 0 0 0 0 0 0 0 0 1 1 0 1 1 1 1 0 1 0 1 0 1 1 0 1 1 0 1 1 1 1 1 0 0 0 0 1 0 1 0 1
+2026-03-03 14:58:25.335 | BITS     |   STUFFED bits:                 0 0 1 0 0 0 0 0 1 0 0 0 1 1 0 1 1 1 1 0 1 0 1 0 1 1 0 1 1 0 1 1 1 1 1 0 0 0 0 0 1 1 0 1 0 1
+2026-03-03 14:58:25.335 | BUS      | 
+[BUS] Simultaneous transmissions → ARBITRATION
+2026-03-03 14:58:25.336 | BUS      |   Arbitration: SAME ID → both transmit together (WeepingCAN)
+2026-03-03 14:58:25.336 | BUS      | 
+[BUS] ATTACKER injects RECESSIVE bit at physical position 36
+2026-03-03 14:58:25.336 | BITS     |   Attacker bit @ pos 36:        1
+2026-03-03 14:58:25.336 | BITS     |   Victim   bit @ pos 36:        0
+2026-03-03 14:58:25.336 | BITS     |   Bus result (wire-AND):        0
+2026-03-03 14:58:25.336 | BUS      | 
+[BUS] BIT ERROR detected by attacker (sent=1, read=0)
+2026-03-03 14:58:25.336 | ERRFLAG  | 
+[BUS] ══ ERROR FLAG SEQUENCE ══
+2026-03-03 14:58:25.336 | BITS     |   ACTIVE Error Flag (attacker): 0 0 0 0 0 0
+2026-03-03 14:58:25.336 | BITS     |   Error Delimiter:              1 1 1 1 1 1 1 1
+2026-03-03 14:58:25.336 | ERRFLAG  | 
+[BUS] TEC update (+8 to both nodes):
+2026-03-03 14:58:25.336 | ERRFLAG  |   Attacker (ATTACKER) TEC: 4 → 12
+2026-03-03 14:58:25.336 | ERRFLAG  |   Victim   (VICTIM)   TEC: 84 → 92
+2026-03-03 14:58:25.337 | ERRFLAG  | 
+[BUS] Victim (VICTIM) retransmits... SUCCESS → TEC -1
+2026-03-03 14:58:25.337 | ERRFLAG  |   Victim (VICTIM) TEC: 92 → 91  [cycle net so far: +7]
+2026-03-03 14:58:25.337 | ATTACK   | [ATTACKER] Step 1 — error injected: TEC +8: 4 → 12
+2026-03-03 14:58:25.337 | BUS      | 
+[BUS] ATTACKER sends 5 valid frame(s) → TEC -5
+2026-03-03 14:58:25.337 | BUS      |   ATTACKER TEC now: 7
+2026-03-03 14:58:25.337 | ATTACK   | [ATTACKER] Step 3 — 5 valid frames: TEC −5: 12 → 7  [cycle net: +3  | victim cycle net: +7]
+2026-03-03 14:58:25.337 | ATTACK   | 
+[ATTACKER] After attack #14: TEC=7  state=Error-Active
+2026-03-03 14:58:25.337 | CYCLE    | 
+──────────────────────────────────────────────────
+  Cycle  21  |  [VICTIM]   TEC= 91  state=Error-Active
+           |  [ATTACKER] TEC=  7  state=Error-Active
+──────────────────────────────────────────────────
+2026-03-03 14:58:25.387 | BUS      | 
+[VICTIM] Preparing periodic frame  CAN-ID=0x100  seq=0x16  data=['0xde', '0xad', '0xbe', '0x16']
+2026-03-03 14:58:25.387 | ATTACK   | 
+──────────────────────────────────────────────────────────────────────
+[ATTACKER] SKIP CYCLE #8  (attacker TEC=7 ≥ threshold=6)
+──────────────────────────────────────────────────────────────────────
+2026-03-03 14:58:25.387 | ATTACK   | [ATTACKER] Skip — victim transmits OK → Victim TEC: 91 → 90  (−1)
+2026-03-03 14:58:25.388 | BUS      | 
+[BUS] ATTACKER sends 5 valid frame(s) → TEC -5
+2026-03-03 14:58:25.388 | BUS      |   ATTACKER TEC now: 2
+2026-03-03 14:58:25.388 | ATTACK   | [ATTACKER] Skip — 5 valid frames: Attacker TEC: 7 → 2  (−5)
+2026-03-03 14:58:25.388 | ATTACK   | [ATTACKER] After skip #8: TEC=2  state=Error-Active  [cycle net attacker: -5  | cycle net victim: −1]
+2026-03-03 14:58:25.388 | CYCLE    | 
+──────────────────────────────────────────────────
+  Cycle  22  |  [VICTIM]   TEC= 90  state=Error-Active
+           |  [ATTACKER] TEC=  2  state=Error-Active
+──────────────────────────────────────────────────
+2026-03-03 14:58:25.438 | BUS      | 
+[VICTIM] Preparing periodic frame  CAN-ID=0x100  seq=0x17  data=['0xde', '0xad', '0xbe', '0x17']
+2026-03-03 14:58:25.439 | ATTACK   | 
+══════════════════════════════════════════════════════════════════════
+[ATTACKER] ATTACK CYCLE #15  (attacker TEC=2)
+══════════════════════════════════════════════════════════════════════
+2026-03-03 14:58:25.439 | ATTACK   | 
+[ATTACKER] Building attack frame  CAN-ID=0x100  recessive-inject-at physical bit 29  (targeted unstuffed safe pool: [13, 18, 20, 22, 25, 28, 34])
+2026-03-03 14:58:25.439 | INFO     | ──────────────────────────────────────────────────────────────────────
+2026-03-03 14:58:25.439 | BUS      | [BUS] Transmission attempt  sender=ATTACKER  CAN-ID=0x100  malicious=True
+2026-03-03 14:58:25.439 | BITS     |   RAW bits (ID+Data):           0 0 1 0 0 0 0 0 0 0 0 1 1 0 1 1 1 1 0 1 0 1 0 1 1 0 1 1 0 1 1 1 1 1 0 0 0 0 1 0 1 1 1
+2026-03-03 14:58:25.439 | BITS     |   STUFFED bits:                 0 0 1 0 0 0 0 0 1 0 0 0 1 1 0 1 1 1 1 0 1 0 1 0 1 1 0 1 1 0 1 1 1 1 1 0 0 0 0 0 1 1 0 1 1 1
+2026-03-03 14:58:25.439 | BUS      | 
+[BUS] Simultaneous transmissions → ARBITRATION
+2026-03-03 14:58:25.439 | BUS      |   Arbitration: SAME ID → both transmit together (WeepingCAN)
+2026-03-03 14:58:25.440 | BUS      | 
+[BUS] ATTACKER injects RECESSIVE bit at physical position 29
+2026-03-03 14:58:25.440 | BITS     |   Attacker bit @ pos 29:        1
+2026-03-03 14:58:25.440 | BITS     |   Victim   bit @ pos 29:        0
+2026-03-03 14:58:25.440 | BITS     |   Bus result (wire-AND):        0
+2026-03-03 14:58:25.440 | BUS      | 
+[BUS] BIT ERROR detected by attacker (sent=1, read=0)
+2026-03-03 14:58:25.440 | ERRFLAG  | 
+[BUS] ══ ERROR FLAG SEQUENCE ══
+2026-03-03 14:58:25.440 | BITS     |   ACTIVE Error Flag (attacker): 0 0 0 0 0 0
+2026-03-03 14:58:25.440 | BITS     |   Error Delimiter:              1 1 1 1 1 1 1 1
+2026-03-03 14:58:25.440 | ERRFLAG  | 
+[BUS] TEC update (+8 to both nodes):
+2026-03-03 14:58:25.441 | ERRFLAG  |   Attacker (ATTACKER) TEC: 2 → 10
+2026-03-03 14:58:25.441 | ERRFLAG  |   Victim   (VICTIM)   TEC: 90 → 98
+2026-03-03 14:58:25.441 | ERRFLAG  | 
+[BUS] Victim (VICTIM) retransmits... SUCCESS → TEC -1
+2026-03-03 14:58:25.441 | ERRFLAG  |   Victim (VICTIM) TEC: 98 → 97  [cycle net so far: +7]
+2026-03-03 14:58:25.441 | ATTACK   | [ATTACKER] Step 1 — error injected: TEC +8: 2 → 10
+2026-03-03 14:58:25.441 | BUS      | 
+[BUS] ATTACKER sends 5 valid frame(s) → TEC -5
+2026-03-03 14:58:25.441 | BUS      |   ATTACKER TEC now: 5
+2026-03-03 14:58:25.441 | ATTACK   | [ATTACKER] Step 3 — 5 valid frames: TEC −5: 10 → 5  [cycle net: +3  | victim cycle net: +7]
+2026-03-03 14:58:25.441 | ATTACK   | 
+[ATTACKER] After attack #15: TEC=5  state=Error-Active
+2026-03-03 14:58:25.441 | CYCLE    | 
+──────────────────────────────────────────────────
+  Cycle  23  |  [VICTIM]   TEC= 97  state=Error-Active
+           |  [ATTACKER] TEC=  5  state=Error-Active
+──────────────────────────────────────────────────
+2026-03-03 14:58:25.492 | BUS      | 
+[VICTIM] Preparing periodic frame  CAN-ID=0x100  seq=0x18  data=['0xde', '0xad', '0xbe', '0x18']
+2026-03-03 14:58:25.492 | ATTACK   | 
+══════════════════════════════════════════════════════════════════════
+[ATTACKER] ATTACK CYCLE #16  (attacker TEC=5)
+══════════════════════════════════════════════════════════════════════
+2026-03-03 14:58:25.492 | ATTACK   | 
+[ATTACKER] Building attack frame  CAN-ID=0x100  recessive-inject-at physical bit 19  (targeted unstuffed safe pool: [13, 18, 20, 22, 25, 28, 34])
+2026-03-03 14:58:25.492 | INFO     | ──────────────────────────────────────────────────────────────────────
+2026-03-03 14:58:25.492 | BUS      | [BUS] Transmission attempt  sender=ATTACKER  CAN-ID=0x100  malicious=True
+2026-03-03 14:58:25.492 | BITS     |   RAW bits (ID+Data):           0 0 1 0 0 0 0 0 0 0 0 1 1 0 1 1 1 1 0 1 0 1 0 1 1 0 1 1 0 1 1 1 1 1 0 0 0 0 1 1 0 0 0
+2026-03-03 14:58:25.492 | BITS     |   STUFFED bits:                 0 0 1 0 0 0 0 0 1 0 0 0 1 1 0 1 1 1 1 0 1 0 1 0 1 1 0 1 1 0 1 1 1 1 1 0 0 0 0 0 1 1 1 0 0 0
+2026-03-03 14:58:25.492 | BUS      | 
+[BUS] Simultaneous transmissions → ARBITRATION
+2026-03-03 14:58:25.492 | BUS      |   Arbitration: SAME ID → both transmit together (WeepingCAN)
+2026-03-03 14:58:25.493 | BUS      | 
+[BUS] ATTACKER injects RECESSIVE bit at physical position 19
+2026-03-03 14:58:25.493 | BITS     |   Attacker bit @ pos 19:        1
+2026-03-03 14:58:25.493 | BITS     |   Victim   bit @ pos 19:        0
+2026-03-03 14:58:25.493 | BITS     |   Bus result (wire-AND):        0
+2026-03-03 14:58:25.493 | BUS      | 
+[BUS] BIT ERROR detected by attacker (sent=1, read=0)
+2026-03-03 14:58:25.493 | ERRFLAG  | 
+[BUS] ══ ERROR FLAG SEQUENCE ══
+2026-03-03 14:58:25.493 | BITS     |   ACTIVE Error Flag (attacker): 0 0 0 0 0 0
+2026-03-03 14:58:25.493 | BITS     |   Error Delimiter:              1 1 1 1 1 1 1 1
+2026-03-03 14:58:25.493 | ERRFLAG  | 
+[BUS] TEC update (+8 to both nodes):
+2026-03-03 14:58:25.493 | ERRFLAG  |   Attacker (ATTACKER) TEC: 5 → 13
+2026-03-03 14:58:25.493 | ERRFLAG  |   Victim   (VICTIM)   TEC: 97 → 105
+2026-03-03 14:58:25.493 | ERRFLAG  | 
+[BUS] Victim (VICTIM) retransmits... SUCCESS → TEC -1
+2026-03-03 14:58:25.493 | ERRFLAG  |   Victim (VICTIM) TEC: 105 → 104  [cycle net so far: +7]
+2026-03-03 14:58:25.493 | ATTACK   | [ATTACKER] Step 1 — error injected: TEC +8: 5 → 13
+2026-03-03 14:58:25.493 | BUS      | 
+[BUS] ATTACKER sends 5 valid frame(s) → TEC -5
+2026-03-03 14:58:25.493 | BUS      |   ATTACKER TEC now: 8
+2026-03-03 14:58:25.493 | ATTACK   | [ATTACKER] Step 3 — 5 valid frames: TEC −5: 13 → 8  [cycle net: +3  | victim cycle net: +7]
+2026-03-03 14:58:25.493 | ATTACK   | 
+[ATTACKER] After attack #16: TEC=8  state=Error-Active
+2026-03-03 14:58:25.493 | CYCLE    | 
+──────────────────────────────────────────────────
+  Cycle  24  |  [VICTIM]   TEC=104  state=Error-Active
+           |  [ATTACKER] TEC=  8  state=Error-Active
+──────────────────────────────────────────────────
+2026-03-03 14:58:25.544 | BUS      | 
+[VICTIM] Preparing periodic frame  CAN-ID=0x100  seq=0x19  data=['0xde', '0xad', '0xbe', '0x19']
+2026-03-03 14:58:25.544 | ATTACK   | 
+──────────────────────────────────────────────────────────────────────
+[ATTACKER] SKIP CYCLE #9  (attacker TEC=8 ≥ threshold=6)
+──────────────────────────────────────────────────────────────────────
+2026-03-03 14:58:25.544 | ATTACK   | [ATTACKER] Skip — victim transmits OK → Victim TEC: 104 → 103  (−1)
+2026-03-03 14:58:25.544 | BUS      | 
+[BUS] ATTACKER sends 5 valid frame(s) → TEC -5
+2026-03-03 14:58:25.544 | BUS      |   ATTACKER TEC now: 3
+2026-03-03 14:58:25.544 | ATTACK   | [ATTACKER] Skip — 5 valid frames: Attacker TEC: 8 → 3  (−5)
+2026-03-03 14:58:25.544 | ATTACK   | [ATTACKER] After skip #9: TEC=3  state=Error-Active  [cycle net attacker: -5  | cycle net victim: −1]
+2026-03-03 14:58:25.544 | CYCLE    | 
+──────────────────────────────────────────────────
+  Cycle  25  |  [VICTIM]   TEC=103  state=Error-Active
+           |  [ATTACKER] TEC=  3  state=Error-Active
+──────────────────────────────────────────────────
+2026-03-03 14:58:25.594 | BUS      | 
+[VICTIM] Preparing periodic frame  CAN-ID=0x100  seq=0x1a  data=['0xde', '0xad', '0xbe', '0x1a']
+2026-03-03 14:58:25.595 | ATTACK   | 
+══════════════════════════════════════════════════════════════════════
+[ATTACKER] ATTACK CYCLE #17  (attacker TEC=3)
+══════════════════════════════════════════════════════════════════════
+2026-03-03 14:58:25.595 | ATTACK   | 
+[ATTACKER] Building attack frame  CAN-ID=0x100  recessive-inject-at physical bit 14  (targeted unstuffed safe pool: [13, 18, 20, 22, 25, 28, 34])
+2026-03-03 14:58:25.595 | INFO     | ──────────────────────────────────────────────────────────────────────
+2026-03-03 14:58:25.595 | BUS      | [BUS] Transmission attempt  sender=ATTACKER  CAN-ID=0x100  malicious=True
+2026-03-03 14:58:25.595 | BITS     |   RAW bits (ID+Data):           0 0 1 0 0 0 0 0 0 0 0 1 1 0 1 1 1 1 0 1 0 1 0 1 1 0 1 1 0 1 1 1 1 1 0 0 0 0 1 1 0 1 0
+2026-03-03 14:58:25.595 | BITS     |   STUFFED bits:                 0 0 1 0 0 0 0 0 1 0 0 0 1 1 0 1 1 1 1 0 1 0 1 0 1 1 0 1 1 0 1 1 1 1 1 0 0 0 0 0 1 1 1 0 1 0
+2026-03-03 14:58:25.595 | BUS      | 
+[BUS] Simultaneous transmissions → ARBITRATION
+2026-03-03 14:58:25.595 | BUS      |   Arbitration: SAME ID → both transmit together (WeepingCAN)
+2026-03-03 14:58:25.595 | BUS      | 
+[BUS] ATTACKER injects RECESSIVE bit at physical position 14
+2026-03-03 14:58:25.595 | BITS     |   Attacker bit @ pos 14:        1
+2026-03-03 14:58:25.595 | BITS     |   Victim   bit @ pos 14:        0
+2026-03-03 14:58:25.595 | BITS     |   Bus result (wire-AND):        0
+2026-03-03 14:58:25.595 | BUS      | 
+[BUS] BIT ERROR detected by attacker (sent=1, read=0)
+2026-03-03 14:58:25.595 | ERRFLAG  | 
+[BUS] ══ ERROR FLAG SEQUENCE ══
+2026-03-03 14:58:25.595 | BITS     |   ACTIVE Error Flag (attacker): 0 0 0 0 0 0
+2026-03-03 14:58:25.596 | BITS     |   Error Delimiter:              1 1 1 1 1 1 1 1
+2026-03-03 14:58:25.596 | ERRFLAG  | 
+[BUS] TEC update (+8 to both nodes):
+2026-03-03 14:58:25.596 | ERRFLAG  |   Attacker (ATTACKER) TEC: 3 → 11
+2026-03-03 14:58:25.596 | ERRFLAG  |   Victim   (VICTIM)   TEC: 103 → 111
+2026-03-03 14:58:25.596 | ERRFLAG  | 
+[BUS] Victim (VICTIM) retransmits... SUCCESS → TEC -1
+2026-03-03 14:58:25.596 | ERRFLAG  |   Victim (VICTIM) TEC: 111 → 110  [cycle net so far: +7]
+2026-03-03 14:58:25.596 | ATTACK   | [ATTACKER] Step 1 — error injected: TEC +8: 3 → 11
+2026-03-03 14:58:25.596 | BUS      | 
+[BUS] ATTACKER sends 5 valid frame(s) → TEC -5
+2026-03-03 14:58:25.596 | BUS      |   ATTACKER TEC now: 6
+2026-03-03 14:58:25.596 | ATTACK   | [ATTACKER] Step 3 — 5 valid frames: TEC −5: 11 → 6  [cycle net: +3  | victim cycle net: +7]
+2026-03-03 14:58:25.596 | ATTACK   | 
+[ATTACKER] After attack #17: TEC=6  state=Error-Active
+2026-03-03 14:58:25.596 | CYCLE    | 
+──────────────────────────────────────────────────
+  Cycle  26  |  [VICTIM]   TEC=110  state=Error-Active
+           |  [ATTACKER] TEC=  6  state=Error-Active
+──────────────────────────────────────────────────
+2026-03-03 14:58:25.646 | BUS      | 
+[VICTIM] Preparing periodic frame  CAN-ID=0x100  seq=0x1b  data=['0xde', '0xad', '0xbe', '0x1b']
+2026-03-03 14:58:25.647 | ATTACK   | 
+──────────────────────────────────────────────────────────────────────
+[ATTACKER] SKIP CYCLE #10  (attacker TEC=6 ≥ threshold=6)
+──────────────────────────────────────────────────────────────────────
+2026-03-03 14:58:25.647 | ATTACK   | [ATTACKER] Skip — victim transmits OK → Victim TEC: 110 → 109  (−1)
+2026-03-03 14:58:25.647 | BUS      | 
+[BUS] ATTACKER sends 5 valid frame(s) → TEC -5
+2026-03-03 14:58:25.647 | BUS      |   ATTACKER TEC now: 1
+2026-03-03 14:58:25.647 | ATTACK   | [ATTACKER] Skip — 5 valid frames: Attacker TEC: 6 → 1  (−5)
+2026-03-03 14:58:25.647 | ATTACK   | [ATTACKER] After skip #10: TEC=1  state=Error-Active  [cycle net attacker: -5  | cycle net victim: −1]
+2026-03-03 14:58:25.647 | CYCLE    | 
+──────────────────────────────────────────────────
+  Cycle  27  |  [VICTIM]   TEC=109  state=Error-Active
+           |  [ATTACKER] TEC=  1  state=Error-Active
+──────────────────────────────────────────────────
+2026-03-03 14:58:25.697 | BUS      | 
+[VICTIM] Preparing periodic frame  CAN-ID=0x100  seq=0x1c  data=['0xde', '0xad', '0xbe', '0x1c']
+2026-03-03 14:58:25.697 | ATTACK   | 
+══════════════════════════════════════════════════════════════════════
+[ATTACKER] ATTACK CYCLE #18  (attacker TEC=1)
+══════════════════════════════════════════════════════════════════════
+2026-03-03 14:58:25.698 | ATTACK   | 
+[ATTACKER] Building attack frame  CAN-ID=0x100  recessive-inject-at physical bit 23  (targeted unstuffed safe pool: [13, 18, 20, 22, 25, 28, 34])
+2026-03-03 14:58:25.698 | INFO     | ──────────────────────────────────────────────────────────────────────
+2026-03-03 14:58:25.698 | BUS      | [BUS] Transmission attempt  sender=ATTACKER  CAN-ID=0x100  malicious=True
+2026-03-03 14:58:25.698 | BITS     |   RAW bits (ID+Data):           0 0 1 0 0 0 0 0 0 0 0 1 1 0 1 1 1 1 0 1 0 1 0 1 1 0 1 1 0 1 1 1 1 1 0 0 0 0 1 1 1 0 0
+2026-03-03 14:58:25.698 | BITS     |   STUFFED bits:                 0 0 1 0 0 0 0 0 1 0 0 0 1 1 0 1 1 1 1 0 1 0 1 0 1 1 0 1 1 0 1 1 1 1 1 0 0 0 0 0 1 1 1 1 0 0
+2026-03-03 14:58:25.698 | BUS      | 
+[BUS] Simultaneous transmissions → ARBITRATION
+2026-03-03 14:58:25.698 | BUS      |   Arbitration: SAME ID → both transmit together (WeepingCAN)
+2026-03-03 14:58:25.698 | BUS      | 
+[BUS] ATTACKER injects RECESSIVE bit at physical position 23
+2026-03-03 14:58:25.698 | BITS     |   Attacker bit @ pos 23:        1
+2026-03-03 14:58:25.698 | BITS     |   Victim   bit @ pos 23:        0
+2026-03-03 14:58:25.698 | BITS     |   Bus result (wire-AND):        0
+2026-03-03 14:58:25.698 | BUS      | 
+[BUS] BIT ERROR detected by attacker (sent=1, read=0)
+2026-03-03 14:58:25.698 | ERRFLAG  | 
+[BUS] ══ ERROR FLAG SEQUENCE ══
+2026-03-03 14:58:25.698 | BITS     |   ACTIVE Error Flag (attacker): 0 0 0 0 0 0
+2026-03-03 14:58:25.698 | BITS     |   Error Delimiter:              1 1 1 1 1 1 1 1
+2026-03-03 14:58:25.699 | ERRFLAG  | 
+[BUS] TEC update (+8 to both nodes):
+2026-03-03 14:58:25.699 | ERRFLAG  |   Attacker (ATTACKER) TEC: 1 → 9
+2026-03-03 14:58:25.699 | ERRFLAG  |   Victim   (VICTIM)   TEC: 109 → 117
+2026-03-03 14:58:25.699 | ERRFLAG  | 
+[BUS] Victim (VICTIM) retransmits... SUCCESS → TEC -1
+2026-03-03 14:58:25.699 | ERRFLAG  |   Victim (VICTIM) TEC: 117 → 116  [cycle net so far: +7]
+2026-03-03 14:58:25.699 | ATTACK   | [ATTACKER] Step 1 — error injected: TEC +8: 1 → 9
+2026-03-03 14:58:25.699 | BUS      | 
+[BUS] ATTACKER sends 5 valid frame(s) → TEC -5
+2026-03-03 14:58:25.699 | BUS      |   ATTACKER TEC now: 4
+2026-03-03 14:58:25.699 | ATTACK   | [ATTACKER] Step 3 — 5 valid frames: TEC −5: 9 → 4  [cycle net: +3  | victim cycle net: +7]
+2026-03-03 14:58:25.699 | ATTACK   | 
+[ATTACKER] After attack #18: TEC=4  state=Error-Active
+2026-03-03 14:58:25.699 | CYCLE    | 
+──────────────────────────────────────────────────
+  Cycle  28  |  [VICTIM]   TEC=116  state=Error-Active
+           |  [ATTACKER] TEC=  4  state=Error-Active
+──────────────────────────────────────────────────
+2026-03-03 14:58:25.750 | BUS      | 
+[VICTIM] Preparing periodic frame  CAN-ID=0x100  seq=0x1d  data=['0xde', '0xad', '0xbe', '0x1d']
+2026-03-03 14:58:25.750 | ATTACK   | 
+══════════════════════════════════════════════════════════════════════
+[ATTACKER] ATTACK CYCLE #19  (attacker TEC=4)
+══════════════════════════════════════════════════════════════════════
+2026-03-03 14:58:25.750 | ATTACK   | 
+[ATTACKER] Building attack frame  CAN-ID=0x100  recessive-inject-at physical bit 26  (targeted unstuffed safe pool: [13, 18, 20, 22, 25, 28, 34])
+2026-03-03 14:58:25.750 | INFO     | ──────────────────────────────────────────────────────────────────────
+2026-03-03 14:58:25.750 | BUS      | [BUS] Transmission attempt  sender=ATTACKER  CAN-ID=0x100  malicious=True
+2026-03-03 14:58:25.750 | BITS     |   RAW bits (ID+Data):           0 0 1 0 0 0 0 0 0 0 0 1 1 0 1 1 1 1 0 1 0 1 0 1 1 0 1 1 0 1 1 1 1 1 0 0 0 0 1 1 1 0 1
+2026-03-03 14:58:25.750 | BITS     |   STUFFED bits:                 0 0 1 0 0 0 0 0 1 0 0 0 1 1 0 1 1 1 1 0 1 0 1 0 1 1 0 1 1 0 1 1 1 1 1 0 0 0 0 0 1 1 1 1 0 1
+2026-03-03 14:58:25.750 | BUS      | 
+[BUS] Simultaneous transmissions → ARBITRATION
+2026-03-03 14:58:25.751 | BUS      |   Arbitration: SAME ID → both transmit together (WeepingCAN)
+2026-03-03 14:58:25.751 | BUS      | 
+[BUS] ATTACKER injects RECESSIVE bit at physical position 26
+2026-03-03 14:58:25.751 | BITS     |   Attacker bit @ pos 26:        1
+2026-03-03 14:58:25.751 | BITS     |   Victim   bit @ pos 26:        0
+2026-03-03 14:58:25.751 | BITS     |   Bus result (wire-AND):        0
+2026-03-03 14:58:25.751 | BUS      | 
+[BUS] BIT ERROR detected by attacker (sent=1, read=0)
+2026-03-03 14:58:25.751 | ERRFLAG  | 
+[BUS] ══ ERROR FLAG SEQUENCE ══
+2026-03-03 14:58:25.751 | BITS     |   ACTIVE Error Flag (attacker): 0 0 0 0 0 0
+2026-03-03 14:58:25.751 | BITS     |   Error Delimiter:              1 1 1 1 1 1 1 1
+2026-03-03 14:58:25.751 | ERRFLAG  | 
+[BUS] TEC update (+8 to both nodes):
+2026-03-03 14:58:25.751 | ERRFLAG  |   Attacker (ATTACKER) TEC: 4 → 12
+2026-03-03 14:58:25.751 | ERRFLAG  |   Victim   (VICTIM)   TEC: 116 → 124
+2026-03-03 14:58:25.751 | ERRFLAG  | 
+[BUS] Victim (VICTIM) retransmits... SUCCESS → TEC -1
+2026-03-03 14:58:25.752 | ERRFLAG  |   Victim (VICTIM) TEC: 124 → 123  [cycle net so far: +7]
+2026-03-03 14:58:25.752 | ATTACK   | [ATTACKER] Step 1 — error injected: TEC +8: 4 → 12
+2026-03-03 14:58:25.752 | BUS      | 
+[BUS] ATTACKER sends 5 valid frame(s) → TEC -5
+2026-03-03 14:58:25.752 | BUS      |   ATTACKER TEC now: 7
+2026-03-03 14:58:25.752 | ATTACK   | [ATTACKER] Step 3 — 5 valid frames: TEC −5: 12 → 7  [cycle net: +3  | victim cycle net: +7]
+2026-03-03 14:58:25.752 | ATTACK   | 
+[ATTACKER] After attack #19: TEC=7  state=Error-Active
+2026-03-03 14:58:25.752 | CYCLE    | 
+──────────────────────────────────────────────────
+  Cycle  29  |  [VICTIM]   TEC=123  state=Error-Active
+           |  [ATTACKER] TEC=  7  state=Error-Active
+──────────────────────────────────────────────────
+2026-03-03 14:58:25.802 | BUS      | 
+[VICTIM] Preparing periodic frame  CAN-ID=0x100  seq=0x1e  data=['0xde', '0xad', '0xbe', '0x1e']
+2026-03-03 14:58:25.802 | ATTACK   | 
+──────────────────────────────────────────────────────────────────────
+[ATTACKER] SKIP CYCLE #11  (attacker TEC=7 ≥ threshold=6)
+──────────────────────────────────────────────────────────────────────
+2026-03-03 14:58:25.803 | ATTACK   | [ATTACKER] Skip — victim transmits OK → Victim TEC: 123 → 122  (−1)
+2026-03-03 14:58:25.803 | BUS      | 
+[BUS] ATTACKER sends 5 valid frame(s) → TEC -5
+2026-03-03 14:58:25.803 | BUS      |   ATTACKER TEC now: 2
+2026-03-03 14:58:25.803 | ATTACK   | [ATTACKER] Skip — 5 valid frames: Attacker TEC: 7 → 2  (−5)
+2026-03-03 14:58:25.803 | ATTACK   | [ATTACKER] After skip #11: TEC=2  state=Error-Active  [cycle net attacker: -5  | cycle net victim: −1]
+2026-03-03 14:58:25.803 | CYCLE    | 
+──────────────────────────────────────────────────
+  Cycle  30  |  [VICTIM]   TEC=122  state=Error-Active
+           |  [ATTACKER] TEC=  2  state=Error-Active
+──────────────────────────────────────────────────
+2026-03-03 14:58:25.853 | BUS      | 
+[VICTIM] Preparing periodic frame  CAN-ID=0x100  seq=0x1f  data=['0xde', '0xad', '0xbe', '0x1f']
+2026-03-03 14:58:25.854 | ATTACK   | 
+══════════════════════════════════════════════════════════════════════
+[ATTACKER] ATTACK CYCLE #20  (attacker TEC=2)
+══════════════════════════════════════════════════════════════════════
+2026-03-03 14:58:25.854 | ATTACK   | 
+[ATTACKER] Building attack frame  CAN-ID=0x100  recessive-inject-at physical bit 29  (targeted unstuffed safe pool: [13, 18, 20, 22, 25, 28, 34])
+2026-03-03 14:58:25.854 | INFO     | ──────────────────────────────────────────────────────────────────────
+2026-03-03 14:58:25.854 | BUS      | [BUS] Transmission attempt  sender=ATTACKER  CAN-ID=0x100  malicious=True
+2026-03-03 14:58:25.854 | BITS     |   RAW bits (ID+Data):           0 0 1 0 0 0 0 0 0 0 0 1 1 0 1 1 1 1 0 1 0 1 0 1 1 0 1 1 0 1 1 1 1 1 0 0 0 0 1 1 1 1 1
+2026-03-03 14:58:25.854 | BITS     |   STUFFED bits:                 0 0 1 0 0 0 0 0 1 0 0 0 1 1 0 1 1 1 1 0 1 0 1 0 1 1 0 1 1 0 1 1 1 1 1 0 0 0 0 0 1 1 1 1 1 0 1
+2026-03-03 14:58:25.854 | BUS      | 
+[BUS] Simultaneous transmissions → ARBITRATION
+2026-03-03 14:58:25.854 | BUS      |   Arbitration: SAME ID → both transmit together (WeepingCAN)
+2026-03-03 14:58:25.854 | BUS      | 
+[BUS] ATTACKER injects RECESSIVE bit at physical position 29
+2026-03-03 14:58:25.854 | BITS     |   Attacker bit @ pos 29:        1
+2026-03-03 14:58:25.854 | BITS     |   Victim   bit @ pos 29:        0
+2026-03-03 14:58:25.854 | BITS     |   Bus result (wire-AND):        0
+2026-03-03 14:58:25.854 | BUS      | 
+[BUS] BIT ERROR detected by attacker (sent=1, read=0)
+2026-03-03 14:58:25.854 | ERRFLAG  | 
+[BUS] ══ ERROR FLAG SEQUENCE ══
+2026-03-03 14:58:25.854 | BITS     |   ACTIVE Error Flag (attacker): 0 0 0 0 0 0
+2026-03-03 14:58:25.854 | BITS     |   Error Delimiter:              1 1 1 1 1 1 1 1
+2026-03-03 14:58:25.855 | ERRFLAG  | 
+[BUS] TEC update (+8 to both nodes):
+2026-03-03 14:58:25.855 | ERRFLAG  |   Attacker (ATTACKER) TEC: 2 → 10
+2026-03-03 14:58:25.855 | ERRFLAG  |   Victim   (VICTIM)   TEC: 122 → 130
+2026-03-03 14:58:25.855 | STATE    | [VICTIM] STATE TRANSITION: Error-Active → Error-Passive
+2026-03-03 14:58:25.855 | ERRFLAG  | 
+[BUS] Victim (VICTIM) retransmits... SUCCESS → TEC -1
+2026-03-03 14:58:25.855 | ERRFLAG  |   Victim (VICTIM) TEC: 130 → 129  [cycle net so far: +7]
+2026-03-03 14:58:25.855 | ATTACK   | [ATTACKER] Step 1 — error injected: TEC +8: 2 → 10
+2026-03-03 14:58:25.855 | BUS      | 
+[BUS] ATTACKER sends 5 valid frame(s) → TEC -5
+2026-03-03 14:58:25.855 | BUS      |   ATTACKER TEC now: 5
+2026-03-03 14:58:25.855 | ATTACK   | [ATTACKER] Step 3 — 5 valid frames: TEC −5: 10 → 5  [cycle net: +3  | victim cycle net: +7]
+2026-03-03 14:58:25.855 | ATTACK   | 
+[ATTACKER] After attack #20: TEC=5  state=Error-Active
+2026-03-03 14:58:25.855 | CYCLE    | 
+──────────────────────────────────────────────────
+  Cycle  31  |  [VICTIM]   TEC=129  state=Error-Passive
+           |  [ATTACKER] TEC=  5  state=Error-Active
+──────────────────────────────────────────────────
+2026-03-03 14:58:25.905 | BUS      | 
+[VICTIM] Preparing periodic frame  CAN-ID=0x100  seq=0x20  data=['0xde', '0xad', '0xbe', '0x20']
+2026-03-03 14:58:25.905 | ATTACK   | 
+══════════════════════════════════════════════════════════════════════
+[ATTACKER] ATTACK CYCLE #21  (attacker TEC=5)
+══════════════════════════════════════════════════════════════════════
+2026-03-03 14:58:25.906 | ATTACK   | 
+[ATTACKER] Building attack frame  CAN-ID=0x100  recessive-inject-at physical bit 29  (targeted unstuffed safe pool: [13, 18, 20, 22, 25, 28, 34])
+2026-03-03 14:58:25.906 | INFO     | ──────────────────────────────────────────────────────────────────────
+2026-03-03 14:58:25.906 | BUS      | [BUS] Transmission attempt  sender=ATTACKER  CAN-ID=0x100  malicious=True
+2026-03-03 14:58:25.906 | BITS     |   RAW bits (ID+Data):           0 0 1 0 0 0 0 0 0 0 0 1 1 0 1 1 1 1 0 1 0 1 0 1 1 0 1 1 0 1 1 1 1 1 0 0 0 1 0 0 0 0 0
+2026-03-03 14:58:25.906 | BITS     |   STUFFED bits:                 0 0 1 0 0 0 0 0 1 0 0 0 1 1 0 1 1 1 1 0 1 0 1 0 1 1 0 1 1 0 1 1 1 1 1 0 0 0 0 1 0 0 0 0 0 1
+2026-03-03 14:58:25.906 | BUS      | 
+[BUS] Simultaneous transmissions → ARBITRATION
+2026-03-03 14:58:25.906 | BUS      |   Arbitration: SAME ID → both transmit together (WeepingCAN)
+2026-03-03 14:58:25.906 | BUS      | 
+[BUS] ATTACKER injects RECESSIVE bit at physical position 29
+2026-03-03 14:58:25.906 | BITS     |   Attacker bit @ pos 29:        1
+2026-03-03 14:58:25.906 | BITS     |   Victim   bit @ pos 29:        0
+2026-03-03 14:58:25.906 | BITS     |   Bus result (wire-AND):        0
+2026-03-03 14:58:25.906 | BUS      | 
+[BUS] BIT ERROR detected by attacker (sent=1, read=0)
+2026-03-03 14:58:25.906 | ERRFLAG  | 
+[BUS] ══ ERROR FLAG SEQUENCE ══
+2026-03-03 14:58:25.906 | BITS     |   ACTIVE Error Flag (attacker): 0 0 0 0 0 0
+2026-03-03 14:58:25.906 | BITS     |   Error Delimiter:              1 1 1 1 1 1 1 1
+2026-03-03 14:58:25.906 | ERRFLAG  | 
+[BUS] TEC update (+8 to both nodes):
+2026-03-03 14:58:25.906 | ERRFLAG  |   Attacker (ATTACKER) TEC: 5 → 13
+2026-03-03 14:58:25.907 | ERRFLAG  |   Victim   (VICTIM)   TEC: 129 → 137
+2026-03-03 14:58:25.907 | ERRFLAG  | 
+[BUS] Victim (VICTIM) retransmits... SUCCESS → TEC -1
+2026-03-03 14:58:25.907 | ERRFLAG  |   Victim (VICTIM) TEC: 137 → 136  [cycle net so far: +7]
+2026-03-03 14:58:25.907 | ATTACK   | [ATTACKER] Step 1 — error injected: TEC +8: 5 → 13
+2026-03-03 14:58:25.907 | BUS      | 
+[BUS] ATTACKER sends 5 valid frame(s) → TEC -5
+2026-03-03 14:58:25.907 | BUS      |   ATTACKER TEC now: 8
+2026-03-03 14:58:25.907 | ATTACK   | [ATTACKER] Step 3 — 5 valid frames: TEC −5: 13 → 8  [cycle net: +3  | victim cycle net: +7]
+2026-03-03 14:58:25.907 | ATTACK   | 
+[ATTACKER] After attack #21: TEC=8  state=Error-Active
+2026-03-03 14:58:25.907 | CYCLE    | 
+──────────────────────────────────────────────────
+  Cycle  32  |  [VICTIM]   TEC=136  state=Error-Passive
+           |  [ATTACKER] TEC=  8  state=Error-Active
+──────────────────────────────────────────────────
+2026-03-03 14:58:25.957 | BUS      | 
+[VICTIM] Preparing periodic frame  CAN-ID=0x100  seq=0x21  data=['0xde', '0xad', '0xbe', '0x21']
+2026-03-03 14:58:25.958 | ATTACK   | 
+──────────────────────────────────────────────────────────────────────
+[ATTACKER] SKIP CYCLE #12  (attacker TEC=8 ≥ threshold=6)
+──────────────────────────────────────────────────────────────────────
+2026-03-03 14:58:25.958 | ATTACK   | [ATTACKER] Skip — victim transmits OK → Victim TEC: 136 → 135  (−1)
+2026-03-03 14:58:25.958 | BUS      | 
+[BUS] ATTACKER sends 5 valid frame(s) → TEC -5
+2026-03-03 14:58:25.958 | BUS      |   ATTACKER TEC now: 3
+2026-03-03 14:58:25.958 | ATTACK   | [ATTACKER] Skip — 5 valid frames: Attacker TEC: 8 → 3  (−5)
+2026-03-03 14:58:25.958 | ATTACK   | [ATTACKER] After skip #12: TEC=3  state=Error-Active  [cycle net attacker: -5  | cycle net victim: −1]
+2026-03-03 14:58:25.958 | CYCLE    | 
+──────────────────────────────────────────────────
+  Cycle  33  |  [VICTIM]   TEC=135  state=Error-Passive
+           |  [ATTACKER] TEC=  3  state=Error-Active
+──────────────────────────────────────────────────
+2026-03-03 14:58:26.008 | BUS      | 
+[VICTIM] Preparing periodic frame  CAN-ID=0x100  seq=0x22  data=['0xde', '0xad', '0xbe', '0x22']
+2026-03-03 14:58:26.008 | ATTACK   | 
+══════════════════════════════════════════════════════════════════════
+[ATTACKER] ATTACK CYCLE #22  (attacker TEC=3)
+══════════════════════════════════════════════════════════════════════
+2026-03-03 14:58:26.009 | ATTACK   | 
+[ATTACKER] Building attack frame  CAN-ID=0x100  recessive-inject-at physical bit 26  (targeted unstuffed safe pool: [13, 18, 20, 22, 25, 28, 34])
+2026-03-03 14:58:26.009 | INFO     | ──────────────────────────────────────────────────────────────────────
+2026-03-03 14:58:26.009 | BUS      | [BUS] Transmission attempt  sender=ATTACKER  CAN-ID=0x100  malicious=True
+2026-03-03 14:58:26.009 | BITS     |   RAW bits (ID+Data):           0 0 1 0 0 0 0 0 0 0 0 1 1 0 1 1 1 1 0 1 0 1 0 1 1 0 1 1 0 1 1 1 1 1 0 0 0 1 0 0 0 1 0
+2026-03-03 14:58:26.009 | BITS     |   STUFFED bits:                 0 0 1 0 0 0 0 0 1 0 0 0 1 1 0 1 1 1 1 0 1 0 1 0 1 1 0 1 1 0 1 1 1 1 1 0 0 0 0 1 0 0 0 1 0
+2026-03-03 14:58:26.009 | BUS      | 
+[BUS] Simultaneous transmissions → ARBITRATION
+2026-03-03 14:58:26.009 | BUS      |   Arbitration: SAME ID → both transmit together (WeepingCAN)
+2026-03-03 14:58:26.009 | BUS      | 
+[BUS] ATTACKER injects RECESSIVE bit at physical position 26
+2026-03-03 14:58:26.009 | BITS     |   Attacker bit @ pos 26:        1
+2026-03-03 14:58:26.009 | BITS     |   Victim   bit @ pos 26:        0
+2026-03-03 14:58:26.009 | BITS     |   Bus result (wire-AND):        0
+2026-03-03 14:58:26.009 | BUS      | 
+[BUS] BIT ERROR detected by attacker (sent=1, read=0)
+2026-03-03 14:58:26.009 | ERRFLAG  | 
+[BUS] ══ ERROR FLAG SEQUENCE ══
+2026-03-03 14:58:26.009 | BITS     |   ACTIVE Error Flag (attacker): 0 0 0 0 0 0
+2026-03-03 14:58:26.009 | BITS     |   Error Delimiter:              1 1 1 1 1 1 1 1
+2026-03-03 14:58:26.009 | ERRFLAG  | 
+[BUS] TEC update (+8 to both nodes):
+2026-03-03 14:58:26.010 | ERRFLAG  |   Attacker (ATTACKER) TEC: 3 → 11
+2026-03-03 14:58:26.010 | ERRFLAG  |   Victim   (VICTIM)   TEC: 135 → 143
+2026-03-03 14:58:26.010 | ERRFLAG  | 
+[BUS] Victim (VICTIM) retransmits... SUCCESS → TEC -1
+2026-03-03 14:58:26.010 | ERRFLAG  |   Victim (VICTIM) TEC: 143 → 142  [cycle net so far: +7]
+2026-03-03 14:58:26.010 | ATTACK   | [ATTACKER] Step 1 — error injected: TEC +8: 3 → 11
+2026-03-03 14:58:26.010 | BUS      | 
+[BUS] ATTACKER sends 5 valid frame(s) → TEC -5
+2026-03-03 14:58:26.010 | BUS      |   ATTACKER TEC now: 6
+2026-03-03 14:58:26.010 | ATTACK   | [ATTACKER] Step 3 — 5 valid frames: TEC −5: 11 → 6  [cycle net: +3  | victim cycle net: +7]
+2026-03-03 14:58:26.010 | ATTACK   | 
+[ATTACKER] After attack #22: TEC=6  state=Error-Active
+2026-03-03 14:58:26.010 | CYCLE    | 
+──────────────────────────────────────────────────
+  Cycle  34  |  [VICTIM]   TEC=142  state=Error-Passive
+           |  [ATTACKER] TEC=  6  state=Error-Active
+──────────────────────────────────────────────────
+2026-03-03 14:58:26.060 | BUS      | 
+[VICTIM] Preparing periodic frame  CAN-ID=0x100  seq=0x23  data=['0xde', '0xad', '0xbe', '0x23']
+2026-03-03 14:58:26.060 | ATTACK   | 
+──────────────────────────────────────────────────────────────────────
+[ATTACKER] SKIP CYCLE #13  (attacker TEC=6 ≥ threshold=6)
+──────────────────────────────────────────────────────────────────────
+2026-03-03 14:58:26.061 | ATTACK   | [ATTACKER] Skip — victim transmits OK → Victim TEC: 142 → 141  (−1)
+2026-03-03 14:58:26.061 | BUS      | 
+[BUS] ATTACKER sends 5 valid frame(s) → TEC -5
+2026-03-03 14:58:26.061 | BUS      |   ATTACKER TEC now: 1
+2026-03-03 14:58:26.061 | ATTACK   | [ATTACKER] Skip — 5 valid frames: Attacker TEC: 6 → 1  (−5)
+2026-03-03 14:58:26.061 | ATTACK   | [ATTACKER] After skip #13: TEC=1  state=Error-Active  [cycle net attacker: -5  | cycle net victim: −1]
+2026-03-03 14:58:26.061 | CYCLE    | 
+──────────────────────────────────────────────────
+  Cycle  35  |  [VICTIM]   TEC=141  state=Error-Passive
+           |  [ATTACKER] TEC=  1  state=Error-Active
+──────────────────────────────────────────────────
+2026-03-03 14:58:26.111 | BUS      | 
+[VICTIM] Preparing periodic frame  CAN-ID=0x100  seq=0x24  data=['0xde', '0xad', '0xbe', '0x24']
+2026-03-03 14:58:26.112 | ATTACK   | 
+══════════════════════════════════════════════════════════════════════
+[ATTACKER] ATTACK CYCLE #23  (attacker TEC=1)
+══════════════════════════════════════════════════════════════════════
+2026-03-03 14:58:26.112 | ATTACK   | 
+[ATTACKER] Building attack frame  CAN-ID=0x100  recessive-inject-at physical bit 26  (targeted unstuffed safe pool: [13, 18, 20, 22, 25, 28, 34])
+2026-03-03 14:58:26.112 | INFO     | ──────────────────────────────────────────────────────────────────────
+2026-03-03 14:58:26.112 | BUS      | [BUS] Transmission attempt  sender=ATTACKER  CAN-ID=0x100  malicious=True
+2026-03-03 14:58:26.112 | BITS     |   RAW bits (ID+Data):           0 0 1 0 0 0 0 0 0 0 0 1 1 0 1 1 1 1 0 1 0 1 0 1 1 0 1 1 0 1 1 1 1 1 0 0 0 1 0 0 1 0 0
+2026-03-03 14:58:26.112 | BITS     |   STUFFED bits:                 0 0 1 0 0 0 0 0 1 0 0 0 1 1 0 1 1 1 1 0 1 0 1 0 1 1 0 1 1 0 1 1 1 1 1 0 0 0 0 1 0 0 1 0 0
+2026-03-03 14:58:26.112 | BUS      | 
+[BUS] Simultaneous transmissions → ARBITRATION
+2026-03-03 14:58:26.112 | BUS      |   Arbitration: SAME ID → both transmit together (WeepingCAN)
+2026-03-03 14:58:26.112 | BUS      | 
+[BUS] ATTACKER injects RECESSIVE bit at physical position 26
+2026-03-03 14:58:26.113 | BITS     |   Attacker bit @ pos 26:        1
+2026-03-03 14:58:26.113 | BITS     |   Victim   bit @ pos 26:        0
+2026-03-03 14:58:26.113 | BITS     |   Bus result (wire-AND):        0
+2026-03-03 14:58:26.113 | BUS      | 
+[BUS] BIT ERROR detected by attacker (sent=1, read=0)
+2026-03-03 14:58:26.113 | ERRFLAG  | 
+[BUS] ══ ERROR FLAG SEQUENCE ══
+2026-03-03 14:58:26.113 | BITS     |   ACTIVE Error Flag (attacker): 0 0 0 0 0 0
+2026-03-03 14:58:26.113 | BITS     |   Error Delimiter:              1 1 1 1 1 1 1 1
+2026-03-03 14:58:26.113 | ERRFLAG  | 
+[BUS] TEC update (+8 to both nodes):
+2026-03-03 14:58:26.113 | ERRFLAG  |   Attacker (ATTACKER) TEC: 1 → 9
+2026-03-03 14:58:26.113 | ERRFLAG  |   Victim   (VICTIM)   TEC: 141 → 149
+2026-03-03 14:58:26.113 | ERRFLAG  | 
+[BUS] Victim (VICTIM) retransmits... SUCCESS → TEC -1
+2026-03-03 14:58:26.113 | ERRFLAG  |   Victim (VICTIM) TEC: 149 → 148  [cycle net so far: +7]
+2026-03-03 14:58:26.113 | ATTACK   | [ATTACKER] Step 1 — error injected: TEC +8: 1 → 9
+2026-03-03 14:58:26.113 | BUS      | 
+[BUS] ATTACKER sends 5 valid frame(s) → TEC -5
+2026-03-03 14:58:26.114 | BUS      |   ATTACKER TEC now: 4
+2026-03-03 14:58:26.114 | ATTACK   | [ATTACKER] Step 3 — 5 valid frames: TEC −5: 9 → 4  [cycle net: +3  | victim cycle net: +7]
+2026-03-03 14:58:26.114 | ATTACK   | 
+[ATTACKER] After attack #23: TEC=4  state=Error-Active
+2026-03-03 14:58:26.114 | CYCLE    | 
+──────────────────────────────────────────────────
+  Cycle  36  |  [VICTIM]   TEC=148  state=Error-Passive
+           |  [ATTACKER] TEC=  4  state=Error-Active
+──────────────────────────────────────────────────
+2026-03-03 14:58:26.164 | BUS      | 
+[VICTIM] Preparing periodic frame  CAN-ID=0x100  seq=0x25  data=['0xde', '0xad', '0xbe', '0x25']
+2026-03-03 14:58:26.164 | ATTACK   | 
+══════════════════════════════════════════════════════════════════════
+[ATTACKER] ATTACK CYCLE #24  (attacker TEC=4)
+══════════════════════════════════════════════════════════════════════
+2026-03-03 14:58:26.165 | ATTACK   | 
+[ATTACKER] Building attack frame  CAN-ID=0x100  recessive-inject-at physical bit 23  (targeted unstuffed safe pool: [13, 18, 20, 22, 25, 28, 34])
+2026-03-03 14:58:26.165 | INFO     | ──────────────────────────────────────────────────────────────────────
+2026-03-03 14:58:26.165 | BUS      | [BUS] Transmission attempt  sender=ATTACKER  CAN-ID=0x100  malicious=True
+2026-03-03 14:58:26.165 | BITS     |   RAW bits (ID+Data):           0 0 1 0 0 0 0 0 0 0 0 1 1 0 1 1 1 1 0 1 0 1 0 1 1 0 1 1 0 1 1 1 1 1 0 0 0 1 0 0 1 0 1
+2026-03-03 14:58:26.165 | BITS     |   STUFFED bits:                 0 0 1 0 0 0 0 0 1 0 0 0 1 1 0 1 1 1 1 0 1 0 1 0 1 1 0 1 1 0 1 1 1 1 1 0 0 0 0 1 0 0 1 0 1
+2026-03-03 14:58:26.165 | BUS      | 
+[BUS] Simultaneous transmissions → ARBITRATION
+2026-03-03 14:58:26.165 | BUS      |   Arbitration: SAME ID → both transmit together (WeepingCAN)
+2026-03-03 14:58:26.165 | BUS      | 
+[BUS] ATTACKER injects RECESSIVE bit at physical position 23
+2026-03-03 14:58:26.165 | BITS     |   Attacker bit @ pos 23:        1
+2026-03-03 14:58:26.165 | BITS     |   Victim   bit @ pos 23:        0
+2026-03-03 14:58:26.165 | BITS     |   Bus result (wire-AND):        0
+2026-03-03 14:58:26.165 | BUS      | 
+[BUS] BIT ERROR detected by attacker (sent=1, read=0)
+2026-03-03 14:58:26.165 | ERRFLAG  | 
+[BUS] ══ ERROR FLAG SEQUENCE ══
+2026-03-03 14:58:26.165 | BITS     |   ACTIVE Error Flag (attacker): 0 0 0 0 0 0
+2026-03-03 14:58:26.165 | BITS     |   Error Delimiter:              1 1 1 1 1 1 1 1
+2026-03-03 14:58:26.165 | ERRFLAG  | 
+[BUS] TEC update (+8 to both nodes):
+2026-03-03 14:58:26.165 | ERRFLAG  |   Attacker (ATTACKER) TEC: 4 → 12
+2026-03-03 14:58:26.165 | ERRFLAG  |   Victim   (VICTIM)   TEC: 148 → 156
+2026-03-03 14:58:26.165 | ERRFLAG  | 
+[BUS] Victim (VICTIM) retransmits... SUCCESS → TEC -1
+2026-03-03 14:58:26.165 | ERRFLAG  |   Victim (VICTIM) TEC: 156 → 155  [cycle net so far: +7]
+2026-03-03 14:58:26.165 | ATTACK   | [ATTACKER] Step 1 — error injected: TEC +8: 4 → 12
+2026-03-03 14:58:26.165 | BUS      | 
+[BUS] ATTACKER sends 5 valid frame(s) → TEC -5
+2026-03-03 14:58:26.165 | BUS      |   ATTACKER TEC now: 7
+2026-03-03 14:58:26.166 | ATTACK   | [ATTACKER] Step 3 — 5 valid frames: TEC −5: 12 → 7  [cycle net: +3  | victim cycle net: +7]
+2026-03-03 14:58:26.166 | ATTACK   | 
+[ATTACKER] After attack #24: TEC=7  state=Error-Active
+2026-03-03 14:58:26.166 | CYCLE    | 
+──────────────────────────────────────────────────
+  Cycle  37  |  [VICTIM]   TEC=155  state=Error-Passive
+           |  [ATTACKER] TEC=  7  state=Error-Active
+──────────────────────────────────────────────────
+2026-03-03 14:58:26.216 | BUS      | 
+[VICTIM] Preparing periodic frame  CAN-ID=0x100  seq=0x26  data=['0xde', '0xad', '0xbe', '0x26']
+2026-03-03 14:58:26.216 | ATTACK   | 
+──────────────────────────────────────────────────────────────────────
+[ATTACKER] SKIP CYCLE #14  (attacker TEC=7 ≥ threshold=6)
+──────────────────────────────────────────────────────────────────────
+2026-03-03 14:58:26.216 | ATTACK   | [ATTACKER] Skip — victim transmits OK → Victim TEC: 155 → 154  (−1)
+2026-03-03 14:58:26.216 | BUS      | 
+[BUS] ATTACKER sends 5 valid frame(s) → TEC -5
+2026-03-03 14:58:26.216 | BUS      |   ATTACKER TEC now: 2
+2026-03-03 14:58:26.216 | ATTACK   | [ATTACKER] Skip — 5 valid frames: Attacker TEC: 7 → 2  (−5)
+2026-03-03 14:58:26.216 | ATTACK   | [ATTACKER] After skip #14: TEC=2  state=Error-Active  [cycle net attacker: -5  | cycle net victim: −1]
+2026-03-03 14:58:26.216 | CYCLE    | 
+──────────────────────────────────────────────────
+  Cycle  38  |  [VICTIM]   TEC=154  state=Error-Passive
+           |  [ATTACKER] TEC=  2  state=Error-Active
+──────────────────────────────────────────────────
+2026-03-03 14:58:26.267 | BUS      | 
+[VICTIM] Preparing periodic frame  CAN-ID=0x100  seq=0x27  data=['0xde', '0xad', '0xbe', '0x27']
+2026-03-03 14:58:26.267 | ATTACK   | 
+══════════════════════════════════════════════════════════════════════
+[ATTACKER] ATTACK CYCLE #25  (attacker TEC=2)
+══════════════════════════════════════════════════════════════════════
+2026-03-03 14:58:26.267 | ATTACK   | 
+[ATTACKER] Building attack frame  CAN-ID=0x100  recessive-inject-at physical bit 21  (targeted unstuffed safe pool: [13, 18, 20, 22, 25, 28, 34])
+2026-03-03 14:58:26.267 | INFO     | ──────────────────────────────────────────────────────────────────────
+2026-03-03 14:58:26.267 | BUS      | [BUS] Transmission attempt  sender=ATTACKER  CAN-ID=0x100  malicious=True
+2026-03-03 14:58:26.267 | BITS     |   RAW bits (ID+Data):           0 0 1 0 0 0 0 0 0 0 0 1 1 0 1 1 1 1 0 1 0 1 0 1 1 0 1 1 0 1 1 1 1 1 0 0 0 1 0 0 1 1 1
+2026-03-03 14:58:26.267 | BITS     |   STUFFED bits:                 0 0 1 0 0 0 0 0 1 0 0 0 1 1 0 1 1 1 1 0 1 0 1 0 1 1 0 1 1 0 1 1 1 1 1 0 0 0 0 1 0 0 1 1 1
+2026-03-03 14:58:26.267 | BUS      | 
+[BUS] Simultaneous transmissions → ARBITRATION
+2026-03-03 14:58:26.267 | BUS      |   Arbitration: SAME ID → both transmit together (WeepingCAN)
+2026-03-03 14:58:26.268 | BUS      | 
+[BUS] ATTACKER injects RECESSIVE bit at physical position 21
+2026-03-03 14:58:26.268 | BITS     |   Attacker bit @ pos 21:        1
+2026-03-03 14:58:26.268 | BITS     |   Victim   bit @ pos 21:        0
+2026-03-03 14:58:26.268 | BITS     |   Bus result (wire-AND):        0
+2026-03-03 14:58:26.268 | BUS      | 
+[BUS] BIT ERROR detected by attacker (sent=1, read=0)
+2026-03-03 14:58:26.268 | ERRFLAG  | 
+[BUS] ══ ERROR FLAG SEQUENCE ══
+2026-03-03 14:58:26.268 | BITS     |   ACTIVE Error Flag (attacker): 0 0 0 0 0 0
+2026-03-03 14:58:26.268 | BITS     |   Error Delimiter:              1 1 1 1 1 1 1 1
+2026-03-03 14:58:26.268 | ERRFLAG  | 
+[BUS] TEC update (+8 to both nodes):
+2026-03-03 14:58:26.268 | ERRFLAG  |   Attacker (ATTACKER) TEC: 2 → 10
+2026-03-03 14:58:26.268 | ERRFLAG  |   Victim   (VICTIM)   TEC: 154 → 162
+2026-03-03 14:58:26.268 | ERRFLAG  | 
+[BUS] Victim (VICTIM) retransmits... SUCCESS → TEC -1
+2026-03-03 14:58:26.268 | ERRFLAG  |   Victim (VICTIM) TEC: 162 → 161  [cycle net so far: +7]
+2026-03-03 14:58:26.268 | ATTACK   | [ATTACKER] Step 1 — error injected: TEC +8: 2 → 10
+2026-03-03 14:58:26.268 | BUS      | 
+[BUS] ATTACKER sends 5 valid frame(s) → TEC -5
+2026-03-03 14:58:26.268 | BUS      |   ATTACKER TEC now: 5
+2026-03-03 14:58:26.268 | ATTACK   | [ATTACKER] Step 3 — 5 valid frames: TEC −5: 10 → 5  [cycle net: +3  | victim cycle net: +7]
+2026-03-03 14:58:26.268 | ATTACK   | 
+[ATTACKER] After attack #25: TEC=5  state=Error-Active
+2026-03-03 14:58:26.269 | CYCLE    | 
+──────────────────────────────────────────────────
+  Cycle  39  |  [VICTIM]   TEC=161  state=Error-Passive
+           |  [ATTACKER] TEC=  5  state=Error-Active
+──────────────────────────────────────────────────
+2026-03-03 14:58:26.319 | BUS      | 
+[VICTIM] Preparing periodic frame  CAN-ID=0x100  seq=0x28  data=['0xde', '0xad', '0xbe', '0x28']
+2026-03-03 14:58:26.319 | ATTACK   | 
+══════════════════════════════════════════════════════════════════════
+[ATTACKER] ATTACK CYCLE #26  (attacker TEC=5)
+══════════════════════════════════════════════════════════════════════
+2026-03-03 14:58:26.319 | ATTACK   | 
+[ATTACKER] Building attack frame  CAN-ID=0x100  recessive-inject-at physical bit 21  (targeted unstuffed safe pool: [13, 18, 20, 22, 25, 28, 34])
+2026-03-03 14:58:26.319 | INFO     | ──────────────────────────────────────────────────────────────────────
+2026-03-03 14:58:26.319 | BUS      | [BUS] Transmission attempt  sender=ATTACKER  CAN-ID=0x100  malicious=True
+2026-03-03 14:58:26.319 | BITS     |   RAW bits (ID+Data):           0 0 1 0 0 0 0 0 0 0 0 1 1 0 1 1 1 1 0 1 0 1 0 1 1 0 1 1 0 1 1 1 1 1 0 0 0 1 0 1 0 0 0
+2026-03-03 14:58:26.319 | BITS     |   STUFFED bits:                 0 0 1 0 0 0 0 0 1 0 0 0 1 1 0 1 1 1 1 0 1 0 1 0 1 1 0 1 1 0 1 1 1 1 1 0 0 0 0 1 0 1 0 0 0
+2026-03-03 14:58:26.319 | BUS      | 
+[BUS] Simultaneous transmissions → ARBITRATION
+2026-03-03 14:58:26.320 | BUS      |   Arbitration: SAME ID → both transmit together (WeepingCAN)
+2026-03-03 14:58:26.320 | BUS      | 
+[BUS] ATTACKER injects RECESSIVE bit at physical position 21
+2026-03-03 14:58:26.320 | BITS     |   Attacker bit @ pos 21:        1
+2026-03-03 14:58:26.320 | BITS     |   Victim   bit @ pos 21:        0
+2026-03-03 14:58:26.320 | BITS     |   Bus result (wire-AND):        0
+2026-03-03 14:58:26.320 | BUS      | 
+[BUS] BIT ERROR detected by attacker (sent=1, read=0)
+2026-03-03 14:58:26.320 | ERRFLAG  | 
+[BUS] ══ ERROR FLAG SEQUENCE ══
+2026-03-03 14:58:26.320 | BITS     |   ACTIVE Error Flag (attacker): 0 0 0 0 0 0
+2026-03-03 14:58:26.320 | BITS     |   Error Delimiter:              1 1 1 1 1 1 1 1
+2026-03-03 14:58:26.320 | ERRFLAG  | 
+[BUS] TEC update (+8 to both nodes):
+2026-03-03 14:58:26.320 | ERRFLAG  |   Attacker (ATTACKER) TEC: 5 → 13
+2026-03-03 14:58:26.320 | ERRFLAG  |   Victim   (VICTIM)   TEC: 161 → 169
+2026-03-03 14:58:26.320 | ERRFLAG  | 
+[BUS] Victim (VICTIM) retransmits... SUCCESS → TEC -1
+2026-03-03 14:58:26.320 | ERRFLAG  |   Victim (VICTIM) TEC: 169 → 168  [cycle net so far: +7]
+2026-03-03 14:58:26.320 | ATTACK   | [ATTACKER] Step 1 — error injected: TEC +8: 5 → 13
+2026-03-03 14:58:26.320 | BUS      | 
+[BUS] ATTACKER sends 5 valid frame(s) → TEC -5
+2026-03-03 14:58:26.320 | BUS      |   ATTACKER TEC now: 8
+2026-03-03 14:58:26.320 | ATTACK   | [ATTACKER] Step 3 — 5 valid frames: TEC −5: 13 → 8  [cycle net: +3  | victim cycle net: +7]
+2026-03-03 14:58:26.320 | ATTACK   | 
+[ATTACKER] After attack #26: TEC=8  state=Error-Active
+2026-03-03 14:58:26.320 | CYCLE    | 
+──────────────────────────────────────────────────
+  Cycle  40  |  [VICTIM]   TEC=168  state=Error-Passive
+           |  [ATTACKER] TEC=  8  state=Error-Active
+──────────────────────────────────────────────────
+2026-03-03 14:58:26.371 | BUS      | 
+[VICTIM] Preparing periodic frame  CAN-ID=0x100  seq=0x29  data=['0xde', '0xad', '0xbe', '0x29']
+2026-03-03 14:58:26.371 | ATTACK   | 
+──────────────────────────────────────────────────────────────────────
+[ATTACKER] SKIP CYCLE #15  (attacker TEC=8 ≥ threshold=6)
+──────────────────────────────────────────────────────────────────────
+2026-03-03 14:58:26.371 | ATTACK   | [ATTACKER] Skip — victim transmits OK → Victim TEC: 168 → 167  (−1)
+2026-03-03 14:58:26.371 | BUS      | 
+[BUS] ATTACKER sends 5 valid frame(s) → TEC -5
+2026-03-03 14:58:26.371 | BUS      |   ATTACKER TEC now: 3
+2026-03-03 14:58:26.371 | ATTACK   | [ATTACKER] Skip — 5 valid frames: Attacker TEC: 8 → 3  (−5)
+2026-03-03 14:58:26.371 | ATTACK   | [ATTACKER] After skip #15: TEC=3  state=Error-Active  [cycle net attacker: -5  | cycle net victim: −1]
+2026-03-03 14:58:26.371 | CYCLE    | 
+──────────────────────────────────────────────────
+  Cycle  41  |  [VICTIM]   TEC=167  state=Error-Passive
+           |  [ATTACKER] TEC=  3  state=Error-Active
+──────────────────────────────────────────────────
+2026-03-03 14:58:26.421 | BUS      | 
+[VICTIM] Preparing periodic frame  CAN-ID=0x100  seq=0x2a  data=['0xde', '0xad', '0xbe', '0x2a']
+2026-03-03 14:58:26.422 | ATTACK   | 
+══════════════════════════════════════════════════════════════════════
+[ATTACKER] ATTACK CYCLE #27  (attacker TEC=3)
+══════════════════════════════════════════════════════════════════════
+2026-03-03 14:58:26.422 | ATTACK   | 
+[ATTACKER] Building attack frame  CAN-ID=0x100  recessive-inject-at physical bit 21  (targeted unstuffed safe pool: [13, 18, 20, 22, 25, 28, 34])
+2026-03-03 14:58:26.422 | INFO     | ──────────────────────────────────────────────────────────────────────
+2026-03-03 14:58:26.422 | BUS      | [BUS] Transmission attempt  sender=ATTACKER  CAN-ID=0x100  malicious=True
+2026-03-03 14:58:26.422 | BITS     |   RAW bits (ID+Data):           0 0 1 0 0 0 0 0 0 0 0 1 1 0 1 1 1 1 0 1 0 1 0 1 1 0 1 1 0 1 1 1 1 1 0 0 0 1 0 1 0 1 0
+2026-03-03 14:58:26.422 | BITS     |   STUFFED bits:                 0 0 1 0 0 0 0 0 1 0 0 0 1 1 0 1 1 1 1 0 1 0 1 0 1 1 0 1 1 0 1 1 1 1 1 0 0 0 0 1 0 1 0 1 0
+2026-03-03 14:58:26.422 | BUS      | 
+[BUS] Simultaneous transmissions → ARBITRATION
+2026-03-03 14:58:26.422 | BUS      |   Arbitration: SAME ID → both transmit together (WeepingCAN)
+2026-03-03 14:58:26.422 | BUS      | 
+[BUS] ATTACKER injects RECESSIVE bit at physical position 21
+2026-03-03 14:58:26.422 | BITS     |   Attacker bit @ pos 21:        1
+2026-03-03 14:58:26.422 | BITS     |   Victim   bit @ pos 21:        0
+2026-03-03 14:58:26.422 | BITS     |   Bus result (wire-AND):        0
+2026-03-03 14:58:26.422 | BUS      | 
+[BUS] BIT ERROR detected by attacker (sent=1, read=0)
+2026-03-03 14:58:26.422 | ERRFLAG  | 
+[BUS] ══ ERROR FLAG SEQUENCE ══
+2026-03-03 14:58:26.422 | BITS     |   ACTIVE Error Flag (attacker): 0 0 0 0 0 0
+2026-03-03 14:58:26.423 | BITS     |   Error Delimiter:              1 1 1 1 1 1 1 1
+2026-03-03 14:58:26.423 | ERRFLAG  | 
+[BUS] TEC update (+8 to both nodes):
+2026-03-03 14:58:26.423 | ERRFLAG  |   Attacker (ATTACKER) TEC: 3 → 11
+2026-03-03 14:58:26.423 | ERRFLAG  |   Victim   (VICTIM)   TEC: 167 → 175
+2026-03-03 14:58:26.423 | ERRFLAG  | 
+[BUS] Victim (VICTIM) retransmits... SUCCESS → TEC -1
+2026-03-03 14:58:26.423 | ERRFLAG  |   Victim (VICTIM) TEC: 175 → 174  [cycle net so far: +7]
+2026-03-03 14:58:26.423 | ATTACK   | [ATTACKER] Step 1 — error injected: TEC +8: 3 → 11
+2026-03-03 14:58:26.423 | BUS      | 
+[BUS] ATTACKER sends 5 valid frame(s) → TEC -5
+2026-03-03 14:58:26.423 | BUS      |   ATTACKER TEC now: 6
+2026-03-03 14:58:26.423 | ATTACK   | [ATTACKER] Step 3 — 5 valid frames: TEC −5: 11 → 6  [cycle net: +3  | victim cycle net: +7]
+2026-03-03 14:58:26.423 | ATTACK   | 
+[ATTACKER] After attack #27: TEC=6  state=Error-Active
+2026-03-03 14:58:26.423 | CYCLE    | 
+──────────────────────────────────────────────────
+  Cycle  42  |  [VICTIM]   TEC=174  state=Error-Passive
+           |  [ATTACKER] TEC=  6  state=Error-Active
+──────────────────────────────────────────────────
+2026-03-03 14:58:26.473 | BUS      | 
+[VICTIM] Preparing periodic frame  CAN-ID=0x100  seq=0x2b  data=['0xde', '0xad', '0xbe', '0x2b']
+2026-03-03 14:58:26.473 | ATTACK   | 
+──────────────────────────────────────────────────────────────────────
+[ATTACKER] SKIP CYCLE #16  (attacker TEC=6 ≥ threshold=6)
+──────────────────────────────────────────────────────────────────────
+2026-03-03 14:58:26.474 | ATTACK   | [ATTACKER] Skip — victim transmits OK → Victim TEC: 174 → 173  (−1)
+2026-03-03 14:58:26.474 | BUS      | 
+[BUS] ATTACKER sends 5 valid frame(s) → TEC -5
+2026-03-03 14:58:26.474 | BUS      |   ATTACKER TEC now: 1
+2026-03-03 14:58:26.474 | ATTACK   | [ATTACKER] Skip — 5 valid frames: Attacker TEC: 6 → 1  (−5)
+2026-03-03 14:58:26.474 | ATTACK   | [ATTACKER] After skip #16: TEC=1  state=Error-Active  [cycle net attacker: -5  | cycle net victim: −1]
+2026-03-03 14:58:26.474 | CYCLE    | 
+──────────────────────────────────────────────────
+  Cycle  43  |  [VICTIM]   TEC=173  state=Error-Passive
+           |  [ATTACKER] TEC=  1  state=Error-Active
+──────────────────────────────────────────────────
+2026-03-03 14:58:26.524 | BUS      | 
+[VICTIM] Preparing periodic frame  CAN-ID=0x100  seq=0x2c  data=['0xde', '0xad', '0xbe', '0x2c']
+2026-03-03 14:58:26.525 | ATTACK   | 
+══════════════════════════════════════════════════════════════════════
+[ATTACKER] ATTACK CYCLE #28  (attacker TEC=1)
+══════════════════════════════════════════════════════════════════════
+2026-03-03 14:58:26.525 | ATTACK   | 
+[ATTACKER] Building attack frame  CAN-ID=0x100  recessive-inject-at physical bit 29  (targeted unstuffed safe pool: [13, 18, 20, 22, 25, 28, 34])
+2026-03-03 14:58:26.525 | INFO     | ──────────────────────────────────────────────────────────────────────
+2026-03-03 14:58:26.525 | BUS      | [BUS] Transmission attempt  sender=ATTACKER  CAN-ID=0x100  malicious=True
+2026-03-03 14:58:26.525 | BITS     |   RAW bits (ID+Data):           0 0 1 0 0 0 0 0 0 0 0 1 1 0 1 1 1 1 0 1 0 1 0 1 1 0 1 1 0 1 1 1 1 1 0 0 0 1 0 1 1 0 0
+2026-03-03 14:58:26.525 | BITS     |   STUFFED bits:                 0 0 1 0 0 0 0 0 1 0 0 0 1 1 0 1 1 1 1 0 1 0 1 0 1 1 0 1 1 0 1 1 1 1 1 0 0 0 0 1 0 1 1 0 0
+2026-03-03 14:58:26.525 | BUS      | 
+[BUS] Simultaneous transmissions → ARBITRATION
+2026-03-03 14:58:26.525 | BUS      |   Arbitration: SAME ID → both transmit together (WeepingCAN)
+2026-03-03 14:58:26.525 | BUS      | 
+[BUS] ATTACKER injects RECESSIVE bit at physical position 29
+2026-03-03 14:58:26.525 | BITS     |   Attacker bit @ pos 29:        1
+2026-03-03 14:58:26.525 | BITS     |   Victim   bit @ pos 29:        0
+2026-03-03 14:58:26.525 | BITS     |   Bus result (wire-AND):        0
+2026-03-03 14:58:26.525 | BUS      | 
+[BUS] BIT ERROR detected by attacker (sent=1, read=0)
+2026-03-03 14:58:26.525 | ERRFLAG  | 
+[BUS] ══ ERROR FLAG SEQUENCE ══
+2026-03-03 14:58:26.525 | BITS     |   ACTIVE Error Flag (attacker): 0 0 0 0 0 0
+2026-03-03 14:58:26.525 | BITS     |   Error Delimiter:              1 1 1 1 1 1 1 1
+2026-03-03 14:58:26.525 | ERRFLAG  | 
+[BUS] TEC update (+8 to both nodes):
+2026-03-03 14:58:26.525 | ERRFLAG  |   Attacker (ATTACKER) TEC: 1 → 9
+2026-03-03 14:58:26.525 | ERRFLAG  |   Victim   (VICTIM)   TEC: 173 → 181
+2026-03-03 14:58:26.526 | ERRFLAG  | 
+[BUS] Victim (VICTIM) retransmits... SUCCESS → TEC -1
+2026-03-03 14:58:26.526 | ERRFLAG  |   Victim (VICTIM) TEC: 181 → 180  [cycle net so far: +7]
+2026-03-03 14:58:26.526 | ATTACK   | [ATTACKER] Step 1 — error injected: TEC +8: 1 → 9
+2026-03-03 14:58:26.526 | BUS      | 
+[BUS] ATTACKER sends 5 valid frame(s) → TEC -5
+2026-03-03 14:58:26.526 | BUS      |   ATTACKER TEC now: 4
+2026-03-03 14:58:26.526 | ATTACK   | [ATTACKER] Step 3 — 5 valid frames: TEC −5: 9 → 4  [cycle net: +3  | victim cycle net: +7]
+2026-03-03 14:58:26.526 | ATTACK   | 
+[ATTACKER] After attack #28: TEC=4  state=Error-Active
+2026-03-03 14:58:26.526 | CYCLE    | 
+──────────────────────────────────────────────────
+  Cycle  44  |  [VICTIM]   TEC=180  state=Error-Passive
+           |  [ATTACKER] TEC=  4  state=Error-Active
+──────────────────────────────────────────────────
+2026-03-03 14:58:26.576 | BUS      | 
+[VICTIM] Preparing periodic frame  CAN-ID=0x100  seq=0x2d  data=['0xde', '0xad', '0xbe', '0x2d']
+2026-03-03 14:58:26.576 | ATTACK   | 
+══════════════════════════════════════════════════════════════════════
+[ATTACKER] ATTACK CYCLE #29  (attacker TEC=4)
+══════════════════════════════════════════════════════════════════════
+2026-03-03 14:58:26.576 | ATTACK   | 
+[ATTACKER] Building attack frame  CAN-ID=0x100  recessive-inject-at physical bit 23  (targeted unstuffed safe pool: [13, 18, 20, 22, 25, 28, 34])
+2026-03-03 14:58:26.576 | INFO     | ──────────────────────────────────────────────────────────────────────
+2026-03-03 14:58:26.576 | BUS      | [BUS] Transmission attempt  sender=ATTACKER  CAN-ID=0x100  malicious=True
+2026-03-03 14:58:26.577 | BITS     |   RAW bits (ID+Data):           0 0 1 0 0 0 0 0 0 0 0 1 1 0 1 1 1 1 0 1 0 1 0 1 1 0 1 1 0 1 1 1 1 1 0 0 0 1 0 1 1 0 1
+2026-03-03 14:58:26.577 | BITS     |   STUFFED bits:                 0 0 1 0 0 0 0 0 1 0 0 0 1 1 0 1 1 1 1 0 1 0 1 0 1 1 0 1 1 0 1 1 1 1 1 0 0 0 0 1 0 1 1 0 1
+2026-03-03 14:58:26.577 | BUS      | 
+[BUS] Simultaneous transmissions → ARBITRATION
+2026-03-03 14:58:26.577 | BUS      |   Arbitration: SAME ID → both transmit together (WeepingCAN)
+2026-03-03 14:58:26.577 | BUS      | 
+[BUS] ATTACKER injects RECESSIVE bit at physical position 23
+2026-03-03 14:58:26.577 | BITS     |   Attacker bit @ pos 23:        1
+2026-03-03 14:58:26.577 | BITS     |   Victim   bit @ pos 23:        0
+2026-03-03 14:58:26.577 | BITS     |   Bus result (wire-AND):        0
+2026-03-03 14:58:26.577 | BUS      | 
+[BUS] BIT ERROR detected by attacker (sent=1, read=0)
+2026-03-03 14:58:26.577 | ERRFLAG  | 
+[BUS] ══ ERROR FLAG SEQUENCE ══
+2026-03-03 14:58:26.577 | BITS     |   ACTIVE Error Flag (attacker): 0 0 0 0 0 0
+2026-03-03 14:58:26.577 | BITS     |   Error Delimiter:              1 1 1 1 1 1 1 1
+2026-03-03 14:58:26.577 | ERRFLAG  | 
+[BUS] TEC update (+8 to both nodes):
+2026-03-03 14:58:26.577 | ERRFLAG  |   Attacker (ATTACKER) TEC: 4 → 12
+2026-03-03 14:58:26.577 | ERRFLAG  |   Victim   (VICTIM)   TEC: 180 → 188
+2026-03-03 14:58:26.577 | ERRFLAG  | 
+[BUS] Victim (VICTIM) retransmits... SUCCESS → TEC -1
+2026-03-03 14:58:26.577 | ERRFLAG  |   Victim (VICTIM) TEC: 188 → 187  [cycle net so far: +7]
+2026-03-03 14:58:26.577 | ATTACK   | [ATTACKER] Step 1 — error injected: TEC +8: 4 → 12
+2026-03-03 14:58:26.577 | BUS      | 
+[BUS] ATTACKER sends 5 valid frame(s) → TEC -5
+2026-03-03 14:58:26.577 | BUS      |   ATTACKER TEC now: 7
+2026-03-03 14:58:26.577 | ATTACK   | [ATTACKER] Step 3 — 5 valid frames: TEC −5: 12 → 7  [cycle net: +3  | victim cycle net: +7]
+2026-03-03 14:58:26.577 | ATTACK   | 
+[ATTACKER] After attack #29: TEC=7  state=Error-Active
+2026-03-03 14:58:26.577 | CYCLE    | 
+──────────────────────────────────────────────────
+  Cycle  45  |  [VICTIM]   TEC=187  state=Error-Passive
+           |  [ATTACKER] TEC=  7  state=Error-Active
+──────────────────────────────────────────────────
+2026-03-03 14:58:26.628 | BUS      | 
+[VICTIM] Preparing periodic frame  CAN-ID=0x100  seq=0x2e  data=['0xde', '0xad', '0xbe', '0x2e']
+2026-03-03 14:58:26.628 | ATTACK   | 
+──────────────────────────────────────────────────────────────────────
+[ATTACKER] SKIP CYCLE #17  (attacker TEC=7 ≥ threshold=6)
+──────────────────────────────────────────────────────────────────────
+2026-03-03 14:58:26.628 | ATTACK   | [ATTACKER] Skip — victim transmits OK → Victim TEC: 187 → 186  (−1)
+2026-03-03 14:58:26.628 | BUS      | 
+[BUS] ATTACKER sends 5 valid frame(s) → TEC -5
+2026-03-03 14:58:26.628 | BUS      |   ATTACKER TEC now: 2
+2026-03-03 14:58:26.628 | ATTACK   | [ATTACKER] Skip — 5 valid frames: Attacker TEC: 7 → 2  (−5)
+2026-03-03 14:58:26.628 | ATTACK   | [ATTACKER] After skip #17: TEC=2  state=Error-Active  [cycle net attacker: -5  | cycle net victim: −1]
+2026-03-03 14:58:26.628 | CYCLE    | 
+──────────────────────────────────────────────────
+  Cycle  46  |  [VICTIM]   TEC=186  state=Error-Passive
+           |  [ATTACKER] TEC=  2  state=Error-Active
+──────────────────────────────────────────────────
+2026-03-03 14:58:26.678 | BUS      | 
+[VICTIM] Preparing periodic frame  CAN-ID=0x100  seq=0x2f  data=['0xde', '0xad', '0xbe', '0x2f']
+2026-03-03 14:58:26.679 | ATTACK   | 
+══════════════════════════════════════════════════════════════════════
+[ATTACKER] ATTACK CYCLE #30  (attacker TEC=2)
+══════════════════════════════════════════════════════════════════════
+2026-03-03 14:58:26.679 | ATTACK   | 
+[ATTACKER] Building attack frame  CAN-ID=0x100  recessive-inject-at physical bit 23  (targeted unstuffed safe pool: [13, 18, 20, 22, 25, 28, 34])
+2026-03-03 14:58:26.679 | INFO     | ──────────────────────────────────────────────────────────────────────
+2026-03-03 14:58:26.679 | BUS      | [BUS] Transmission attempt  sender=ATTACKER  CAN-ID=0x100  malicious=True
+2026-03-03 14:58:26.679 | BITS     |   RAW bits (ID+Data):           0 0 1 0 0 0 0 0 0 0 0 1 1 0 1 1 1 1 0 1 0 1 0 1 1 0 1 1 0 1 1 1 1 1 0 0 0 1 0 1 1 1 1
+2026-03-03 14:58:26.679 | BITS     |   STUFFED bits:                 0 0 1 0 0 0 0 0 1 0 0 0 1 1 0 1 1 1 1 0 1 0 1 0 1 1 0 1 1 0 1 1 1 1 1 0 0 0 0 1 0 1 1 1 1
+2026-03-03 14:58:26.679 | BUS      | 
+[BUS] Simultaneous transmissions → ARBITRATION
+2026-03-03 14:58:26.679 | BUS      |   Arbitration: SAME ID → both transmit together (WeepingCAN)
+2026-03-03 14:58:26.679 | BUS      | 
+[BUS] ATTACKER injects RECESSIVE bit at physical position 23
+2026-03-03 14:58:26.679 | BITS     |   Attacker bit @ pos 23:        1
+2026-03-03 14:58:26.679 | BITS     |   Victim   bit @ pos 23:        0
+2026-03-03 14:58:26.679 | BITS     |   Bus result (wire-AND):        0
+2026-03-03 14:58:26.679 | BUS      | 
+[BUS] BIT ERROR detected by attacker (sent=1, read=0)
+2026-03-03 14:58:26.679 | ERRFLAG  | 
+[BUS] ══ ERROR FLAG SEQUENCE ══
+2026-03-03 14:58:26.680 | BITS     |   ACTIVE Error Flag (attacker): 0 0 0 0 0 0
+2026-03-03 14:58:26.680 | BITS     |   Error Delimiter:              1 1 1 1 1 1 1 1
+2026-03-03 14:58:26.680 | ERRFLAG  | 
+[BUS] TEC update (+8 to both nodes):
+2026-03-03 14:58:26.680 | ERRFLAG  |   Attacker (ATTACKER) TEC: 2 → 10
+2026-03-03 14:58:26.680 | ERRFLAG  |   Victim   (VICTIM)   TEC: 186 → 194
+2026-03-03 14:58:26.680 | ERRFLAG  | 
+[BUS] Victim (VICTIM) retransmits... SUCCESS → TEC -1
+2026-03-03 14:58:26.680 | ERRFLAG  |   Victim (VICTIM) TEC: 194 → 193  [cycle net so far: +7]
+2026-03-03 14:58:26.680 | ATTACK   | [ATTACKER] Step 1 — error injected: TEC +8: 2 → 10
+2026-03-03 14:58:26.680 | BUS      | 
+[BUS] ATTACKER sends 5 valid frame(s) → TEC -5
+2026-03-03 14:58:26.680 | BUS      |   ATTACKER TEC now: 5
+2026-03-03 14:58:26.680 | ATTACK   | [ATTACKER] Step 3 — 5 valid frames: TEC −5: 10 → 5  [cycle net: +3  | victim cycle net: +7]
+2026-03-03 14:58:26.680 | ATTACK   | 
+[ATTACKER] After attack #30: TEC=5  state=Error-Active
+2026-03-03 14:58:26.680 | CYCLE    | 
+──────────────────────────────────────────────────
+  Cycle  47  |  [VICTIM]   TEC=193  state=Error-Passive
+           |  [ATTACKER] TEC=  5  state=Error-Active
+──────────────────────────────────────────────────
+2026-03-03 14:58:26.730 | BUS      | 
+[VICTIM] Preparing periodic frame  CAN-ID=0x100  seq=0x30  data=['0xde', '0xad', '0xbe', '0x30']
+2026-03-03 14:58:26.731 | ATTACK   | 
+══════════════════════════════════════════════════════════════════════
+[ATTACKER] ATTACK CYCLE #31  (attacker TEC=5)
+══════════════════════════════════════════════════════════════════════
+2026-03-03 14:58:26.731 | ATTACK   | 
+[ATTACKER] Building attack frame  CAN-ID=0x100  recessive-inject-at physical bit 14  (targeted unstuffed safe pool: [13, 18, 20, 22, 25, 28, 34])
+2026-03-03 14:58:26.731 | INFO     | ──────────────────────────────────────────────────────────────────────
+2026-03-03 14:58:26.731 | BUS      | [BUS] Transmission attempt  sender=ATTACKER  CAN-ID=0x100  malicious=True
+2026-03-03 14:58:26.731 | BITS     |   RAW bits (ID+Data):           0 0 1 0 0 0 0 0 0 0 0 1 1 0 1 1 1 1 0 1 0 1 0 1 1 0 1 1 0 1 1 1 1 1 0 0 0 1 1 0 0 0 0
+2026-03-03 14:58:26.731 | BITS     |   STUFFED bits:                 0 0 1 0 0 0 0 0 1 0 0 0 1 1 0 1 1 1 1 0 1 0 1 0 1 1 0 1 1 0 1 1 1 1 1 0 0 0 0 1 1 0 0 0 0
+2026-03-03 14:58:26.731 | BUS      | 
+[BUS] Simultaneous transmissions → ARBITRATION
+2026-03-03 14:58:26.732 | BUS      |   Arbitration: SAME ID → both transmit together (WeepingCAN)
+2026-03-03 14:58:26.732 | BUS      | 
+[BUS] ATTACKER injects RECESSIVE bit at physical position 14
+2026-03-03 14:58:26.732 | BITS     |   Attacker bit @ pos 14:        1
+2026-03-03 14:58:26.732 | BITS     |   Victim   bit @ pos 14:        0
+2026-03-03 14:58:26.732 | BITS     |   Bus result (wire-AND):        0
+2026-03-03 14:58:26.732 | BUS      | 
+[BUS] BIT ERROR detected by attacker (sent=1, read=0)
+2026-03-03 14:58:26.732 | ERRFLAG  | 
+[BUS] ══ ERROR FLAG SEQUENCE ══
+2026-03-03 14:58:26.732 | BITS     |   ACTIVE Error Flag (attacker): 0 0 0 0 0 0
+2026-03-03 14:58:26.732 | BITS     |   Error Delimiter:              1 1 1 1 1 1 1 1
+2026-03-03 14:58:26.732 | ERRFLAG  | 
+[BUS] TEC update (+8 to both nodes):
+2026-03-03 14:58:26.732 | ERRFLAG  |   Attacker (ATTACKER) TEC: 5 → 13
+2026-03-03 14:58:26.732 | ERRFLAG  |   Victim   (VICTIM)   TEC: 193 → 201
+2026-03-03 14:58:26.732 | ERRFLAG  | 
+[BUS] Victim (VICTIM) retransmits... SUCCESS → TEC -1
+2026-03-03 14:58:26.732 | ERRFLAG  |   Victim (VICTIM) TEC: 201 → 200  [cycle net so far: +7]
+2026-03-03 14:58:26.732 | ATTACK   | [ATTACKER] Step 1 — error injected: TEC +8: 5 → 13
+2026-03-03 14:58:26.732 | BUS      | 
+[BUS] ATTACKER sends 5 valid frame(s) → TEC -5
+2026-03-03 14:58:26.732 | BUS      |   ATTACKER TEC now: 8
+2026-03-03 14:58:26.733 | ATTACK   | [ATTACKER] Step 3 — 5 valid frames: TEC −5: 13 → 8  [cycle net: +3  | victim cycle net: +7]
+2026-03-03 14:58:26.733 | ATTACK   | 
+[ATTACKER] After attack #31: TEC=8  state=Error-Active
+2026-03-03 14:58:26.733 | CYCLE    | 
+──────────────────────────────────────────────────
+  Cycle  48  |  [VICTIM]   TEC=200  state=Error-Passive
+           |  [ATTACKER] TEC=  8  state=Error-Active
+──────────────────────────────────────────────────
+2026-03-03 14:58:26.783 | BUS      | 
+[VICTIM] Preparing periodic frame  CAN-ID=0x100  seq=0x31  data=['0xde', '0xad', '0xbe', '0x31']
+2026-03-03 14:58:26.783 | ATTACK   | 
+──────────────────────────────────────────────────────────────────────
+[ATTACKER] SKIP CYCLE #18  (attacker TEC=8 ≥ threshold=6)
+──────────────────────────────────────────────────────────────────────
+2026-03-03 14:58:26.783 | ATTACK   | [ATTACKER] Skip — victim transmits OK → Victim TEC: 200 → 199  (−1)
+2026-03-03 14:58:26.784 | BUS      | 
+[BUS] ATTACKER sends 5 valid frame(s) → TEC -5
+2026-03-03 14:58:26.784 | BUS      |   ATTACKER TEC now: 3
+2026-03-03 14:58:26.784 | ATTACK   | [ATTACKER] Skip — 5 valid frames: Attacker TEC: 8 → 3  (−5)
+2026-03-03 14:58:26.784 | ATTACK   | [ATTACKER] After skip #18: TEC=3  state=Error-Active  [cycle net attacker: -5  | cycle net victim: −1]
+2026-03-03 14:58:26.784 | CYCLE    | 
+──────────────────────────────────────────────────
+  Cycle  49  |  [VICTIM]   TEC=199  state=Error-Passive
+           |  [ATTACKER] TEC=  3  state=Error-Active
+──────────────────────────────────────────────────
+2026-03-03 14:58:26.834 | BUS      | 
+[VICTIM] Preparing periodic frame  CAN-ID=0x100  seq=0x32  data=['0xde', '0xad', '0xbe', '0x32']
+2026-03-03 14:58:26.835 | ATTACK   | 
+══════════════════════════════════════════════════════════════════════
+[ATTACKER] ATTACK CYCLE #32  (attacker TEC=3)
+══════════════════════════════════════════════════════════════════════
+2026-03-03 14:58:26.835 | ATTACK   | 
+[ATTACKER] Building attack frame  CAN-ID=0x100  recessive-inject-at physical bit 23  (targeted unstuffed safe pool: [13, 18, 20, 22, 25, 28, 34])
+2026-03-03 14:58:26.835 | INFO     | ──────────────────────────────────────────────────────────────────────
+2026-03-03 14:58:26.835 | BUS      | [BUS] Transmission attempt  sender=ATTACKER  CAN-ID=0x100  malicious=True
+2026-03-03 14:58:26.835 | BITS     |   RAW bits (ID+Data):           0 0 1 0 0 0 0 0 0 0 0 1 1 0 1 1 1 1 0 1 0 1 0 1 1 0 1 1 0 1 1 1 1 1 0 0 0 1 1 0 0 1 0
+2026-03-03 14:58:26.835 | BITS     |   STUFFED bits:                 0 0 1 0 0 0 0 0 1 0 0 0 1 1 0 1 1 1 1 0 1 0 1 0 1 1 0 1 1 0 1 1 1 1 1 0 0 0 0 1 1 0 0 1 0
+2026-03-03 14:58:26.835 | BUS      | 
+[BUS] Simultaneous transmissions → ARBITRATION
+2026-03-03 14:58:26.835 | BUS      |   Arbitration: SAME ID → both transmit together (WeepingCAN)
+2026-03-03 14:58:26.835 | BUS      | 
+[BUS] ATTACKER injects RECESSIVE bit at physical position 23
+2026-03-03 14:58:26.835 | BITS     |   Attacker bit @ pos 23:        1
+2026-03-03 14:58:26.835 | BITS     |   Victim   bit @ pos 23:        0
+2026-03-03 14:58:26.835 | BITS     |   Bus result (wire-AND):        0
+2026-03-03 14:58:26.835 | BUS      | 
+[BUS] BIT ERROR detected by attacker (sent=1, read=0)
+2026-03-03 14:58:26.835 | ERRFLAG  | 
+[BUS] ══ ERROR FLAG SEQUENCE ══
+2026-03-03 14:58:26.835 | BITS     |   ACTIVE Error Flag (attacker): 0 0 0 0 0 0
+2026-03-03 14:58:26.835 | BITS     |   Error Delimiter:              1 1 1 1 1 1 1 1
+2026-03-03 14:58:26.835 | ERRFLAG  | 
+[BUS] TEC update (+8 to both nodes):
+2026-03-03 14:58:26.836 | ERRFLAG  |   Attacker (ATTACKER) TEC: 3 → 11
+2026-03-03 14:58:26.836 | ERRFLAG  |   Victim   (VICTIM)   TEC: 199 → 207
+2026-03-03 14:58:26.836 | ERRFLAG  | 
+[BUS] Victim (VICTIM) retransmits... SUCCESS → TEC -1
+2026-03-03 14:58:26.836 | ERRFLAG  |   Victim (VICTIM) TEC: 207 → 206  [cycle net so far: +7]
+2026-03-03 14:58:26.836 | ATTACK   | [ATTACKER] Step 1 — error injected: TEC +8: 3 → 11
+2026-03-03 14:58:26.836 | BUS      | 
+[BUS] ATTACKER sends 5 valid frame(s) → TEC -5
+2026-03-03 14:58:26.836 | BUS      |   ATTACKER TEC now: 6
+2026-03-03 14:58:26.836 | ATTACK   | [ATTACKER] Step 3 — 5 valid frames: TEC −5: 11 → 6  [cycle net: +3  | victim cycle net: +7]
+2026-03-03 14:58:26.836 | ATTACK   | 
+[ATTACKER] After attack #32: TEC=6  state=Error-Active
+2026-03-03 14:58:26.836 | CYCLE    | 
+──────────────────────────────────────────────────
+  Cycle  50  |  [VICTIM]   TEC=206  state=Error-Passive
+           |  [ATTACKER] TEC=  6  state=Error-Active
+──────────────────────────────────────────────────
+2026-03-03 14:58:26.886 | BUS      | 
+[VICTIM] Preparing periodic frame  CAN-ID=0x100  seq=0x33  data=['0xde', '0xad', '0xbe', '0x33']
+2026-03-03 14:58:26.886 | ATTACK   | 
+──────────────────────────────────────────────────────────────────────
+[ATTACKER] SKIP CYCLE #19  (attacker TEC=6 ≥ threshold=6)
+──────────────────────────────────────────────────────────────────────
+2026-03-03 14:58:26.886 | ATTACK   | [ATTACKER] Skip — victim transmits OK → Victim TEC: 206 → 205  (−1)
+2026-03-03 14:58:26.887 | BUS      | 
+[BUS] ATTACKER sends 5 valid frame(s) → TEC -5
+2026-03-03 14:58:26.887 | BUS      |   ATTACKER TEC now: 1
+2026-03-03 14:58:26.887 | ATTACK   | [ATTACKER] Skip — 5 valid frames: Attacker TEC: 6 → 1  (−5)
+2026-03-03 14:58:26.887 | ATTACK   | [ATTACKER] After skip #19: TEC=1  state=Error-Active  [cycle net attacker: -5  | cycle net victim: −1]
+2026-03-03 14:58:26.887 | CYCLE    | 
+──────────────────────────────────────────────────
+  Cycle  51  |  [VICTIM]   TEC=205  state=Error-Passive
+           |  [ATTACKER] TEC=  1  state=Error-Active
+──────────────────────────────────────────────────
+2026-03-03 14:58:26.937 | BUS      | 
+[VICTIM] Preparing periodic frame  CAN-ID=0x100  seq=0x34  data=['0xde', '0xad', '0xbe', '0x34']
+2026-03-03 14:58:26.937 | ATTACK   | 
+══════════════════════════════════════════════════════════════════════
+[ATTACKER] ATTACK CYCLE #33  (attacker TEC=1)
+══════════════════════════════════════════════════════════════════════
+2026-03-03 14:58:26.937 | ATTACK   | 
+[ATTACKER] Building attack frame  CAN-ID=0x100  recessive-inject-at physical bit 23  (targeted unstuffed safe pool: [13, 18, 20, 22, 25, 28, 34])
+2026-03-03 14:58:26.937 | INFO     | ──────────────────────────────────────────────────────────────────────
+2026-03-03 14:58:26.937 | BUS      | [BUS] Transmission attempt  sender=ATTACKER  CAN-ID=0x100  malicious=True
+2026-03-03 14:58:26.937 | BITS     |   RAW bits (ID+Data):           0 0 1 0 0 0 0 0 0 0 0 1 1 0 1 1 1 1 0 1 0 1 0 1 1 0 1 1 0 1 1 1 1 1 0 0 0 1 1 0 1 0 0
+2026-03-03 14:58:26.938 | BITS     |   STUFFED bits:                 0 0 1 0 0 0 0 0 1 0 0 0 1 1 0 1 1 1 1 0 1 0 1 0 1 1 0 1 1 0 1 1 1 1 1 0 0 0 0 1 1 0 1 0 0
+2026-03-03 14:58:26.938 | BUS      | 
+[BUS] Simultaneous transmissions → ARBITRATION
+2026-03-03 14:58:26.938 | BUS      |   Arbitration: SAME ID → both transmit together (WeepingCAN)
+2026-03-03 14:58:26.938 | BUS      | 
+[BUS] ATTACKER injects RECESSIVE bit at physical position 23
+2026-03-03 14:58:26.938 | BITS     |   Attacker bit @ pos 23:        1
+2026-03-03 14:58:26.938 | BITS     |   Victim   bit @ pos 23:        0
+2026-03-03 14:58:26.938 | BITS     |   Bus result (wire-AND):        0
+2026-03-03 14:58:26.938 | BUS      | 
+[BUS] BIT ERROR detected by attacker (sent=1, read=0)
+2026-03-03 14:58:26.938 | ERRFLAG  | 
+[BUS] ══ ERROR FLAG SEQUENCE ══
+2026-03-03 14:58:26.938 | BITS     |   ACTIVE Error Flag (attacker): 0 0 0 0 0 0
+2026-03-03 14:58:26.938 | BITS     |   Error Delimiter:              1 1 1 1 1 1 1 1
+2026-03-03 14:58:26.938 | ERRFLAG  | 
+[BUS] TEC update (+8 to both nodes):
+2026-03-03 14:58:26.938 | ERRFLAG  |   Attacker (ATTACKER) TEC: 1 → 9
+2026-03-03 14:58:26.938 | ERRFLAG  |   Victim   (VICTIM)   TEC: 205 → 213
+2026-03-03 14:58:26.938 | ERRFLAG  | 
+[BUS] Victim (VICTIM) retransmits... SUCCESS → TEC -1
+2026-03-03 14:58:26.938 | ERRFLAG  |   Victim (VICTIM) TEC: 213 → 212  [cycle net so far: +7]
+2026-03-03 14:58:26.938 | ATTACK   | [ATTACKER] Step 1 — error injected: TEC +8: 1 → 9
+2026-03-03 14:58:26.939 | BUS      | 
+[BUS] ATTACKER sends 5 valid frame(s) → TEC -5
+2026-03-03 14:58:26.939 | BUS      |   ATTACKER TEC now: 4
+2026-03-03 14:58:26.939 | ATTACK   | [ATTACKER] Step 3 — 5 valid frames: TEC −5: 9 → 4  [cycle net: +3  | victim cycle net: +7]
+2026-03-03 14:58:26.939 | ATTACK   | 
+[ATTACKER] After attack #33: TEC=4  state=Error-Active
+2026-03-03 14:58:26.939 | CYCLE    | 
+──────────────────────────────────────────────────
+  Cycle  52  |  [VICTIM]   TEC=212  state=Error-Passive
+           |  [ATTACKER] TEC=  4  state=Error-Active
+──────────────────────────────────────────────────
+2026-03-03 14:58:26.989 | BUS      | 
+[VICTIM] Preparing periodic frame  CAN-ID=0x100  seq=0x35  data=['0xde', '0xad', '0xbe', '0x35']
+2026-03-03 14:58:26.989 | ATTACK   | 
+══════════════════════════════════════════════════════════════════════
+[ATTACKER] ATTACK CYCLE #34  (attacker TEC=4)
+══════════════════════════════════════════════════════════════════════
+2026-03-03 14:58:26.989 | ATTACK   | 
+[ATTACKER] Building attack frame  CAN-ID=0x100  recessive-inject-at physical bit 29  (targeted unstuffed safe pool: [13, 18, 20, 22, 25, 28, 34])
+2026-03-03 14:58:26.990 | INFO     | ──────────────────────────────────────────────────────────────────────
+2026-03-03 14:58:26.990 | BUS      | [BUS] Transmission attempt  sender=ATTACKER  CAN-ID=0x100  malicious=True
+2026-03-03 14:58:26.990 | BITS     |   RAW bits (ID+Data):           0 0 1 0 0 0 0 0 0 0 0 1 1 0 1 1 1 1 0 1 0 1 0 1 1 0 1 1 0 1 1 1 1 1 0 0 0 1 1 0 1 0 1
+2026-03-03 14:58:26.990 | BITS     |   STUFFED bits:                 0 0 1 0 0 0 0 0 1 0 0 0 1 1 0 1 1 1 1 0 1 0 1 0 1 1 0 1 1 0 1 1 1 1 1 0 0 0 0 1 1 0 1 0 1
+2026-03-03 14:58:26.990 | BUS      | 
+[BUS] Simultaneous transmissions → ARBITRATION
+2026-03-03 14:58:26.990 | BUS      |   Arbitration: SAME ID → both transmit together (WeepingCAN)
+2026-03-03 14:58:26.990 | BUS      | 
+[BUS] ATTACKER injects RECESSIVE bit at physical position 29
+2026-03-03 14:58:26.990 | BITS     |   Attacker bit @ pos 29:        1
+2026-03-03 14:58:26.990 | BITS     |   Victim   bit @ pos 29:        0
+2026-03-03 14:58:26.990 | BITS     |   Bus result (wire-AND):        0
+2026-03-03 14:58:26.990 | BUS      | 
+[BUS] BIT ERROR detected by attacker (sent=1, read=0)
+2026-03-03 14:58:26.990 | ERRFLAG  | 
+[BUS] ══ ERROR FLAG SEQUENCE ══
+2026-03-03 14:58:26.990 | BITS     |   ACTIVE Error Flag (attacker): 0 0 0 0 0 0
+2026-03-03 14:58:26.990 | BITS     |   Error Delimiter:              1 1 1 1 1 1 1 1
+2026-03-03 14:58:26.990 | ERRFLAG  | 
+[BUS] TEC update (+8 to both nodes):
+2026-03-03 14:58:26.990 | ERRFLAG  |   Attacker (ATTACKER) TEC: 4 → 12
+2026-03-03 14:58:26.990 | ERRFLAG  |   Victim   (VICTIM)   TEC: 212 → 220
+2026-03-03 14:58:26.990 | ERRFLAG  | 
+[BUS] Victim (VICTIM) retransmits... SUCCESS → TEC -1
+2026-03-03 14:58:26.990 | ERRFLAG  |   Victim (VICTIM) TEC: 220 → 219  [cycle net so far: +7]
+2026-03-03 14:58:26.990 | ATTACK   | [ATTACKER] Step 1 — error injected: TEC +8: 4 → 12
+2026-03-03 14:58:26.990 | BUS      | 
+[BUS] ATTACKER sends 5 valid frame(s) → TEC -5
+2026-03-03 14:58:26.990 | BUS      |   ATTACKER TEC now: 7
+2026-03-03 14:58:26.991 | ATTACK   | [ATTACKER] Step 3 — 5 valid frames: TEC −5: 12 → 7  [cycle net: +3  | victim cycle net: +7]
+2026-03-03 14:58:26.991 | ATTACK   | 
+[ATTACKER] After attack #34: TEC=7  state=Error-Active
+2026-03-03 14:58:26.991 | CYCLE    | 
+──────────────────────────────────────────────────
+  Cycle  53  |  [VICTIM]   TEC=219  state=Error-Passive
+           |  [ATTACKER] TEC=  7  state=Error-Active
+──────────────────────────────────────────────────
+2026-03-03 14:58:27.041 | BUS      | 
+[VICTIM] Preparing periodic frame  CAN-ID=0x100  seq=0x36  data=['0xde', '0xad', '0xbe', '0x36']
+2026-03-03 14:58:27.041 | ATTACK   | 
+──────────────────────────────────────────────────────────────────────
+[ATTACKER] SKIP CYCLE #20  (attacker TEC=7 ≥ threshold=6)
+──────────────────────────────────────────────────────────────────────
+2026-03-03 14:58:27.041 | ATTACK   | [ATTACKER] Skip — victim transmits OK → Victim TEC: 219 → 218  (−1)
+2026-03-03 14:58:27.041 | BUS      | 
+[BUS] ATTACKER sends 5 valid frame(s) → TEC -5
+2026-03-03 14:58:27.042 | BUS      |   ATTACKER TEC now: 2
+2026-03-03 14:58:27.042 | ATTACK   | [ATTACKER] Skip — 5 valid frames: Attacker TEC: 7 → 2  (−5)
+2026-03-03 14:58:27.042 | ATTACK   | [ATTACKER] After skip #20: TEC=2  state=Error-Active  [cycle net attacker: -5  | cycle net victim: −1]
+2026-03-03 14:58:27.042 | CYCLE    | 
+──────────────────────────────────────────────────
+  Cycle  54  |  [VICTIM]   TEC=218  state=Error-Passive
+           |  [ATTACKER] TEC=  2  state=Error-Active
+──────────────────────────────────────────────────
+2026-03-03 14:58:27.092 | BUS      | 
+[VICTIM] Preparing periodic frame  CAN-ID=0x100  seq=0x37  data=['0xde', '0xad', '0xbe', '0x37']
+2026-03-03 14:58:27.093 | ATTACK   | 
+══════════════════════════════════════════════════════════════════════
+[ATTACKER] ATTACK CYCLE #35  (attacker TEC=2)
+══════════════════════════════════════════════════════════════════════
+2026-03-03 14:58:27.093 | ATTACK   | 
+[ATTACKER] Building attack frame  CAN-ID=0x100  recessive-inject-at physical bit 36  (targeted unstuffed safe pool: [13, 18, 20, 22, 25, 28, 34])
+2026-03-03 14:58:27.093 | INFO     | ──────────────────────────────────────────────────────────────────────
+2026-03-03 14:58:27.094 | BUS      | [BUS] Transmission attempt  sender=ATTACKER  CAN-ID=0x100  malicious=True
+2026-03-03 14:58:27.094 | BITS     |   RAW bits (ID+Data):           0 0 1 0 0 0 0 0 0 0 0 1 1 0 1 1 1 1 0 1 0 1 0 1 1 0 1 1 0 1 1 1 1 1 0 0 0 1 1 0 1 1 1
+2026-03-03 14:58:27.094 | BITS     |   STUFFED bits:                 0 0 1 0 0 0 0 0 1 0 0 0 1 1 0 1 1 1 1 0 1 0 1 0 1 1 0 1 1 0 1 1 1 1 1 0 0 0 0 1 1 0 1 1 1
+2026-03-03 14:58:27.094 | BUS      | 
+[BUS] Simultaneous transmissions → ARBITRATION
+2026-03-03 14:58:27.094 | BUS      |   Arbitration: SAME ID → both transmit together (WeepingCAN)
+2026-03-03 14:58:27.094 | BUS      | 
+[BUS] ATTACKER injects RECESSIVE bit at physical position 36
+2026-03-03 14:58:27.094 | BITS     |   Attacker bit @ pos 36:        1
+2026-03-03 14:58:27.094 | BITS     |   Victim   bit @ pos 36:        0
+2026-03-03 14:58:27.094 | BITS     |   Bus result (wire-AND):        0
+2026-03-03 14:58:27.094 | BUS      | 
+[BUS] BIT ERROR detected by attacker (sent=1, read=0)
+2026-03-03 14:58:27.094 | ERRFLAG  | 
+[BUS] ══ ERROR FLAG SEQUENCE ══
+2026-03-03 14:58:27.094 | BITS     |   ACTIVE Error Flag (attacker): 0 0 0 0 0 0
+2026-03-03 14:58:27.094 | BITS     |   Error Delimiter:              1 1 1 1 1 1 1 1
+2026-03-03 14:58:27.094 | ERRFLAG  | 
+[BUS] TEC update (+8 to both nodes):
+2026-03-03 14:58:27.094 | ERRFLAG  |   Attacker (ATTACKER) TEC: 2 → 10
+2026-03-03 14:58:27.094 | ERRFLAG  |   Victim   (VICTIM)   TEC: 218 → 226
+2026-03-03 14:58:27.094 | ERRFLAG  | 
+[BUS] Victim (VICTIM) retransmits... SUCCESS → TEC -1
+2026-03-03 14:58:27.095 | ERRFLAG  |   Victim (VICTIM) TEC: 226 → 225  [cycle net so far: +7]
+2026-03-03 14:58:27.095 | ATTACK   | [ATTACKER] Step 1 — error injected: TEC +8: 2 → 10
+2026-03-03 14:58:27.095 | BUS      | 
+[BUS] ATTACKER sends 5 valid frame(s) → TEC -5
+2026-03-03 14:58:27.095 | BUS      |   ATTACKER TEC now: 5
+2026-03-03 14:58:27.095 | ATTACK   | [ATTACKER] Step 3 — 5 valid frames: TEC −5: 10 → 5  [cycle net: +3  | victim cycle net: +7]
+2026-03-03 14:58:27.095 | ATTACK   | 
+[ATTACKER] After attack #35: TEC=5  state=Error-Active
+2026-03-03 14:58:27.095 | CYCLE    | 
+──────────────────────────────────────────────────
+  Cycle  55  |  [VICTIM]   TEC=225  state=Error-Passive
+           |  [ATTACKER] TEC=  5  state=Error-Active
+──────────────────────────────────────────────────
+2026-03-03 14:58:27.145 | BUS      | 
+[VICTIM] Preparing periodic frame  CAN-ID=0x100  seq=0x38  data=['0xde', '0xad', '0xbe', '0x38']
+2026-03-03 14:58:27.146 | ATTACK   | 
+══════════════════════════════════════════════════════════════════════
+[ATTACKER] ATTACK CYCLE #36  (attacker TEC=5)
+══════════════════════════════════════════════════════════════════════
+2026-03-03 14:58:27.146 | ATTACK   | 
+[ATTACKER] Building attack frame  CAN-ID=0x100  recessive-inject-at physical bit 19  (targeted unstuffed safe pool: [13, 18, 20, 22, 25, 28, 34])
+2026-03-03 14:58:27.146 | INFO     | ──────────────────────────────────────────────────────────────────────
+2026-03-03 14:58:27.146 | BUS      | [BUS] Transmission attempt  sender=ATTACKER  CAN-ID=0x100  malicious=True
+2026-03-03 14:58:27.147 | BITS     |   RAW bits (ID+Data):           0 0 1 0 0 0 0 0 0 0 0 1 1 0 1 1 1 1 0 1 0 1 0 1 1 0 1 1 0 1 1 1 1 1 0 0 0 1 1 1 0 0 0
+2026-03-03 14:58:27.147 | BITS     |   STUFFED bits:                 0 0 1 0 0 0 0 0 1 0 0 0 1 1 0 1 1 1 1 0 1 0 1 0 1 1 0 1 1 0 1 1 1 1 1 0 0 0 0 1 1 1 0 0 0
+2026-03-03 14:58:27.147 | BUS      | 
+[BUS] Simultaneous transmissions → ARBITRATION
+2026-03-03 14:58:27.147 | BUS      |   Arbitration: SAME ID → both transmit together (WeepingCAN)
+2026-03-03 14:58:27.147 | BUS      | 
+[BUS] ATTACKER injects RECESSIVE bit at physical position 19
+2026-03-03 14:58:27.147 | BITS     |   Attacker bit @ pos 19:        1
+2026-03-03 14:58:27.147 | BITS     |   Victim   bit @ pos 19:        0
+2026-03-03 14:58:27.147 | BITS     |   Bus result (wire-AND):        0
+2026-03-03 14:58:27.147 | BUS      | 
+[BUS] BIT ERROR detected by attacker (sent=1, read=0)
+2026-03-03 14:58:27.147 | ERRFLAG  | 
+[BUS] ══ ERROR FLAG SEQUENCE ══
+2026-03-03 14:58:27.147 | BITS     |   ACTIVE Error Flag (attacker): 0 0 0 0 0 0
+2026-03-03 14:58:27.147 | BITS     |   Error Delimiter:              1 1 1 1 1 1 1 1
+2026-03-03 14:58:27.147 | ERRFLAG  | 
+[BUS] TEC update (+8 to both nodes):
+2026-03-03 14:58:27.147 | ERRFLAG  |   Attacker (ATTACKER) TEC: 5 → 13
+2026-03-03 14:58:27.147 | ERRFLAG  |   Victim   (VICTIM)   TEC: 225 → 233
+2026-03-03 14:58:27.147 | ERRFLAG  | 
+[BUS] Victim (VICTIM) retransmits... SUCCESS → TEC -1
+2026-03-03 14:58:27.147 | ERRFLAG  |   Victim (VICTIM) TEC: 233 → 232  [cycle net so far: +7]
+2026-03-03 14:58:27.148 | ATTACK   | [ATTACKER] Step 1 — error injected: TEC +8: 5 → 13
+2026-03-03 14:58:27.148 | BUS      | 
+[BUS] ATTACKER sends 5 valid frame(s) → TEC -5
+2026-03-03 14:58:27.148 | BUS      |   ATTACKER TEC now: 8
+2026-03-03 14:58:27.148 | ATTACK   | [ATTACKER] Step 3 — 5 valid frames: TEC −5: 13 → 8  [cycle net: +3  | victim cycle net: +7]
+2026-03-03 14:58:27.148 | ATTACK   | 
+[ATTACKER] After attack #36: TEC=8  state=Error-Active
+2026-03-03 14:58:27.148 | CYCLE    | 
+──────────────────────────────────────────────────
+  Cycle  56  |  [VICTIM]   TEC=232  state=Error-Passive
+           |  [ATTACKER] TEC=  8  state=Error-Active
+──────────────────────────────────────────────────
+2026-03-03 14:58:27.198 | BUS      | 
+[VICTIM] Preparing periodic frame  CAN-ID=0x100  seq=0x39  data=['0xde', '0xad', '0xbe', '0x39']
+2026-03-03 14:58:27.198 | ATTACK   | 
+──────────────────────────────────────────────────────────────────────
+[ATTACKER] SKIP CYCLE #21  (attacker TEC=8 ≥ threshold=6)
+──────────────────────────────────────────────────────────────────────
+2026-03-03 14:58:27.198 | ATTACK   | [ATTACKER] Skip — victim transmits OK → Victim TEC: 232 → 231  (−1)
+2026-03-03 14:58:27.199 | BUS      | 
+[BUS] ATTACKER sends 5 valid frame(s) → TEC -5
+2026-03-03 14:58:27.199 | BUS      |   ATTACKER TEC now: 3
+2026-03-03 14:58:27.199 | ATTACK   | [ATTACKER] Skip — 5 valid frames: Attacker TEC: 8 → 3  (−5)
+2026-03-03 14:58:27.199 | ATTACK   | [ATTACKER] After skip #21: TEC=3  state=Error-Active  [cycle net attacker: -5  | cycle net victim: −1]
+2026-03-03 14:58:27.199 | CYCLE    | 
+──────────────────────────────────────────────────
+  Cycle  57  |  [VICTIM]   TEC=231  state=Error-Passive
+           |  [ATTACKER] TEC=  3  state=Error-Active
+──────────────────────────────────────────────────
+2026-03-03 14:58:27.250 | BUS      | 
+[VICTIM] Preparing periodic frame  CAN-ID=0x100  seq=0x3a  data=['0xde', '0xad', '0xbe', '0x3a']
+2026-03-03 14:58:27.250 | ATTACK   | 
+══════════════════════════════════════════════════════════════════════
+[ATTACKER] ATTACK CYCLE #37  (attacker TEC=3)
+══════════════════════════════════════════════════════════════════════
+2026-03-03 14:58:27.250 | ATTACK   | 
+[ATTACKER] Building attack frame  CAN-ID=0x100  recessive-inject-at physical bit 36  (targeted unstuffed safe pool: [13, 18, 20, 22, 25, 28, 34])
+2026-03-03 14:58:27.250 | INFO     | ──────────────────────────────────────────────────────────────────────
+2026-03-03 14:58:27.251 | BUS      | [BUS] Transmission attempt  sender=ATTACKER  CAN-ID=0x100  malicious=True
+2026-03-03 14:58:27.251 | BITS     |   RAW bits (ID+Data):           0 0 1 0 0 0 0 0 0 0 0 1 1 0 1 1 1 1 0 1 0 1 0 1 1 0 1 1 0 1 1 1 1 1 0 0 0 1 1 1 0 1 0
+2026-03-03 14:58:27.251 | BITS     |   STUFFED bits:                 0 0 1 0 0 0 0 0 1 0 0 0 1 1 0 1 1 1 1 0 1 0 1 0 1 1 0 1 1 0 1 1 1 1 1 0 0 0 0 1 1 1 0 1 0
+2026-03-03 14:58:27.251 | BUS      | 
+[BUS] Simultaneous transmissions → ARBITRATION
+2026-03-03 14:58:27.251 | BUS      |   Arbitration: SAME ID → both transmit together (WeepingCAN)
+2026-03-03 14:58:27.251 | BUS      | 
+[BUS] ATTACKER injects RECESSIVE bit at physical position 36
+2026-03-03 14:58:27.251 | BITS     |   Attacker bit @ pos 36:        1
+2026-03-03 14:58:27.251 | BITS     |   Victim   bit @ pos 36:        0
+2026-03-03 14:58:27.251 | BITS     |   Bus result (wire-AND):        0
+2026-03-03 14:58:27.251 | BUS      | 
+[BUS] BIT ERROR detected by attacker (sent=1, read=0)
+2026-03-03 14:58:27.251 | ERRFLAG  | 
+[BUS] ══ ERROR FLAG SEQUENCE ══
+2026-03-03 14:58:27.251 | BITS     |   ACTIVE Error Flag (attacker): 0 0 0 0 0 0
+2026-03-03 14:58:27.251 | BITS     |   Error Delimiter:              1 1 1 1 1 1 1 1
+2026-03-03 14:58:27.251 | ERRFLAG  | 
+[BUS] TEC update (+8 to both nodes):
+2026-03-03 14:58:27.251 | ERRFLAG  |   Attacker (ATTACKER) TEC: 3 → 11
+2026-03-03 14:58:27.251 | ERRFLAG  |   Victim   (VICTIM)   TEC: 231 → 239
+2026-03-03 14:58:27.252 | ERRFLAG  | 
+[BUS] Victim (VICTIM) retransmits... SUCCESS → TEC -1
+2026-03-03 14:58:27.252 | ERRFLAG  |   Victim (VICTIM) TEC: 239 → 238  [cycle net so far: +7]
+2026-03-03 14:58:27.252 | ATTACK   | [ATTACKER] Step 1 — error injected: TEC +8: 3 → 11
+2026-03-03 14:58:27.252 | BUS      | 
+[BUS] ATTACKER sends 5 valid frame(s) → TEC -5
+2026-03-03 14:58:27.252 | BUS      |   ATTACKER TEC now: 6
+2026-03-03 14:58:27.252 | ATTACK   | [ATTACKER] Step 3 — 5 valid frames: TEC −5: 11 → 6  [cycle net: +3  | victim cycle net: +7]
+2026-03-03 14:58:27.252 | ATTACK   | 
+[ATTACKER] After attack #37: TEC=6  state=Error-Active
+2026-03-03 14:58:27.252 | CYCLE    | 
+──────────────────────────────────────────────────
+  Cycle  58  |  [VICTIM]   TEC=238  state=Error-Passive
+           |  [ATTACKER] TEC=  6  state=Error-Active
+──────────────────────────────────────────────────
+2026-03-03 14:58:27.302 | BUS      | 
+[VICTIM] Preparing periodic frame  CAN-ID=0x100  seq=0x3b  data=['0xde', '0xad', '0xbe', '0x3b']
+2026-03-03 14:58:27.302 | ATTACK   | 
+──────────────────────────────────────────────────────────────────────
+[ATTACKER] SKIP CYCLE #22  (attacker TEC=6 ≥ threshold=6)
+──────────────────────────────────────────────────────────────────────
+2026-03-03 14:58:27.303 | ATTACK   | [ATTACKER] Skip — victim transmits OK → Victim TEC: 238 → 237  (−1)
+2026-03-03 14:58:27.303 | BUS      | 
+[BUS] ATTACKER sends 5 valid frame(s) → TEC -5
+2026-03-03 14:58:27.303 | BUS      |   ATTACKER TEC now: 1
+2026-03-03 14:58:27.303 | ATTACK   | [ATTACKER] Skip — 5 valid frames: Attacker TEC: 6 → 1  (−5)
+2026-03-03 14:58:27.303 | ATTACK   | [ATTACKER] After skip #22: TEC=1  state=Error-Active  [cycle net attacker: -5  | cycle net victim: −1]
+2026-03-03 14:58:27.304 | CYCLE    | 
+──────────────────────────────────────────────────
+  Cycle  59  |  [VICTIM]   TEC=237  state=Error-Passive
+           |  [ATTACKER] TEC=  1  state=Error-Active
+──────────────────────────────────────────────────
+2026-03-03 14:58:27.354 | BUS      | 
+[VICTIM] Preparing periodic frame  CAN-ID=0x100  seq=0x3c  data=['0xde', '0xad', '0xbe', '0x3c']
+2026-03-03 14:58:27.354 | ATTACK   | 
+══════════════════════════════════════════════════════════════════════
+[ATTACKER] ATTACK CYCLE #38  (attacker TEC=1)
+══════════════════════════════════════════════════════════════════════
+2026-03-03 14:58:27.355 | ATTACK   | 
+[ATTACKER] Building attack frame  CAN-ID=0x100  recessive-inject-at physical bit 23  (targeted unstuffed safe pool: [13, 18, 20, 22, 25, 28, 34])
+2026-03-03 14:58:27.355 | INFO     | ──────────────────────────────────────────────────────────────────────
+2026-03-03 14:58:27.355 | BUS      | [BUS] Transmission attempt  sender=ATTACKER  CAN-ID=0x100  malicious=True
+2026-03-03 14:58:27.355 | BITS     |   RAW bits (ID+Data):           0 0 1 0 0 0 0 0 0 0 0 1 1 0 1 1 1 1 0 1 0 1 0 1 1 0 1 1 0 1 1 1 1 1 0 0 0 1 1 1 1 0 0
+2026-03-03 14:58:27.355 | BITS     |   STUFFED bits:                 0 0 1 0 0 0 0 0 1 0 0 0 1 1 0 1 1 1 1 0 1 0 1 0 1 1 0 1 1 0 1 1 1 1 1 0 0 0 0 1 1 1 1 0 0
+2026-03-03 14:58:27.355 | BUS      | 
+[BUS] Simultaneous transmissions → ARBITRATION
+2026-03-03 14:58:27.355 | BUS      |   Arbitration: SAME ID → both transmit together (WeepingCAN)
+2026-03-03 14:58:27.355 | BUS      | 
+[BUS] ATTACKER injects RECESSIVE bit at physical position 23
+2026-03-03 14:58:27.355 | BITS     |   Attacker bit @ pos 23:        1
+2026-03-03 14:58:27.355 | BITS     |   Victim   bit @ pos 23:        0
+2026-03-03 14:58:27.356 | BITS     |   Bus result (wire-AND):        0
+2026-03-03 14:58:27.356 | BUS      | 
+[BUS] BIT ERROR detected by attacker (sent=1, read=0)
+2026-03-03 14:58:27.356 | ERRFLAG  | 
+[BUS] ══ ERROR FLAG SEQUENCE ══
+2026-03-03 14:58:27.356 | BITS     |   ACTIVE Error Flag (attacker): 0 0 0 0 0 0
+2026-03-03 14:58:27.356 | BITS     |   Error Delimiter:              1 1 1 1 1 1 1 1
+2026-03-03 14:58:27.356 | ERRFLAG  | 
+[BUS] TEC update (+8 to both nodes):
+2026-03-03 14:58:27.356 | ERRFLAG  |   Attacker (ATTACKER) TEC: 1 → 9
+2026-03-03 14:58:27.356 | ERRFLAG  |   Victim   (VICTIM)   TEC: 237 → 245
+2026-03-03 14:58:27.356 | ERRFLAG  | 
+[BUS] Victim (VICTIM) retransmits... SUCCESS → TEC -1
+2026-03-03 14:58:27.356 | ERRFLAG  |   Victim (VICTIM) TEC: 245 → 244  [cycle net so far: +7]
+2026-03-03 14:58:27.356 | ATTACK   | [ATTACKER] Step 1 — error injected: TEC +8: 1 → 9
+2026-03-03 14:58:27.356 | BUS      | 
+[BUS] ATTACKER sends 5 valid frame(s) → TEC -5
+2026-03-03 14:58:27.356 | BUS      |   ATTACKER TEC now: 4
+2026-03-03 14:58:27.356 | ATTACK   | [ATTACKER] Step 3 — 5 valid frames: TEC −5: 9 → 4  [cycle net: +3  | victim cycle net: +7]
+2026-03-03 14:58:27.356 | ATTACK   | 
+[ATTACKER] After attack #38: TEC=4  state=Error-Active
+2026-03-03 14:58:27.356 | CYCLE    | 
+──────────────────────────────────────────────────
+  Cycle  60  |  [VICTIM]   TEC=244  state=Error-Passive
+           |  [ATTACKER] TEC=  4  state=Error-Active
+──────────────────────────────────────────────────
+2026-03-03 14:58:27.407 | BUS      | 
+[VICTIM] Preparing periodic frame  CAN-ID=0x100  seq=0x3d  data=['0xde', '0xad', '0xbe', '0x3d']
+2026-03-03 14:58:27.407 | ATTACK   | 
+══════════════════════════════════════════════════════════════════════
+[ATTACKER] ATTACK CYCLE #39  (attacker TEC=4)
+══════════════════════════════════════════════════════════════════════
+2026-03-03 14:58:27.407 | ATTACK   | 
+[ATTACKER] Building attack frame  CAN-ID=0x100  recessive-inject-at physical bit 23  (targeted unstuffed safe pool: [13, 18, 20, 22, 25, 28, 34])
+2026-03-03 14:58:27.408 | INFO     | ──────────────────────────────────────────────────────────────────────
+2026-03-03 14:58:27.408 | BUS      | [BUS] Transmission attempt  sender=ATTACKER  CAN-ID=0x100  malicious=True
+2026-03-03 14:58:27.408 | BITS     |   RAW bits (ID+Data):           0 0 1 0 0 0 0 0 0 0 0 1 1 0 1 1 1 1 0 1 0 1 0 1 1 0 1 1 0 1 1 1 1 1 0 0 0 1 1 1 1 0 1
+2026-03-03 14:58:27.408 | BITS     |   STUFFED bits:                 0 0 1 0 0 0 0 0 1 0 0 0 1 1 0 1 1 1 1 0 1 0 1 0 1 1 0 1 1 0 1 1 1 1 1 0 0 0 0 1 1 1 1 0 1
+2026-03-03 14:58:27.408 | BUS      | 
+[BUS] Simultaneous transmissions → ARBITRATION
+2026-03-03 14:58:27.408 | BUS      |   Arbitration: SAME ID → both transmit together (WeepingCAN)
+2026-03-03 14:58:27.408 | BUS      | 
+[BUS] ATTACKER injects RECESSIVE bit at physical position 23
+2026-03-03 14:58:27.408 | BITS     |   Attacker bit @ pos 23:        1
+2026-03-03 14:58:27.408 | BITS     |   Victim   bit @ pos 23:        0
+2026-03-03 14:58:27.408 | BITS     |   Bus result (wire-AND):        0
+2026-03-03 14:58:27.408 | BUS      | 
+[BUS] BIT ERROR detected by attacker (sent=1, read=0)
+2026-03-03 14:58:27.409 | ERRFLAG  | 
+[BUS] ══ ERROR FLAG SEQUENCE ══
+2026-03-03 14:58:27.409 | BITS     |   ACTIVE Error Flag (attacker): 0 0 0 0 0 0
+2026-03-03 14:58:27.409 | BITS     |   Error Delimiter:              1 1 1 1 1 1 1 1
+2026-03-03 14:58:27.409 | ERRFLAG  | 
+[BUS] TEC update (+8 to both nodes):
+2026-03-03 14:58:27.409 | ERRFLAG  |   Attacker (ATTACKER) TEC: 4 → 12
+2026-03-03 14:58:27.409 | ERRFLAG  |   Victim   (VICTIM)   TEC: 244 → 252
+2026-03-03 14:58:27.409 | ERRFLAG  | 
+[BUS] Victim (VICTIM) retransmits... SUCCESS → TEC -1
+2026-03-03 14:58:27.409 | ERRFLAG  |   Victim (VICTIM) TEC: 252 → 251  [cycle net so far: +7]
+2026-03-03 14:58:27.409 | ATTACK   | [ATTACKER] Step 1 — error injected: TEC +8: 4 → 12
+2026-03-03 14:58:27.409 | BUS      | 
+[BUS] ATTACKER sends 5 valid frame(s) → TEC -5
+2026-03-03 14:58:27.409 | BUS      |   ATTACKER TEC now: 7
+2026-03-03 14:58:27.409 | ATTACK   | [ATTACKER] Step 3 — 5 valid frames: TEC −5: 12 → 7  [cycle net: +3  | victim cycle net: +7]
+2026-03-03 14:58:27.409 | ATTACK   | 
+[ATTACKER] After attack #39: TEC=7  state=Error-Active
+2026-03-03 14:58:27.410 | CYCLE    | 
+──────────────────────────────────────────────────
+  Cycle  61  |  [VICTIM]   TEC=251  state=Error-Passive
+           |  [ATTACKER] TEC=  7  state=Error-Active
+──────────────────────────────────────────────────
+2026-03-03 14:58:27.460 | BUS      | 
+[VICTIM] Preparing periodic frame  CAN-ID=0x100  seq=0x3e  data=['0xde', '0xad', '0xbe', '0x3e']
+2026-03-03 14:58:27.460 | ATTACK   | 
+──────────────────────────────────────────────────────────────────────
+[ATTACKER] SKIP CYCLE #23  (attacker TEC=7 ≥ threshold=6)
+──────────────────────────────────────────────────────────────────────
+2026-03-03 14:58:27.460 | ATTACK   | [ATTACKER] Skip — victim transmits OK → Victim TEC: 251 → 250  (−1)
+2026-03-03 14:58:27.461 | BUS      | 
+[BUS] ATTACKER sends 5 valid frame(s) → TEC -5
+2026-03-03 14:58:27.461 | BUS      |   ATTACKER TEC now: 2
+2026-03-03 14:58:27.461 | ATTACK   | [ATTACKER] Skip — 5 valid frames: Attacker TEC: 7 → 2  (−5)
+2026-03-03 14:58:27.461 | ATTACK   | [ATTACKER] After skip #23: TEC=2  state=Error-Active  [cycle net attacker: -5  | cycle net victim: −1]
+2026-03-03 14:58:27.461 | CYCLE    | 
+──────────────────────────────────────────────────
+  Cycle  62  |  [VICTIM]   TEC=250  state=Error-Passive
+           |  [ATTACKER] TEC=  2  state=Error-Active
+──────────────────────────────────────────────────
+2026-03-03 14:58:27.511 | BUS      | 
+[VICTIM] Preparing periodic frame  CAN-ID=0x100  seq=0x3f  data=['0xde', '0xad', '0xbe', '0x3f']
+2026-03-03 14:58:27.512 | ATTACK   | 
+══════════════════════════════════════════════════════════════════════
+[ATTACKER] ATTACK CYCLE #40  (attacker TEC=2)
+══════════════════════════════════════════════════════════════════════
+2026-03-03 14:58:27.512 | ATTACK   | 
+[ATTACKER] Building attack frame  CAN-ID=0x100  recessive-inject-at physical bit 19  (targeted unstuffed safe pool: [13, 18, 20, 22, 25, 28, 34])
+2026-03-03 14:58:27.512 | INFO     | ──────────────────────────────────────────────────────────────────────
+2026-03-03 14:58:27.512 | BUS      | [BUS] Transmission attempt  sender=ATTACKER  CAN-ID=0x100  malicious=True
+2026-03-03 14:58:27.512 | BITS     |   RAW bits (ID+Data):           0 0 1 0 0 0 0 0 0 0 0 1 1 0 1 1 1 1 0 1 0 1 0 1 1 0 1 1 0 1 1 1 1 1 0 0 0 1 1 1 1 1 1
+2026-03-03 14:58:27.512 | BITS     |   STUFFED bits:                 0 0 1 0 0 0 0 0 1 0 0 0 1 1 0 1 1 1 1 0 1 0 1 0 1 1 0 1 1 0 1 1 1 1 1 0 0 0 0 1 1 1 1 1 0 1
+2026-03-03 14:58:27.512 | BUS      | 
+[BUS] Simultaneous transmissions → ARBITRATION
+2026-03-03 14:58:27.512 | BUS      |   Arbitration: SAME ID → both transmit together (WeepingCAN)
+2026-03-03 14:58:27.512 | BUS      | 
+[BUS] ATTACKER injects RECESSIVE bit at physical position 19
+2026-03-03 14:58:27.513 | BITS     |   Attacker bit @ pos 19:        1
+2026-03-03 14:58:27.513 | BITS     |   Victim   bit @ pos 19:        0
+2026-03-03 14:58:27.513 | BITS     |   Bus result (wire-AND):        0
+2026-03-03 14:58:27.513 | BUS      | 
+[BUS] BIT ERROR detected by attacker (sent=1, read=0)
+2026-03-03 14:58:27.513 | ERRFLAG  | 
+[BUS] ══ ERROR FLAG SEQUENCE ══
+2026-03-03 14:58:27.513 | BITS     |   ACTIVE Error Flag (attacker): 0 0 0 0 0 0
+2026-03-03 14:58:27.513 | BITS     |   Error Delimiter:              1 1 1 1 1 1 1 1
+2026-03-03 14:58:27.513 | ERRFLAG  | 
+[BUS] TEC update (+8 to both nodes):
+2026-03-03 14:58:27.513 | ERRFLAG  |   Attacker (ATTACKER) TEC: 2 → 10
+2026-03-03 14:58:27.513 | ERRFLAG  |   Victim   (VICTIM)   TEC: 250 → 256
+2026-03-03 14:58:27.513 | STATE    | [VICTIM] STATE TRANSITION: Error-Passive → Bus-Off
+2026-03-03 14:58:27.513 | ERRFLAG  | 
+[BUS] Victim (VICTIM) is BUS-OFF — cannot retransmit!
+2026-03-03 14:58:27.513 | ATTACK   | [ATTACKER] Step 1 — error injected: TEC +8: 2 → 10
+2026-03-03 14:58:27.513 | BUS      | 
+[BUS] ATTACKER sends 5 valid frame(s) → TEC -5
+2026-03-03 14:58:27.513 | BUS      |   ATTACKER TEC now: 5
+2026-03-03 14:58:27.514 | ATTACK   | [ATTACKER] Step 3 — 5 valid frames: TEC −5: 10 → 5  [cycle net: +3  | victim cycle net: +7]
+2026-03-03 14:58:27.514 | ATTACK   | 
+[ATTACKER] After attack #40: TEC=5  state=Error-Active
+2026-03-03 14:58:27.514 | CYCLE    | 
+──────────────────────────────────────────────────
+  Cycle  63  |  [VICTIM]   TEC=256  state=Bus-Off
+           |  [ATTACKER] TEC=  5  state=Error-Active
+──────────────────────────────────────────────────
+2026-03-03 14:58:27.514 | SUMMARY  | 
+════════════════════════════════════════════════════════════
+  VICTIM HAS GONE BUS-OFF after 63 cycle(s)!
+════════════════════════════════════════════════════════════
+2026-03-03 14:58:27.514 | SUMMARY  | 
+════════════════════════════════════════════════════════════
+2026-03-03 14:58:27.514 | SUMMARY  |   SIMULATION COMPLETE
+2026-03-03 14:58:27.514 | SUMMARY  | ════════════════════════════════════════════════════════════
+2026-03-03 14:58:27.514 | SUMMARY  | 
+  Cycles executed : 63
+2026-03-03 14:58:27.514 | SUMMARY  |   [VICTIM]  TEC=256  state=Bus-Off
+2026-03-03 14:58:27.514 | SUMMARY  |   [ATTACKER]  TEC=  5  state=Error-Active
+2026-03-03 14:58:27.514 | SUMMARY  | 
+  [ATTACKER] Total cycles=63  Attack cycles=40  Mis-timed=0  Skip cycles=23  Valid msgs sent=315  TEC=5  state=Error-Active
+2026-03-03 14:58:27.514 | SUMMARY  | 
+  Attacker remained in Error-Active throughout.
+2026-03-03 14:58:27.514 | SUMMARY  | 
+  Log saved to : logs/weepingcan_20260303_145824.log
+  JSON saved to: logs/weepingcan_20260303_145824.jsonl
+2026-03-03 14:58:27.515 | INFO     | 

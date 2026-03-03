@@ -2,45 +2,24 @@
 attacker_ecu.py
 ---------------
 AttackerECU — implements the WeepingCAN attack logic.
+Modello DES con fisica e deviazione standard gaussiana.
 """
 from __future__ import annotations
 import random
 from ecu import ECU, ECUState
-from can_bus import CANFrame
+from can_bus import CANFrame, build_physical_frame
 from logger import get_logger, RED, YELLOW, CYAN, MAGENTA, GREEN, GRAY, RESET
 
 N_VALID_MSGS = 5
-
-# ── Probabilistic realism: hardware sync jitter ──────────────────────────
-# Probability that the attacker loses perfect synchronization during an
-# injection cycle, causing a "mis-timed" injection (see paper §IV-B).
-# When this happens the injected recessive bit lands on a random position
-# and is very likely to hit another recessive bit, producing no bus error.
-SYNC_ERROR_PROBABILITY: float = 0.05   # 5 %
-
-# Bit positions derived from offline traffic analysis of the victim's known-static payload.
-# Victim data temdenplate: [0xDE, 0xAD, 0xBE, <seq>]
-#   0xDE = 1101_1110  →  zeros at frame offsets 13, 18
-#   0xAD = 1010_1101  →  zeros at frame offsets 20, 22, 25
-#   0xBE = 1011_1110  →  zeros at frame offsets 28, 34
-# The seq byte (offsets 35–42) is excluded: it changes every cycle.
-# Injecting a recessive (1) at any of these positions guarantees the victim is
-# driving dominant (0) there, so the wire-AND exposes a bit error to the attacker.
-SAFE_INJECT_POSITIONS: list[int] = [13, 18, 20, 22, 25, 28, 34]
-
-# Skipping threshold: if the attacker's TEC is at or above this value at the
-# start of a cycle, the attacker deliberately skips the attack and sends only
-# valid frames instead.  This keeps the attacker's TEC oscillating near zero
-# (well below the Error-Passive boundary of 128) while the victim's TEC still
-# climbs inexorably toward Bus-Off.
-#
-# Math with SKIP_TEC_THRESHOLD = 6 (≈ 2 attacks per skip in steady state):
-#   Attack cycle : attacker +3,  victim +7
-#   Skip   cycle : attacker −5,  victim −1
-#   Attacker TEC : oscillates in [0, ~8]  → always Error-Active
-#   Victim   TEC : net ≈ +20 per 3 cycles → Bus-Off after ~38 × 3/2 = ~57 cycles
 SKIP_TEC_THRESHOLD: int = 6
 
+# --- Variabili Fisiche DES ---
+BAUD_RATE_KBPS = 500
+BIT_TIME_US    = 1000.0 / BAUD_RATE_KBPS  # 2.0 µs per bit
+ATTACKER_JITTER_STD_DEV_US = 0.65         # Deviazione standard dell'oscillatore (µs)
+
+# Indici logici calcolati relativi allo START del campo dati
+SAFE_INJECT_POSITIONS: list[int] = [2, 7, 9, 11, 14, 18, 23]
 
 class AttackerECU(ECU):
     def __init__(self, name: str = "ATTACKER", target_can_id: int = 0x100,
@@ -52,201 +31,119 @@ class AttackerECU(ECU):
         self._mistimed_count = 0
         self._cycle_count   = 0
         self._valid_count   = 0
+        
+        # Variabili richieste dal motore DES in simulation.py
+        self._last_action   = ""
+        self.valid_msgs_sent_last_cycle = 0
 
     def analyze_pattern(self, victim_can_id: int, victim_period_ms: int) -> None:
         self.target_can_id = victim_can_id
         get_logger().attack(
             f"{CYAN}\n[{self.name}] Pattern analysis complete → "
-            f"target CAN-ID=0x{victim_can_id:03X}  "
-            f"period≈{victim_period_ms}ms{RESET}"
+            f"target CAN-ID=0x{victim_can_id:03X}{RESET}"
         )
+
+    def _calculate_jitter_result(self, inject_pos: int) -> bool:
+        """
+        Determina deterministicamente se l'attacco va a segno calcolando
+        lo scostamento fisico (jitter) in microsecondi rispetto alla finestra del bit.
+        """
+        ideal_time_us = inject_pos * BIT_TIME_US
+        # Aggiunge rumore gaussiano all'orologio dell'attaccante
+        actual_time_us = ideal_time_us + random.gauss(0, ATTACKER_JITTER_STD_DEV_US)
+        
+        # La finestra per sovrascrivere il bit è centrata sul tempo ideale, larga 1 bit_time
+        window_start = ideal_time_us - (BIT_TIME_US / 2)
+        window_end   = ideal_time_us + (BIT_TIME_US / 2)
+        
+        log = get_logger()
+        log.raw(f"{GRAY}  [PHYSICS] Bit pos: {inject_pos} | Ideal time: {ideal_time_us:.2f} µs | Actual: {actual_time_us:.2f} µs{RESET}")
+
+        if window_start <= actual_time_us <= window_end:
+            return True # Iniezione centrata
+        else:
+            log.raw(f"{YELLOW}  [PHYSICS] Drift superato! Missed window [{window_start:.2f}, {window_end:.2f}]{RESET}")
+            return False # Fuori sincrono (mis-timed)
 
     def _make_attack_frame(self, victim_frame: CANFrame) -> CANFrame:
         mirrored_data = list(victim_frame.data)
-        inject_pos    = random.choice(SAFE_INJECT_POSITIONS)
-
-        get_logger().attack(
-            f"{MAGENTA}\n[{self.name}] Building attack frame  "
-            f"CAN-ID=0x{self.target_can_id:03X}  "
-            f"recessive-inject-at bit {inject_pos}  "
-            f"(targeted — safe pool: {SAFE_INJECT_POSITIONS}){RESET}"
-        )
+        _, data_index_map = build_physical_frame(self.target_can_id, mirrored_data)
+        
+        safe_stuffed_positions = [
+            data_index_map[pos] for pos in SAFE_INJECT_POSITIONS 
+            if pos < len(data_index_map)
+        ]
+        
         return CANFrame(
             can_id              = self.target_can_id,
             data                = mirrored_data,
             sender_id           = self.name,
-            inject_recessive_at = inject_pos,
+            inject_recessive_at = random.choice(safe_stuffed_positions),
             is_malicious        = True,
         )
 
     def _should_skip(self) -> bool:
-        """Decide whether to skip this attack cycle to keep TEC near zero.
-
-        The heuristic is simple: if TEC >= SKIP_TEC_THRESHOLD the attacker
-        deliberately skips, letting the victim send without interference while
-        the attacker sends N_VALID_MSGS valid frames to drain its own TEC.
-        """
         return self.tec >= SKIP_TEC_THRESHOLD
 
     def _execute_skip(self, victim_frame: CANFrame) -> bool:
-        """Execute a 'skip' cycle — no error injection.
-
-        During a skipped cycle:
-          • The victim sends its message without interference → TEC victim −1.
-          • The attacker sends N_VALID_MSGS valid frames      → TEC attacker −5
-            (clamped at 0).
-        """
         log = get_logger()
         self._skip_count += 1
-        tec_cycle_start = self.tec
+        self._last_action = "SKIP"
+        self.valid_msgs_sent_last_cycle = N_VALID_MSGS
 
-        log.attack(
-            f"{GREEN}\n{'─'*70}\n"
-            f"[{self.name}] SKIP CYCLE #{self._skip_count}  "
-            f"(attacker TEC={tec_cycle_start} ≥ threshold={SKIP_TEC_THRESHOLD})\n"
-            f"{'─'*70}{RESET}"
-        )
+        log.attack(f"{GREEN}\n[{self.name}] SKIP CYCLE #{self._skip_count} (TEC={self.tec}){RESET}")
 
-        # ── Victim sends in peace: its TEC −1 (successful transmission) ──────
         victim_node = self.bus._nodes.get(victim_frame.sender_id) if self.bus else None
         if victim_node and victim_node.state != ECUState.BUS_OFF:
-            old_vtec = victim_node.tec
             victim_node._decrement_tec(1)
             victim_node._check_state_transition()
-            log.attack(
-                f"{GREEN}[{self.name}] Skip — victim transmits OK → "
-                f"Victim TEC: {old_vtec} → {victim_node.tec}  (−1){RESET}"
-            )
 
-        # ── Attacker sends N_VALID_MSGS valid frames: TEC −5 (min 0) ─────────
         if self.bus:
-            tec_before_valid = self.tec
             self.bus.transmit_valid(self.name, N_VALID_MSGS)
-            actual_decrease = tec_before_valid - self.tec
-            log.attack(
-                f"{GREEN}[{self.name}] Skip — {N_VALID_MSGS} valid frames: "
-                f"Attacker TEC: {tec_before_valid} → {self.tec}  "
-                f"(−{actual_decrease}){RESET}"
-            )
         self._valid_count += N_VALID_MSGS
 
-        log.attack(
-            f"{GREEN}[{self.name}] After skip #{self._skip_count}: "
-            f"TEC={self.tec}  state={self.state}  "
-            f"[cycle net attacker: {self.tec - tec_cycle_start:+d}  "
-            f"| cycle net victim: −1]{RESET}"
-        )
         return True
 
     def _execute_mistimed(self, victim_frame: CANFrame) -> bool:
-        """Handle a mis-timed injection — attacker loses sync.
-
-        The injected recessive bit lands on a random frame position.
-        With very high probability the random position carries a recessive (1)
-        bit from the victim, so overwriting 1 with 1 produces no bus error.
-        The victim's transmission succeeds normally (TEC −1) and the attacker
-        simply wastes the cycle.
-        """
         log = get_logger()
         self._mistimed_count += 1
+        self._last_action = "MISTIMED"
+        self.valid_msgs_sent_last_cycle = 0
 
-        log.attack(
-            f"{YELLOW}\n{'~'*70}\n"
-            f"[{self.name}] ⚠ MIS-TIMED INJECTION  "
-            f"(attacker TEC={self.tec})\n"
-            f"{'~'*70}{RESET}"
-        )
-        log.bus(
-            f"{YELLOW}[BUS] Injection mis-timed! "
-            f"Attacker missed the dominant bit. Attack cycle failed.{RESET}"
-        )
+        log.attack(f"{YELLOW}\n[{self.name}] ⚠ MIS-TIMED INJECTION (Physics Drift){RESET}")
 
-        # Victim's frame goes through without interference → TEC victim −1
-        victim_node = (
-            self.bus._nodes.get(victim_frame.sender_id) if self.bus else None
-        )
+        victim_node = self.bus._nodes.get(victim_frame.sender_id) if self.bus else None
         if victim_node and victim_node.state != ECUState.BUS_OFF:
-            old_vtec = victim_node.tec
             victim_node._decrement_tec(1)
             victim_node._check_state_transition()
-            log.attack(
-                f"{GREEN}[{self.name}] Mis-timed — victim transmits OK → "
-                f"Victim TEC: {old_vtec} → {victim_node.tec}  (−1){RESET}"
-            )
 
-        # Attacker sent a harmless recessive bit — no bus error, no TEC change
-        log.attack(
-            f"{YELLOW}[{self.name}] Mis-timed — attacker sent harmless "
-            f"recessive bit, no TEC penalty.  "
-            f"(mistimed #{self._mistimed_count}){RESET}"
-        )
         return True
 
     def _execute_attack(self, victim_frame: CANFrame) -> bool:
-        """Execute a real attack cycle — inject error + send valid frames.
-
-        During an attack cycle:
-          • Error injection → TEC +8 to both attacker and victim.
-          • Victim retransmits → TEC victim −1.  Net victim: +7.
-          • Attacker sends N_VALID_MSGS valid frames → TEC −5.  Net attacker: +3.
-
-        Before injecting, a sync-error check is performed.  If the attacker
-        loses hardware synchronization (probability = SYNC_ERROR_PROBABILITY),
-        the injection is mis-timed and the cycle is wasted.
-        """
         log = get_logger()
         self._attack_count += 1
         tec_cycle_start = self.tec
+        self._last_action = "ATTACK"
 
-        log.attack(
-            f"{RED}\n{'═'*70}\n"
-            f"[{self.name}] ATTACK CYCLE #{self._attack_count}  "
-            f"(attacker TEC={tec_cycle_start})\n"
-            f"{'═'*70}{RESET}"
-        )
+        log.attack(f"{RED}\n[{self.name}] ATTACK CYCLE #{self._attack_count} (TEC={tec_cycle_start}){RESET}")
 
-        # ── Sync-error jitter check ───────────────────────────────────────────
-        if random.random() < SYNC_ERROR_PROBABILITY:
+        attack_frame = self._make_attack_frame(victim_frame)
+        
+        # Valutazione fisica del jitter
+        if not self._calculate_jitter_result(attack_frame.inject_recessive_at):
             return self._execute_mistimed(victim_frame)
 
-        # ── Step 1: inject recessive bit → bit error → TEC +8 both nodes ─────
-        attack_frame = self._make_attack_frame(victim_frame)
         self.send(attack_frame, concurrent_frame=victim_frame)
-        log.attack(
-            f"{RED}[{self.name}] Step 1 — error injected: "
-            f"TEC +8: {tec_cycle_start} → {self.tec}{RESET}"
-        )
-
-        # ── Step 2 (victim side, handled by bus): victim retransmits → TEC −1 ─
-        #    Net effect on victim per cycle: +8 − 1 = +7.
-
-        # ── Step 3: attacker sends N_VALID_MSGS valid frames → TEC −5 ─────────
-        #    Net effect on attacker per cycle: +8 − 5 = +3.
+        
         if self.bus:
-            tec_after_error = self.tec
             self.bus.transmit_valid(self.name, N_VALID_MSGS)
-            log.attack(
-                f"{YELLOW}[{self.name}] Step 3 — {N_VALID_MSGS} valid frames: "
-                f"TEC −{N_VALID_MSGS}: {tec_after_error} → {self.tec}  "
-                f"[cycle net: +{self.tec - tec_cycle_start}  "
-                f"| victim cycle net: +7]{RESET}"
-            )
+            self.valid_msgs_sent_last_cycle = N_VALID_MSGS
         self._valid_count += N_VALID_MSGS
 
-        log.attack(
-            f"{YELLOW}\n[{self.name}] After attack #{self._attack_count}: "
-            f"TEC={self.tec}  state={self.state}{RESET}"
-        )
         return True
 
     def attack(self, victim_frame: CANFrame) -> bool:
-        """Main entry point: decide whether to attack or skip, then execute."""
-        log = get_logger()
         if self.state != ECUState.ERROR_ACTIVE:
-            log.attack(
-                f"{RED}[{self.name}] Not in Error-Active state "
-                f"(state={self.state}, TEC={self.tec}). Attack aborted.{RESET}"
-            )
             return False
 
         self._cycle_count += 1
