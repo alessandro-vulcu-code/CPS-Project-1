@@ -13,6 +13,7 @@ from can_bus     import CANBus
 from ecu         import ECUState
 from victim_ecu  import VictimECU
 from attacker_ecu import AttackerECU
+from detector    import F1Detector
 
 
 BANNER = f"""
@@ -45,7 +46,8 @@ def run_simulation(max_cycles: int | None = None,
     VICTIM_CAN_ID = 0x100
     VICTIM_PERIOD = 10
 
-    bus      = CANBus(verbose=verbose)
+    detector = F1Detector()
+    bus      = CANBus(verbose=verbose, detector=detector)
     victim   = VictimECU(can_id=VICTIM_CAN_ID, period_ms=VICTIM_PERIOD, verbose=verbose)
     attacker = AttackerECU(target_can_id=VICTIM_CAN_ID, verbose=verbose)
 
@@ -112,6 +114,7 @@ def run_simulation(max_cycles: int | None = None,
     logger.summary(f"  {victim.status()}")
     logger.summary(f"  {attacker.status()}")
     logger.summary(f"\n  {attacker.stats()}")
+    logger.summary(f"\n  {detector.report()}")
 
     if attacker.state == ECUState.ERROR_ACTIVE:
         logger.summary(f"\n  {GREEN}Attacker remained in Error-Active throughout.{RESET}")

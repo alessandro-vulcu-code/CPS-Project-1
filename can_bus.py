@@ -45,10 +45,14 @@ def _data_to_bits(data: List[int]) -> List[int]:
 
 
 class CANBus:
-    def __init__(self, verbose: bool = True):
+    def __init__(self, verbose: bool = True, detector=None):
         self.verbose = verbose
         self._nodes: dict = {}
         self._lock  = threading.Lock()
+        # Optional passive F1 attack detector (see detector.py). When attached,
+        # the bus reports every error flag and every clean transmission so the
+        # detector can measure feature F1 (consecutive errors on one ID).
+        self.detector = detector
 
     def register(self, ecu) -> None:
         self._nodes[ecu.name] = ecu
@@ -118,17 +122,24 @@ class CANBus:
                     f"{RED}\n[BUS] BIT ERROR detected by attacker "
                     f"(sent={attacker_sent}, read={bus_result}){RESET}"
                 )
+                # F1 detector: an error flag is raised for this in-flight ID.
+                if self.detector is not None:
+                    self.detector.record_error(frame.can_id)
                 self._emit_error_flag(
                     frame.sender_id,
                     concurrent.sender_id if concurrent else None,
+                    can_id=frame.can_id,
                 )
                 return False
 
         log.bus(f"{GREEN}\n[BUS] Frame transmitted successfully by {frame.sender_id}{RESET}")
+        if self.detector is not None:
+            self.detector.record_success(frame.can_id)
         self._deliver_frame(frame)
         return True
 
-    def _emit_error_flag(self, attacker_name: str, victim_name: Optional[str]) -> None:
+    def _emit_error_flag(self, attacker_name: str, victim_name: Optional[str],
+                         can_id: Optional[int] = None) -> None:
         log = get_logger()
         log.error_flag(f"{RED}\n[BUS] ══ ERROR FLAG SEQUENCE ══{RESET}")
 
@@ -162,6 +173,11 @@ class CANBus:
                 log.tec(f"{GREEN}  Victim ({victim_name}) TEC: {old} → {victim_node.tec}  "
                         f"[cycle net so far: +7]{RESET}")
                 victim_node._check_state_transition()
+                # F1 detector: the victim's retransmission succeeds, closing the
+                # error run on this ID. This single error → success pattern is
+                # precisely why WeepingCAN never trips F1 (no consecutive errors).
+                if self.detector is not None and can_id is not None:
+                    self.detector.record_success(can_id)
             else:
                 log.tec(f"{RED}\n[BUS] Victim ({victim_name}) is BUS-OFF — cannot retransmit!{RESET}")
 
