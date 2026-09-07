@@ -37,7 +37,6 @@ from __future__ import annotations
 
 import json
 import logging
-import os
 import re
 import sys
 from datetime import datetime
@@ -136,52 +135,59 @@ class SimLogger:
 
     Parameters
     ----------
-    log_dir   : directory where log files are written (created if absent)
+    log_dir   : directory where log files are written when enabled
     run_name  : base name for the log files (timestamp appended automatically)
     console   : whether to also print to stdout
+    file_logging : whether plain-text and JSON files are created
+    console_level: minimum level emitted to stdout
     """
 
     def __init__(self,
                  log_dir:  str  = "logs",
                  run_name: str  = "weepingcan",
-                 console:  bool = True):
+                 console:  bool = True,
+                 file_logging: bool = True,
+                 console_level: int = logging.DEBUG):
 
         self._console = console
+        self._file_logging = file_logging
 
         # ── Ensure log directory exists ───────────────────────────────────────
-        log_path = Path(log_dir)
-        log_path.mkdir(parents=True, exist_ok=True)
-
-        ts = datetime.now().strftime("%Y%m%d_%H%M%S")
-        self.log_file      = str(log_path / f"{run_name}_{ts}.log")
-        self.json_log_file = str(log_path / f"{run_name}_{ts}.jsonl")
+        ts = datetime.now().strftime("%Y%m%d_%H%M%S_%f")
+        self.log_file: Optional[str] = None
+        self.json_log_file: Optional[str] = None
 
         # ── Build logger ──────────────────────────────────────────────────────
         self._logger = logging.getLogger(f"weepingcan.{ts}")
         self._logger.setLevel(logging.DEBUG)
         self._logger.propagate = False
 
-        # Plain-text file handler
-        fh = logging.FileHandler(self.log_file, encoding="utf-8")
-        fh.setLevel(logging.DEBUG)
-        fh.setFormatter(PlainFormatter())
-        self._logger.addHandler(fh)
+        if file_logging:
+            log_path = Path(log_dir)
+            log_path.mkdir(parents=True, exist_ok=True)
+            self.log_file = str(log_path / f"{run_name}_{ts}.log")
+            self.json_log_file = str(log_path / f"{run_name}_{ts}.jsonl")
 
-        # JSON Lines file handler
-        jh = JSONFileHandler(self.json_log_file, encoding="utf-8")
-        jh.setLevel(logging.DEBUG)
-        self._logger.addHandler(jh)
+            fh = logging.FileHandler(self.log_file, encoding="utf-8")
+            fh.setLevel(logging.DEBUG)
+            fh.setFormatter(PlainFormatter())
+            self._logger.addHandler(fh)
+
+            jh = JSONFileHandler(self.json_log_file, encoding="utf-8")
+            jh.setLevel(logging.DEBUG)
+            self._logger.addHandler(jh)
 
         # Console handler (optional)
         if console:
             ch = logging.StreamHandler(sys.stdout)
-            ch.setLevel(logging.DEBUG)
+            ch.setLevel(console_level)
             ch.setFormatter(ConsoleFormatter())
             self._logger.addHandler(ch)
 
         self._logger.info(f"WeepingCAN simulation log started — {datetime.now().isoformat()}")
-        self._logger.info(f"Plain log : {self.log_file}")
-        self._logger.info(f"JSON log  : {self.json_log_file}")
+        if file_logging:
+            self._logger.info(f"Plain log : {self.log_file}")
+            self._logger.info(f"JSON log  : {self.json_log_file}")
 
     # ── Low-level emit helper ─────────────────────────────────────────────────
     def _emit(self, level: int, msg: str, **extras) -> None:
@@ -246,7 +252,11 @@ class SimLogger:
                     handler.stream.flush()
                 except Exception:
                     pass
-            elif isinstance(handler, logging.StreamHandler) and self._console:
+            elif (
+                isinstance(handler, logging.StreamHandler)
+                and self._console
+                and LEVEL_BITS >= handler.level
+            ):
                 # Console: coloured
                 try:
                     handler.stream.write(console_msg + "\n")
@@ -304,10 +314,17 @@ class SimLogger:
         self._emit(logging.INFO, color + BOLD + char * n + RESET)
 
     # ── Accessors ─────────────────────────────────────────────────────────────
-    def get_log_path(self) -> str:
+    def close(self) -> None:
+        """Flush, detach, and close every handler owned by this instance."""
+        for handler in list(self._logger.handlers):
+            handler.flush()
+            handler.close()
+            self._logger.removeHandler(handler)
+
+    def get_log_path(self) -> Optional[str]:
         return self.log_file
 
-    def get_json_path(self) -> str:
+    def get_json_path(self) -> Optional[str]:
         return self.json_log_file
 
 
@@ -317,10 +334,20 @@ _instance: Optional[SimLogger] = None
 
 def init_logger(log_dir:  str  = "logs",
                 run_name: str  = "weepingcan",
-                console:  bool = True) -> SimLogger:
+                console:  bool = True,
+                file_logging: bool = True,
+                console_level: int = logging.DEBUG) -> SimLogger:
     """Initialise (or reinitialise) the module-level singleton logger."""
     global _instance
-    _instance = SimLogger(log_dir=log_dir, run_name=run_name, console=console)
+    if _instance is not None:
+        _instance.close()
+    _instance = SimLogger(
+        log_dir=log_dir,
+        run_name=run_name,
+        console=console,
+        file_logging=file_logging,
+        console_level=console_level,
+    )
     return _instance
 
 

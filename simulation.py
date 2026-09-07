@@ -5,10 +5,10 @@ Orchestrates the WeepingCAN simulation.
 Initialises the SimLogger so every module writes to the same .log / .jsonl files.
 """
 
-import sys
+import logging
 import time
 
-from logger      import init_logger, get_logger, RED, GREEN, YELLOW, CYAN, BOLD, RESET
+from logger      import init_logger, LEVEL_SUMMARY, RED, GREEN, YELLOW, CYAN, BOLD, RESET
 from can_bus     import CANBus
 from ecu         import ECUState
 from victim_ecu  import VictimECU
@@ -32,15 +32,18 @@ def run_simulation(max_cycles: int | None = None,
     logger = init_logger(
         log_dir  = log_dir,
         run_name = "weepingcan",
-        console  = True,          # always print to stdout
+        console  = True,
+        file_logging = not no_log,
+        console_level = LEVEL_SUMMARY if not verbose else logging.DEBUG,
     )
 
     # Print and log the banner
     logger.raw(BANNER)
-    logger.raw(
-        f"  Log file  : {logger.get_log_path()}\n"
-        f"  JSON log  : {logger.get_json_path()}"
-    )
+    if not no_log:
+        logger.raw(
+            f"  Log file  : {logger.get_log_path()}\n"
+            f"  JSON log  : {logger.get_json_path()}"
+        )
 
     # ── Setup ──────────────────────────────────────────────────────────────────
     VICTIM_CAN_ID = 0x100
@@ -121,10 +124,11 @@ def run_simulation(max_cycles: int | None = None,
     else:
         logger.summary(f"\n  {RED}Attacker left Error-Active — attack model violated!{RESET}")
 
-    logger.summary(
-        f"\n  Log saved to : {logger.get_log_path()}"
-        f"\n  JSON saved to: {logger.get_json_path()}"
-    )
+    if not no_log:
+        logger.summary(
+            f"\n  Log saved to : {logger.get_log_path()}"
+            f"\n  JSON saved to: {logger.get_json_path()}"
+        )
     logger.raw("")
 
 
@@ -138,7 +142,7 @@ if __name__ == "__main__":
         epilog="""
 Examples:
   python simulation.py                        # verbose, saves logs/
-  python simulation.py --quiet                # suppress bit dumps
+  python simulation.py --quiet                # print final summary only
   python simulation.py --max-cycles 200       # more cycles
   python simulation.py --log-dir /tmp/can     # custom log directory
   python simulation.py --no-log               # disable file logging
@@ -149,7 +153,7 @@ Examples:
     parser.add_argument("--delay",      type=float, default=0.05,
                         help="Seconds between cycles (default: 0.05)")
     parser.add_argument("--quiet",      action="store_true",
-                        help="Suppress per-frame bit-stream dumps")
+                        help="Suppress detailed output; print final summary only")
     parser.add_argument("--log-dir",    type=str,   default="logs",
                         help="Directory for log files (default: logs/)")
     parser.add_argument("--no-log",     action="store_true",

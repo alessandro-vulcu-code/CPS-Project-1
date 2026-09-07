@@ -233,10 +233,10 @@ pip install numpy pandas matplotlib
 ### Run the simulation
 
 ```bash
-# Default: 100 cycles, verbose, logs saved to logs/
+# Default: runs until Bus-Off, verbose, logs saved to logs/
 python simulation.py
 
-# Quieter output (no bit-stream dumps)
+# Quiet output (final summary only)
 python simulation.py --quiet
 
 # More cycles, faster

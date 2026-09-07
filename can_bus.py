@@ -98,6 +98,17 @@ class CANBus:
                     break
             if winner_id == "TIE":
                 log.bus(f"{MAGENTA}  Arbitration: SAME ID → both transmit together (WeepingCAN){RESET}")
+            else:
+                winner = concurrent if winner_id == concurrent.sender_id else frame
+                loser = frame if winner is concurrent else concurrent
+                log.bus(
+                    f"{MAGENTA}  {loser.sender_id} stops transmitting; "
+                    f"{winner.sender_id} completes the frame.{RESET}"
+                )
+                if self.detector is not None:
+                    self.detector.record_success(winner.can_id)
+                self._deliver_frame(winner)
+                return winner is frame
 
         if frame.is_malicious and frame.inject_recessive_at is not None:
             inject_pos = frame.inject_recessive_at
@@ -157,6 +168,7 @@ class CANBus:
             old = attacker_node.tec
             attacker_node._increment_tec(8)
             log.tec(f"{YELLOW}  Attacker ({attacker_name}) TEC: {old} → {attacker_node.tec}{RESET}")
+            attacker_node._check_state_transition()
 
         victim_node = self._nodes.get(victim_name) if victim_name else None
         if victim_node:
@@ -180,10 +192,6 @@ class CANBus:
                     self.detector.record_success(can_id)
             else:
                 log.tec(f"{RED}\n[BUS] Victim ({victim_name}) is BUS-OFF — cannot retransmit!{RESET}")
-
-        # NOTE: attacker state transition is intentionally deferred to after
-        # transmit_valid() so that _check_state_transition reflects the full
-        # cycle balance (+8 error  −5 valid msgs = net +3), not a transient +8.
 
     def _deliver_frame(self, frame: CANFrame) -> None:
         for name, node in self._nodes.items():

@@ -1,0 +1,7 @@
+__pycache__/
+*.py[cod]
+.ipynb_checkpoints/
+.obsidian/
+md/
+autosec2021_23002_paper.pdf
+graphify-out/

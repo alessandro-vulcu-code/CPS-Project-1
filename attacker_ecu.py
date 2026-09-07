@@ -38,7 +38,7 @@ SAFE_INJECT_POSITIONS: list[int] = [13, 18, 20, 22, 25, 28, 34]
 #   Attack cycle : attacker +3,  victim +7
 #   Skip   cycle : attacker −5,  victim −1
 #   Attacker TEC : oscillates in [0, ~8]  → always Error-Active
-#   Victim   TEC : net ≈ +20 per 3 cycles → Bus-Off after ~38 × 3/2 = ~57 cycles
+#   Victim   TEC : net ≈ +13 per 3 cycles → ideal Bus-Off after ~60 cycles
 SKIP_TEC_THRESHOLD: int = 6
 
 
@@ -211,7 +211,15 @@ class AttackerECU(ECU):
 
         # ── Step 1: inject recessive bit → bit error → TEC +8 both nodes ─────
         attack_frame = self._make_attack_frame(victim_frame)
-        self.send(attack_frame, concurrent_frame=victim_frame)
+        transmitted = self.send(attack_frame, concurrent_frame=victim_frame)
+        expected_tec = min(tec_cycle_start + 8, 256)
+        if transmitted or self.tec != expected_tec:
+            log.attack(
+                f"{RED}[{self.name}] Step 1 failed: expected injected error, "
+                f"transmitted={transmitted}, TEC={self.tec}, "
+                f"expected TEC={expected_tec}.{RESET}"
+            )
+            return False
         log.attack(
             f"{RED}[{self.name}] Step 1 — error injected: "
             f"TEC +8: {tec_cycle_start} → {self.tec}{RESET}"
